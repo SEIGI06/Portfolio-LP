@@ -8,7 +8,22 @@
     --transition-speed: 0.3s;
 }
 
-/* Ajout d'un pseudo-élément pour l'arrière-plan flouté */
+/* Style de base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Arrière-plan flouté */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    position: relative;
+    min-height: 100vh;
+}
+
 body::before {
     content: "";
     position: fixed;
@@ -22,25 +37,14 @@ body::before {
     z-index: -1;
 }
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: var(--text-color);
-    position: relative;
-}
-
-/* Conteneur principal avec fond semi-transparent */
+/* Contenu principal */
 main {
     position: relative;
     z-index: 1;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.95);
     min-height: 100vh;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    backdrop-filter: none;
+    filter: none;
 }
 
 .container {
