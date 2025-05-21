@@ -1,0 +1,31 @@
+[data-theme="dark"] {
+    --primary-color: #303f9f;
+    --secondary-color: #1a237e;
+    --text-color: #f5f5f5;
+    --background-color: #121212;
+    --gray-light: #2d2d2d;
+    --gray-dark: #e0e0e0;
+}
+
+[data-theme="dark"] body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .contact-link {
+    color: var(--gray-dark);
+}
+
+[data-theme="dark"] .contact-link:hover {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .btn-primary,
+[data-theme="dark"] .btn-download {
+    background-color: var(--primary-color);
+}
+
+[data-theme="dark"] .btn-primary:hover,
+[data-theme="dark"] .btn-download:hover {
+    background-color: var(--secondary-color);
+} 

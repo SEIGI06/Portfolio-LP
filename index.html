@@ -3,118 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Portfolio</title>
+    <title>Portfolio - Étudiant BTS SIO SISR</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+    <script src="js/main.js" defer></script>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-content">
-            <div class="logo">
-                <a href="#">Portfolio</a>
+    <header>
+        <nav>
+            <div class="logo">Portfolio</div>
+            <div class="nav-links">
+                <a href="#accueil">Accueil</a>
+                <a href="#e5">Épreuve E5</a>
+                <a href="#documentation">Documentation</a>
+                <a href="#certifications">Certifications</a>
+                <a href="#parcours">Parcours</a>
+                <a href="#veille">Veille</a>
+                <a href="#projets">Projets</a>
             </div>
-            <ul class="nav-links">
-                <li><a href="#accueil">Accueil</a></li>
-                <li><a href="#a-propos">À propos</a></li>
-                <li><a href="#projets">Projets</a></li>
-                <li><a href="#competences">Compétences</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
+            <button id="darkModeToggle" aria-label="Activer/Désactiver le mode sombre">
+                <span class="moon">🌙</span>
+                <span class="sun">☀️</span>
+            </button>
+        </nav>
+    </header>
 
-    <!-- Section Accueil -->
-    <section id="accueil" class="hero">
-        <div class="hero-content">
-            <h1>Bienvenue sur mon Portfolio</h1>
-            <p>Développeur Web Créatif</p>
-            <a href="#contact" class="cta-button">Me contacter</a>
-        </div>
-    </section>
-
-    <!-- Section À propos -->
-    <section id="a-propos" class="about">
-        <h2>À propos de moi</h2>
-        <div class="about-content">
-            <div class="about-text">
-                <p>Votre texte de présentation ici...</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section Projets -->
-    <section id="projets" class="projects">
-        <h2>Mes Projets</h2>
-        <div class="projects-grid">
-            <!-- Projet 1 -->
-            <div class="project-card">
-                <img src="images/project1.jpg" alt="Projet 1">
-                <h3>Nom du Projet</h3>
-                <p>Description du projet...</p>
-                <div class="project-links">
-                    <a href="#" target="_blank">Voir le projet</a>
-                    <a href="#" target="_blank">Code source</a>
+    <main>
+        <section id="accueil" class="section">
+            <div class="container">
+                <h1>Bienvenue sur mon Portfolio</h1>
+                <div class="presentation">
+                    <div class="profile-info">
+                        <h2>Présentation</h2>
+                        <p>Étudiant en BTS SIO option SISR</p>
+                        <div class="contact-info">
+                            <a href="tel:+33600000000" class="contact-link">📱 06 00 00 00 00</a>
+                            <a href="https://linkedin.com/in/votre-profil" target="_blank" class="contact-link">💼 LinkedIn</a>
+                            <a href="assets/cv.pdf" download class="btn-download">📄 Télécharger mon CV</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <!-- Ajoutez d'autres projets ici -->
-        </div>
-    </section>
+        </section>
 
-    <!-- Section Compétences -->
-    <section id="competences" class="skills">
-        <h2>Mes Compétences</h2>
-        <div class="skills-grid">
-            <div class="skill-card">
-                <i class="fab fa-html5"></i>
-                <h3>HTML5</h3>
+        <section id="e5" class="section">
+            <div class="container">
+                <h2>Épreuve E5</h2>
+                <div class="e5-content">
+                    <div class="e5-image">
+                        <!-- L'image sera ajoutée manuellement -->
+                        <div class="placeholder-image">Image E5</div>
+                    </div>
+                    <a href="documentation.html" class="btn-primary">Voir la Documentation</a>
+                </div>
             </div>
-            <div class="skill-card">
-                <i class="fab fa-css3-alt"></i>
-                <h3>CSS3</h3>
-            </div>
-            <div class="skill-card">
-                <i class="fab fa-js"></i>
-                <h3>JavaScript</h3>
-            </div>
-            <div class="skill-card">
-                <i class="fab fa-php"></i>
-                <h3>PHP</h3>
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Section Contact -->
-    <section id="contact" class="contact">
-        <h2>Contact</h2>
-        <div class="contact-content">
-            <form id="contact-form">
-                <div class="form-group">
-                    <input type="text" id="name" name="name" required placeholder="Votre nom">
-                </div>
-                <div class="form-group">
-                    <input type="email" id="email" name="email" required placeholder="Votre email">
-                </div>
-                <div class="form-group">
-                    <textarea id="message" name="message" required placeholder="Votre message"></textarea>
-                </div>
-                <button type="submit" class="submit-btn">Envoyer</button>
-            </form>
-        </div>
-    </section>
+        <!-- Les autres sections seront ajoutées progressivement -->
+    </main>
 
-    <!-- Footer -->
     <footer>
-        <div class="footer-content">
-            <div class="social-links">
-                <a href="#" target="_blank"><i class="fab fa-github"></i></a>
-                <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
-                <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="https://github.com/votre-username" target="_blank">GitHub</a>
+                    <a href="https://linkedin.com/in/votre-profil" target="_blank">LinkedIn</a>
+                </div>
+                <p>&copy; 2024 - Tous droits réservés</p>
             </div>
-            <p>&copy; 2024 Mon Portfolio. Tous droits réservés.</p>
         </div>
     </footer>
-
-    <script src="js/main.js"></script>
 </body>
 </html> 
