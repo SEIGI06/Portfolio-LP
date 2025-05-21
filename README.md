@@ -20,7 +20,6 @@ Le site est composé des sections suivantes :
 - Arrière-plan flouté avec effet de profondeur
 - Animations au défilement
 - Navigation fluide
-- Téléchargement du CV
 - Liens vers les réseaux professionnels
 
 ## Structure des Dossiers
@@ -30,8 +29,7 @@ portfolio/
 ├── assets/
 │   ├── backgrounds/    # Images d'arrière-plan
 │   ├── certifications/ # Badges et images des certifications
-│   ├── images/        # Images générales du site
-│   └── CV.pdf         # CV téléchargeable
+│   └── images/        # Images générales du site
 ├── css/
 │   ├── style.css      # Styles principaux
 │   └── documentation.css # Styles spécifiques à la documentation
@@ -57,9 +55,6 @@ portfolio/
 ### Projets
 1. Pour ajouter un projet, copiez le template de projet dans `projets.html`
 2. Mettez à jour les informations (titre, description, technologies, liens)
-
-### CV
-1. Remplacez le fichier `assets/CV Lilian Peyr.pdf` par votre CV au format PDF
 
 ## Déploiement sur GitHub Pages
 
