@@ -2,7 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const header = `
         <header>
             <nav>
-                <div class="logo">Portfolio</div>
+                <div class="logo">
+                    <img src="images/logo.png" alt="Logo Portfolio" class="logo-img">
+                </div>
                 <div class="nav-links">
                     <a href="index.html">Accueil</a>
                     <a href="parcours.html">Parcours</a>
