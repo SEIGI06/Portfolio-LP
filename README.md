@@ -7,26 +7,47 @@ Ce portfolio a été créé pour présenter les compétences et réalisations d'
 Le site est composé des sections suivantes :
 
 - **Accueil** : Présentation rapide et coordonnées
-- **Épreuve E5** : Présentation de l'épreuve avec accès à la documentation
-- **Documentation** : Arborescence des projets et documentations techniques
-- **Certifications** : Grille des certifications obtenues
 - **Parcours** : Timeline des études et expériences
+- **Certifications** : Grille des certifications obtenues (RGPD, ANSSI, etc.)
 - **Veille informatique** : Présentation des sujets suivis
 - **Projets** : Présentation des projets réalisés
+- **Documentation** : Arborescence des projets et documentations techniques
+- **Épreuve E5** : Présentation de l'épreuve avec accès à la documentation
 
 ## Fonctionnalités
 
 - Design responsive (mobile, tablette, desktop)
-- Mode sombre/clair
+- Arrière-plan flouté avec effet de profondeur
 - Animations au défilement
 - Navigation fluide
 - Téléchargement du CV
 - Liens vers les réseaux professionnels
 
+## Structure des Dossiers
+
+```
+portfolio/
+├── assets/
+│   ├── backgrounds/    # Images d'arrière-plan
+│   ├── certifications/ # Badges et images des certifications
+│   ├── images/        # Images générales du site
+│   └── CV.pdf         # CV téléchargeable
+├── css/
+│   ├── style.css      # Styles principaux
+│   └── documentation.css # Styles spécifiques à la documentation
+├── js/
+│   ├── header.js      # Gestion du header
+│   └── main.js        # Fonctionnalités principales
+└── *.html             # Pages du site
+```
+
 ## Comment Modifier le Contenu
 
 ### Images
-1. Placez vos images dans le dossier `assets/images/`
+1. Placez vos images dans les dossiers appropriés :
+   - `assets/backgrounds/` pour les images d'arrière-plan
+   - `assets/certifications/` pour les badges de certification
+   - `assets/images/` pour les autres images
 2. Mettez à jour les chemins dans les fichiers HTML correspondants
 
 ### Textes
@@ -34,11 +55,11 @@ Le site est composé des sections suivantes :
 2. Modifiez le contenu entre les balises appropriées
 
 ### Projets
-1. Pour ajouter un projet, copiez le template de projet dans la section correspondante
+1. Pour ajouter un projet, copiez le template de projet dans `projets.html`
 2. Mettez à jour les informations (titre, description, technologies, liens)
 
 ### CV
-1. Remplacez le fichier `assets/cv.pdf` par votre CV au format PDF
+1. Remplacez le fichier `assets/CV Lilian Peyr.pdf` par votre CV au format PDF
 
 ## Déploiement sur GitHub Pages
 
@@ -56,17 +77,6 @@ Le site est composé des sections suivantes :
    - Dans "Source", sélectionnez "main" comme branche
    - Cliquez sur "Save"
 6. Votre site sera accessible à l'adresse : `https://votre-username.github.io/nom-du-repo`
-
-## Mise à Jour du Site
-
-1. Modifiez les fichiers localement
-2. Committez et poussez les changements :
-   ```bash
-   git add .
-   git commit -m "Description des modifications"
-   git push origin main
-   ```
-3. Les changements seront automatiquement déployés sur GitHub Pages
 
 ## Technologies Utilisées
 
