@@ -229,74 +229,64 @@ footer {
 }
 
 /* Parcours Section */
-.timeline {
-    position: relative;
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 2rem 0;
+.parcours-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 2rem;
 }
 
-.timeline::before {
-    content: '';
-    position: absolute;
-    width: 2px;
-    background-color: var(--primary-color);
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    margin-left: -1px;
-}
-
-.timeline-item {
-    position: relative;
-    margin-bottom: 2rem;
-}
-
-.timeline-date {
-    position: absolute;
-    width: 100px;
-    text-align: right;
-    right: 50%;
-    padding-right: 2rem;
-    font-weight: bold;
-}
-
-.timeline-image {
-    margin-bottom: 1rem;
+.parcours-card {
+    display: flex;
+    background-color: var(--background-color);
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.school-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform var(--transition-speed);
 }
 
-.school-image:hover {
-    transform: scale(1.05);
+.parcours-card:hover {
+    transform: translateY(-5px);
 }
 
-.timeline-content {
-    background-color: var(--gray-light);
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-left: 2rem;
+.parcours-image {
     position: relative;
+    width: 40%; /* Adjust as needed */
+    flex-shrink: 0;
 }
 
-.timeline-content::before {
-    content: '';
+.parcours-image img {
+    display: block;
+    width: 100%;
+    height: 100%; /* Make image fill the container */
+    object-fit: cover;
+}
+
+.date-tag {
     position: absolute;
-    left: -10px;
-    top: 20px;
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-right: 10px solid var(--gray-light);
+    top: 1rem;
+    right: 1rem;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.parcours-info {
+    padding: 1.5rem;
+    flex-grow: 1;
+}
+
+.parcours-info h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+.parcours-info p {
+    margin-bottom: 0.5rem;
 }
 
 /* Veille Section */
@@ -386,6 +376,19 @@ footer {
 
 /* Responsive Design pour les nouvelles sections */
 @media (max-width: 768px) {
+    .parcours-card {
+        flex-direction: column;
+    }
+    
+    .parcours-image {
+        width: 100%;
+        height: 200px; /* Fixed height for small screens */
+    }
+
+    .parcours-image img {
+         height: 200px;
+    }
+
     .timeline::before {
         left: 31px;
     }
