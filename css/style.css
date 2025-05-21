@@ -202,30 +202,78 @@ footer {
 /* Certifications Section */
 .certifications-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
     margin-top: 2rem;
 }
 
 .certification-card {
     background-color: var(--gray-light);
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
-    transition: transform var(--transition-speed);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .certification-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .certification-image {
-    padding: 1rem;
+    padding: 1.5rem;
     text-align: center;
+    background-color: white;
+}
+
+.certification-badge {
+    max-width: 150px;
+    height: auto;
+    transition: transform var(--transition-speed);
+}
+
+.certification-card:hover .certification-badge {
+    transform: scale(1.05);
 }
 
 .certification-info {
-    padding: 1rem;
+    padding: 1.5rem;
     text-align: center;
+}
+
+.certification-info h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+}
+
+.certification-info p {
+    margin: 0.5rem 0;
+    color: var(--gray-dark);
+}
+
+.certification-description {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-top: 1rem;
+}
+
+.coming-soon {
+    opacity: 0.8;
+}
+
+.coming-soon .placeholder-image {
+    background-color: var(--gray-dark);
+    color: white;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
 /* Parcours Section */
