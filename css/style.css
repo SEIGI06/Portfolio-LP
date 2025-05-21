@@ -191,4 +191,184 @@ footer {
 
 .section {
     animation: fadeIn 1s ease-out;
+}
+
+/* Certifications Section */
+.certifications-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.certification-card {
+    background-color: var(--gray-light);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform var(--transition-speed);
+}
+
+.certification-card:hover {
+    transform: translateY(-5px);
+}
+
+.certification-image {
+    padding: 1rem;
+    text-align: center;
+}
+
+.certification-info {
+    padding: 1rem;
+    text-align: center;
+}
+
+/* Parcours Section */
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    width: 2px;
+    background-color: var(--primary-color);
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    margin-left: -1px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.timeline-date {
+    position: absolute;
+    width: 100px;
+    text-align: right;
+    right: 50%;
+    padding-right: 2rem;
+    font-weight: bold;
+}
+
+.timeline-content {
+    position: relative;
+    margin-left: 50%;
+    padding-left: 2rem;
+    background-color: var(--gray-light);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+/* Veille Section */
+.veille-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.veille-tools,
+.veille-topics {
+    background-color: var(--gray-light);
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.veille-tools ul,
+.veille-topics ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.veille-tools li,
+.veille-topics li {
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.veille-tools li::before,
+.veille-topics li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+}
+
+/* Projets Section */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.project-card {
+    background-color: var(--gray-light);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform var(--transition-speed);
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+}
+
+.project-image {
+    width: 100%;
+    height: 200px;
+    background-color: var(--gray-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.project-info {
+    padding: 1.5rem;
+}
+
+.project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.project-tech span {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+}
+
+/* Responsive Design pour les nouvelles sections */
+@media (max-width: 768px) {
+    .timeline::before {
+        left: 31px;
+    }
+
+    .timeline-date {
+        position: relative;
+        right: auto;
+        padding-right: 0;
+        padding-bottom: 0.5rem;
+        text-align: left;
+    }
+
+    .timeline-content {
+        margin-left: 0;
+        padding-left: 0;
+    }
+
+    .veille-content {
+        grid-template-columns: 1fr;
+    }
 } 
