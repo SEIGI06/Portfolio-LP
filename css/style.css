@@ -8,17 +8,28 @@
     --transition-speed: 0.3s;
 }
 
+body {
+    background: url("../assets/backgrounds/699cae9c-fe45-429b-9331-2f05551eca05.png") no-repeat center center fixed;
+    background-size: cover;
+    filter: blur(3px);
+    backdrop-filter: blur(3px);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+/* Ajout d'un conteneur pour le contenu principal pour éviter l'effet de flou sur le texte */
+main {
+    position: relative;
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 0.9);
+    min-height: 100vh;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: var(--text-color);
-    background-color: var(--background-color);
 }
 
 .container {
