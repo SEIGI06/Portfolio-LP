@@ -66,6 +66,12 @@ nav {
     color: var(--gray-light);
 }
 
+.nav-links a.active {
+    color: #007bff;
+    font-weight: bold;
+    border-bottom: 2px solid #007bff;
+}
+
 /* Sections */
 .section {
     padding: 5rem 0;
