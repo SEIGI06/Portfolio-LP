@@ -1,3 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://seigi06.github.io/Portfolio-LP/</loc>
+         <lastmod>2025-05-23</lastmod>
+    </url>
+    <url>
+         <loc>https://seigi06.github.io/Portfolio-LP/about/</loc>
+         <lastmod>2025-05-23</lastmod>
+    </url>
+    <url>
+         <loc>https://seigi06.github.io/Portfolio-LP/active-directory/</loc>
+         <lastmod>2025-05-23</lastmod>
+    </url>
+    <url>
+         <loc>https://seigi06.github.io/Portfolio-LP/nmap/</loc>
+         <lastmod>2025-05-23</lastmod>
+    </url>
+    <url>
+         <loc>https://seigi06.github.io/Portfolio-LP/pfsense/</loc>
+         <lastmod>2025-05-23</lastmod>
+    </url>
 </urlset>
