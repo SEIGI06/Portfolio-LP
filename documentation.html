@@ -8,64 +8,36 @@
     <link rel="stylesheet" href="css/documentation.css">
     <script src="js/header.js" defer></script>
     <script src="js/main.js" defer></script>
+    <style>
+        .documentation-container {
+            width: 100%;
+            height: calc(100vh - 200px); /* Ajustez la hauteur selon vos besoins */
+            border: none;
+            margin-top: 20px;
+        }
+        .documentation-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .documentation-header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .documentation-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+    </style>
 </head>
 <body>
     <main>
         <section id="documentation" class="section">
             <div class="container">
-                <h1>Documentation</h1>
-                <div class="documentation-tree">
-                    <div class="folder">
-                        <div class="folder-header">
-                            <span class="folder-icon">📁</span>
-                            <span class="folder-name">Active Directory</span>
-                        </div>
-                        <div class="folder-content">
-                            <div class="file">
-                                <span class="file-icon">📄</span>
-                                <span class="file-name">Installation et Configuration</span>
-                            </div>
-                            <div class="file">
-                                <span class="file-icon">📄</span>
-                                <span class="file-name">Gestion des Utilisateurs</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="folder">
-                        <div class="folder-header">
-                            <span class="folder-icon">📁</span>
-                            <span class="folder-name">Pfsense</span>
-                        </div>
-                        <div class="folder-content">
-                            <div class="file">
-                                <span class="file-icon">📄</span>
-                                <span class="file-name">Configuration du Pare-feu</span>
-                            </div>
-                            <div class="file">
-                                <span class="file-icon">📄</span>
-                                <span class="file-name">Règles de Filtrage</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="folder">
-                        <div class="folder-header">
-                            <span class="folder-icon">📁</span>
-                            <span class="folder-name">Sécurité</span>
-                        </div>
-                        <div class="folder-content">
-                            <div class="file">
-                                <span class="file-icon">📄</span>
-                                <span class="file-name">Politique de Sécurité</span>
-                            </div>
-                            <div class="file">
-                                <span class="file-icon">📄</span>
-                                <span class="file-name">Audit de Sécurité</span>
-                            </div>
-                        </div>
-                    </div>
+                <div class="documentation-header">
+                    <h1>Documentation Technique</h1>
+                    <p>Explorez notre documentation complète sur l'administration système et la sécurité</p>
                 </div>
+                <iframe src="site/index.html" class="documentation-container" title="Documentation Technique"></iframe>
             </div>
         </section>
     </main>
