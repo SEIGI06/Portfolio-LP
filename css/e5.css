@@ -18,9 +18,12 @@
 
 .pdf-container iframe {
     width: 100%;
-    height: 500px; /* Hauteur réduite pour un affichage plus large */
+    height: 80vh; /* Hauteur augmentée pour un affichage plus large et paysage */
     border: none;
     display: block;
+    max-width: 100vw;
+    max-height: 100vh;
+    margin: 0 auto;
 }
 
 /* Responsive design */
@@ -30,7 +33,7 @@
     }
     
     .pdf-container iframe {
-        height: 400px; /* Hauteur encore plus réduite sur mobile */
+        height: 60vh; /* Hauteur adaptée sur mobile */
     }
     
     .e5-content {
