@@ -21,6 +21,10 @@ Le site est composé des sections suivantes :
 - Animations au défilement
 - Navigation fluide
 - Liens vers les réseaux professionnels
+- Accessibilité améliorée (ARIA labels, rôles sémantiques)
+- Chargement optimisé des images (lazy loading)
+- SEO optimisé (meta tags, descriptions)
+- Mode sombre (en développement)
 
 ## Structure des Dossiers
 
@@ -32,11 +36,13 @@ portfolio/
 │   └── images/        # Images générales du site
 ├── css/
 │   ├── style.css      # Styles principaux
+│   ├── e5.css         # Styles spécifiques à l'épreuve E5
 │   └── documentation.css # Styles spécifiques à la documentation
 ├── js/
 │   ├── header.js      # Gestion du header
 │   └── main.js        # Fonctionnalités principales
-└── *.html             # Pages du site
+├── docs_épreuveE5/    # Documentation de l'épreuve E5
+└── *.html            # Pages du site
 ```
 
 ## Comment Modifier le Contenu
@@ -47,14 +53,26 @@ portfolio/
    - `assets/certifications/` pour les badges de certification
    - `assets/images/` pour les autres images
 2. Mettez à jour les chemins dans les fichiers HTML correspondants
+3. Utilisez le format WebP pour une meilleure optimisation
 
 ### Textes
 1. Ouvrez le fichier HTML correspondant à la section à modifier
 2. Modifiez le contenu entre les balises appropriées
+3. Assurez-vous de maintenir la structure sémantique (h1, h2, h3, etc.)
 
 ### Projets
 1. Pour ajouter un projet, copiez le template de projet dans `projets.html`
 2. Mettez à jour les informations (titre, description, technologies, liens)
+3. Ajoutez les attributs ARIA appropriés pour l'accessibilité
+
+## Bonnes Pratiques
+
+- Utilisez des balises sémantiques HTML5 (`<article>`, `<section>`, etc.)
+- Ajoutez des attributs ARIA pour l'accessibilité
+- Optimisez les images avant de les ajouter
+- Maintenez une structure de titres cohérente
+- Utilisez des descriptions alt pertinentes pour les images
+- Ajoutez des meta tags pour le SEO
 
 ## Déploiement sur GitHub Pages
 
@@ -75,7 +93,16 @@ portfolio/
 
 ## Technologies Utilisées
 
-- HTML5
-- CSS3
+- HTML5 (avec focus sur l'accessibilité)
+- CSS3 (variables, flexbox, grid)
 - JavaScript (Vanilla)
-- GitHub Pages pour l'hébergement 
+- GitHub Pages pour l'hébergement
+- WebP pour l'optimisation des images
+
+## Améliorations Futures
+
+- [ ] Implémentation complète du mode sombre
+- [ ] Ajout d'animations plus fluides
+- [ ] Optimisation des performances
+- [ ] Ajout de tests d'accessibilité
+- [ ] Intégration d'un système de blog 
