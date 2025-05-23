@@ -1,0 +1,34 @@
+.e5-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+}
+
+.pdf-container {
+    width: 100%;
+    max-width: 1400px; /* Augmentation de la largeur maximale */
+    margin: 0 auto;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.pdf-container iframe {
+    width: 100%;
+    height: 1200px;
+    border: none;
+    display: block;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .pdf-container {
+        max-width: 100%;
+    }
+    
+    .pdf-container iframe {
+        height: 800px;
+    }
+} 
