@@ -7,7 +7,7 @@
 
 .pdf-container {
     width: 100%;
-    max-width: 1400px; /* Augmentation de la largeur maximale */
+    max-width: 1800px; /* Augmentation de la largeur maximale */
     margin: 0 auto;
     background-color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -17,9 +17,10 @@
 
 .pdf-container iframe {
     width: 100%;
-    height: 1200px;
+    height: 800px; /* Réduction de la hauteur pour un affichage plus large */
     border: none;
     display: block;
+    transform: scale(1.0); /* Assure que le PDF s'affiche à sa taille normale */
 }
 
 /* Responsive design */
@@ -29,6 +30,6 @@
     }
     
     .pdf-container iframe {
-        height: 800px;
+        height: 600px; /* Hauteur réduite sur mobile */
     }
 } 
