@@ -1,17 +1,21 @@
-# Welcome to MkDocs
+# Bienvenue dans la Documentation BTS SIO
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+Cette documentation regroupe les différentes ressources et guides techniques pour le BTS SIO.
 
-## Commands
+## Sections principales
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+### Administration Système
+- [Active Directory](active-directory/index.md) - Gestion des utilisateurs et des politiques de groupe
+- [pfSense](pfsense/index.md) - Configuration et administration du pare-feu
 
-## Project layout
+### Sécurité
+- [Nmap](nmap/index.md) - Guide d'utilisation des commandes Nmap
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+## À propos
+Consultez la [page À propos](about.md) pour plus d'informations sur cette documentation.
+
+## Comment utiliser cette documentation
+
+Cette documentation est organisée de manière hiérarchique, avec des sections principales et des sous-sections. Utilisez la barre de navigation à gauche pour accéder aux différentes sections.
+
+Vous pouvez également utiliser la fonction de recherche en haut à droite pour trouver rapidement des informations spécifiques.

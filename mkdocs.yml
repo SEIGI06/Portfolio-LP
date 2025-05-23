@@ -1,5 +1,42 @@
 site_name: Documentation BTS SIO
-nav:
-  - Accueil: index.md
+site_description: Documentation technique pour le BTS SIO
+site_author: Lilia
+
 theme:
   name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - search.highlight
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+nav:
+  - Accueil: index.md
+  - Administration Système:
+    - Active Directory: active-directory/index.md
+    - pfSense: pfsense/index.md
+  - Sécurité:
+    - Nmap: nmap/index.md
+  - À propos: about.md
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - admonition
+  - footnotes
+  - toc:
+      permalink: true
