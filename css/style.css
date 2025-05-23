@@ -274,13 +274,15 @@ footer {
     justify-content: center;
     background-color: #f5f5f5;
     border-radius: 8px 8px 0 0;
+    position: relative;
 }
 
 .certification-badge {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     transition: transform var(--transition-speed);
+    display: block;
 }
 
 .certification-card:hover .certification-badge {
@@ -301,7 +303,7 @@ footer {
 
 .certification-info {
     padding: 1.5rem;
-    position: relative;
+    background-color: white;
 }
 
 .certification-info h3 {
