@@ -94,4 +94,28 @@
     .file {
         padding: 0.5rem;
     }
+}
+
+/* Styles pour le conteneur de documentation */
+.documentation-container {
+    width: 100%;
+    height: calc(100vh - 200px);
+    border: none;
+    margin-top: 20px;
+}
+
+/* Styles pour l'en-tête de la documentation */
+.documentation-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.documentation-header h1 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.documentation-header p {
+    color: #666;
+    font-size: 1.1em;
 } 
