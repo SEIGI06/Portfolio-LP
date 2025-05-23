@@ -1,0 +1,5 @@
+site_name: Documentation BTS SIO
+nav:
+  - Accueil: index.md
+theme:
+  name: material
