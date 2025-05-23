@@ -5,8 +5,6 @@
     padding: 20px;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    min-height: 100vh;
 }
 
 .pdf-container {
@@ -29,7 +27,7 @@
     margin: 0 auto;
 }
 
-/* Responsive design */
+/* Responsive Design */
 @media (max-width: 768px) {
     .pdf-container {
         max-width: 100%;
