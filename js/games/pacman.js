@@ -1,20 +1,33 @@
 class Ghost {
-    constructor(x, y, color, mode = 'chase') {
+    constructor(x, y, color, mode = 'scatter') {
         this.x = x;
         this.y = y;
         this.color = color;
         this.speed = 2;
-        this.direction = Math.random() * Math.PI * 2;
+        this.direction = 0;
         this.radius = 15;
         this.mode = mode; // 'chase', 'scatter', 'frightened'
         this.targetX = 0;
         this.targetY = 0;
         this.frightenedTimer = 0;
+        this.scatterTimer = 0;
+        this.scatterDuration = 7000; // 7 secondes
+        this.chaseDuration = 20000; // 20 secondes
     }
 
     update(pacman, walls) {
+        // Gestion des modes
+        this.scatterTimer += 16; // 16ms par frame
+        if (this.mode === 'scatter' && this.scatterTimer >= this.scatterDuration) {
+            this.mode = 'chase';
+            this.scatterTimer = 0;
+        } else if (this.mode === 'chase' && this.scatterTimer >= this.chaseDuration) {
+            this.mode = 'scatter';
+            this.scatterTimer = 0;
+        }
+
         if (this.mode === 'frightened') {
-            this.frightenedTimer--;
+            this.frightenedTimer -= 16;
             if (this.frightenedTimer <= 0) {
                 this.mode = 'chase';
                 this.speed = 2;
@@ -23,8 +36,35 @@ class Ghost {
 
         // Définir la cible en fonction du mode
         if (this.mode === 'chase') {
-            this.targetX = pacman.x;
-            this.targetY = pacman.y;
+            // Chaque fantôme a une stratégie de poursuite différente
+            switch(this.color) {
+                case 'red': // Blinky - suit directement Pacman
+                    this.targetX = pacman.x;
+                    this.targetY = pacman.y;
+                    break;
+                case 'pink': // Pinky - vise 4 cases devant Pacman
+                    this.targetX = pacman.x + (Math.cos(pacman.direction) * 4 * 20);
+                    this.targetY = pacman.y + (Math.sin(pacman.direction) * 4 * 20);
+                    break;
+                case 'cyan': // Inky - utilise la position de Blinky
+                    const blinky = this.getBlinkyPosition();
+                    this.targetX = blinky.x + (pacman.x - blinky.x) * 2;
+                    this.targetY = blinky.y + (pacman.y - blinky.y) * 2;
+                    break;
+                case 'orange': // Clyde - s'éloigne si trop proche
+                    const distance = Math.sqrt(
+                        Math.pow(pacman.x - this.x, 2) + 
+                        Math.pow(pacman.y - this.y, 2)
+                    );
+                    if (distance > 8 * 20) {
+                        this.targetX = pacman.x;
+                        this.targetY = pacman.y;
+                    } else {
+                        this.targetX = 0;
+                        this.targetY = this.canvas.height;
+                    }
+                    break;
+            }
         } else if (this.mode === 'scatter') {
             // Chaque fantôme a un coin différent
             switch(this.color) {
@@ -61,6 +101,10 @@ class Ghost {
 
         this.x += Math.cos(this.direction) * this.speed;
         this.y += Math.sin(this.direction) * this.speed;
+
+        // Gestion des tunnels
+        if (this.x < 0) this.x = this.canvas.width;
+        if (this.x > this.canvas.width) this.x = 0;
     }
 
     checkWallCollision(x, y, walls) {
@@ -96,13 +140,12 @@ class Ghost {
     setFrightened() {
         this.mode = 'frightened';
         this.speed = 1;
-        this.frightenedTimer = 300; // 5 secondes à 60 FPS
+        this.frightenedTimer = 7000; // 7 secondes
     }
 }
 
 class Pacman {
     constructor(canvas) {
-        console.log('Initialisation du jeu Pacman');
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.pacman = {
@@ -123,14 +166,38 @@ class Pacman {
         this.score = 0;
         this.lives = 3;
         this.dots = [];
+        this.powerUps = [];
         this.ghosts = [];
+        this.walls = [];
         this.gameOver = false;
         this.animationId = null;
         this.isRunning = false;
         
+        this.setupMaze();
         this.setupDots();
+        this.setupPowerUps();
         this.setupGhosts();
         this.setupEventListeners();
+    }
+
+    setupMaze() {
+        // Murs extérieurs
+        this.walls = [
+            { x: 0, y: 0, width: this.canvas.width, height: 20 },
+            { x: 0, y: 0, width: 20, height: this.canvas.height },
+            { x: 0, y: this.canvas.height - 20, width: this.canvas.width, height: 20 },
+            { x: this.canvas.width - 20, y: 0, width: 20, height: this.canvas.height }
+        ];
+
+        // Ajouter des murs intérieurs
+        const wallPositions = [
+            { x: 100, y: 100, width: 200, height: 20 },
+            { x: 100, y: 100, width: 20, height: 200 },
+            { x: 280, y: 100, width: 20, height: 200 },
+            { x: 100, y: 280, width: 200, height: 20 }
+        ];
+
+        this.walls.push(...wallPositions);
     }
 
     setupDots() {
@@ -138,24 +205,48 @@ class Pacman {
         const padding = 30;
         for (let x = padding; x < this.canvas.width - padding; x += gridSize) {
             for (let y = padding; y < this.canvas.height - padding; y += gridSize) {
-                this.dots.push({ x, y, radius: 3, collected: false });
+                // Vérifier si le point n'est pas dans un mur
+                if (!this.isInWall(x, y)) {
+                    this.dots.push({ x, y, radius: 3, collected: false });
+                }
             }
         }
     }
 
+    setupPowerUps() {
+        const powerUpPositions = [
+            { x: 50, y: 50 },
+            { x: this.canvas.width - 50, y: 50 },
+            { x: 50, y: this.canvas.height - 50 },
+            { x: this.canvas.width - 50, y: this.canvas.height - 50 }
+        ];
+
+        powerUpPositions.forEach(pos => {
+            if (!this.isInWall(pos.x, pos.y)) {
+                this.powerUps.push({ x: pos.x, y: pos.y, radius: 8, collected: false });
+            }
+        });
+    }
+
     setupGhosts() {
         const colors = ['red', 'pink', 'cyan', 'orange'];
+        const startX = this.canvas.width / 2;
+        const startY = this.canvas.height / 2;
+        
         for (let i = 0; i < 4; i++) {
-            const x = Math.random() * (this.canvas.width - 100) + 50;
-            const y = Math.random() * (this.canvas.height - 100) + 50;
-            this.ghosts.push({
-                x: x,
-                y: y,
-                color: colors[i],
-                speed: 2,
-                direction: Math.random() * Math.PI * 2
-            });
+            this.ghosts.push(new Ghost(
+                startX + (i - 1.5) * 40,
+                startY,
+                colors[i]
+            ));
         }
+    }
+
+    isInWall(x, y) {
+        return this.walls.some(wall => 
+            x > wall.x && x < wall.x + wall.width &&
+            y > wall.y && y < wall.y + wall.height
+        );
     }
 
     setupEventListeners() {
@@ -174,7 +265,6 @@ class Pacman {
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
 
-        // Nettoyer les événements quand le jeu est arrêté
         this.cleanup = () => {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
@@ -185,32 +275,41 @@ class Pacman {
         if (this.gameOver || !this.isRunning) return;
 
         // Mise à jour de la position de Pacman
+        let nextX = this.pacman.x;
+        let nextY = this.pacman.y;
+
         if (this.keys.ArrowUp) {
-            this.pacman.y -= this.pacman.speed;
+            nextY -= this.pacman.speed;
             this.pacman.direction = -Math.PI / 2;
         }
         if (this.keys.ArrowDown) {
-            this.pacman.y += this.pacman.speed;
+            nextY += this.pacman.speed;
             this.pacman.direction = Math.PI / 2;
         }
         if (this.keys.ArrowLeft) {
-            this.pacman.x -= this.pacman.speed;
+            nextX -= this.pacman.speed;
             this.pacman.direction = Math.PI;
         }
         if (this.keys.ArrowRight) {
-            this.pacman.x += this.pacman.speed;
+            nextX += this.pacman.speed;
             this.pacman.direction = 0;
         }
+
+        // Vérifier les collisions avec les murs
+        if (!this.isInWall(nextX, nextY)) {
+            this.pacman.x = nextX;
+            this.pacman.y = nextY;
+        }
+
+        // Gestion des tunnels
+        if (this.pacman.x < 0) this.pacman.x = this.canvas.width;
+        if (this.pacman.x > this.canvas.width) this.pacman.x = 0;
 
         // Animation de la bouche
         this.pacman.mouthOpen += this.pacman.mouthSpeed;
         if (this.pacman.mouthOpen > 0.5 || this.pacman.mouthOpen < 0) {
             this.pacman.mouthSpeed = -this.pacman.mouthSpeed;
         }
-
-        // Limites du canvas
-        this.pacman.x = Math.max(this.pacman.radius, Math.min(this.canvas.width - this.pacman.radius, this.pacman.x));
-        this.pacman.y = Math.max(this.pacman.radius, Math.min(this.canvas.height - this.pacman.radius, this.pacman.y));
 
         // Collecte des points
         this.dots.forEach(dot => {
@@ -225,41 +324,72 @@ class Pacman {
             }
         });
 
-        // Mise à jour des fantômes
-        this.ghosts.forEach(ghost => {
-            const dx = this.pacman.x - ghost.x;
-            const dy = this.pacman.y - ghost.y;
-            const angle = Math.atan2(dy, dx);
-            
-            ghost.direction += (angle - ghost.direction) * 0.1 + (Math.random() - 0.5) * 0.2;
-            
-            ghost.x += Math.cos(ghost.direction) * ghost.speed;
-            ghost.y += Math.sin(ghost.direction) * ghost.speed;
-
-            ghost.x = Math.max(20, Math.min(this.canvas.width - 20, ghost.x));
-            ghost.y = Math.max(20, Math.min(this.canvas.height - 20, ghost.y));
-            
-            const ghostDx = this.pacman.x - ghost.x;
-            const ghostDy = this.pacman.y - ghost.y;
-            const ghostDistance = Math.sqrt(ghostDx * ghostDx + ghostDy * ghostDy);
-            if (ghostDistance < this.pacman.radius + 15) {
-                this.lives--;
-                if (this.lives <= 0) {
-                    this.gameOver = true;
-                } else {
-                    this.pacman.x = this.canvas.width / 2;
-                    this.pacman.y = this.canvas.height / 2;
+        // Collecte des power-ups
+        this.powerUps.forEach(powerUp => {
+            if (!powerUp.collected) {
+                const dx = this.pacman.x - powerUp.x;
+                const dy = this.pacman.y - powerUp.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < this.pacman.radius + powerUp.radius) {
+                    powerUp.collected = true;
+                    this.score += 50;
+                    // Rendre les fantômes vulnérables
+                    this.ghosts.forEach(ghost => ghost.setFrightened());
                 }
             }
         });
 
+        // Mise à jour des fantômes
+        this.ghosts.forEach(ghost => {
+            ghost.update(this.pacman, this.walls);
+            
+            // Collision avec les fantômes
+            const ghostDx = this.pacman.x - ghost.x;
+            const ghostDy = this.pacman.y - ghost.y;
+            const ghostDistance = Math.sqrt(ghostDx * ghostDx + ghostDy * ghostDy);
+            
+            if (ghostDistance < this.pacman.radius + ghost.radius) {
+                if (ghost.mode === 'frightened') {
+                    // Manger le fantôme
+                    ghost.x = this.canvas.width / 2;
+                    ghost.y = this.canvas.height / 2;
+                    this.score += 200;
+                } else {
+                    this.lives--;
+                    if (this.lives <= 0) {
+                        this.gameOver = true;
+                    } else {
+                        this.resetPositions();
+                    }
+                }
+            }
+        });
+
+        // Vérifier si tous les points sont collectés
         if (this.dots.every(dot => dot.collected)) {
             this.setupDots();
+            this.setupPowerUps();
         }
+    }
+
+    resetPositions() {
+        this.pacman.x = this.canvas.width / 2;
+        this.pacman.y = this.canvas.height / 2;
+        this.ghosts.forEach((ghost, i) => {
+            ghost.x = this.canvas.width / 2 + (i - 1.5) * 40;
+            ghost.y = this.canvas.height / 2;
+            ghost.mode = 'scatter';
+        });
     }
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Dessiner les murs
+        this.ctx.fillStyle = 'blue';
+        this.walls.forEach(wall => {
+            this.ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
+        });
 
         // Dessiner les points
         this.dots.forEach(dot => {
@@ -272,23 +402,19 @@ class Pacman {
             }
         });
 
-        // Dessiner les fantômes
-        this.ghosts.forEach(ghost => {
-            this.ctx.beginPath();
-            this.ctx.arc(ghost.x, ghost.y, 15, 0, Math.PI, true);
-            this.ctx.lineTo(ghost.x + 15, ghost.y + 15);
-            this.ctx.lineTo(ghost.x - 15, ghost.y + 15);
-            this.ctx.fillStyle = ghost.color;
-            this.ctx.fill();
-            this.ctx.closePath();
-
-            this.ctx.fillStyle = 'white';
-            this.ctx.beginPath();
-            this.ctx.arc(ghost.x - 5, ghost.y - 2, 3, 0, Math.PI * 2);
-            this.ctx.arc(ghost.x + 5, ghost.y - 2, 3, 0, Math.PI * 2);
-            this.ctx.fill();
-            this.ctx.closePath();
+        // Dessiner les power-ups
+        this.powerUps.forEach(powerUp => {
+            if (!powerUp.collected) {
+                this.ctx.beginPath();
+                this.ctx.arc(powerUp.x, powerUp.y, powerUp.radius, 0, Math.PI * 2);
+                this.ctx.fillStyle = 'yellow';
+                this.ctx.fill();
+                this.ctx.closePath();
+            }
         });
+
+        // Dessiner les fantômes
+        this.ghosts.forEach(ghost => ghost.draw(this.ctx));
 
         // Dessiner Pacman
         this.ctx.beginPath();
@@ -342,10 +468,9 @@ class Pacman {
         this.score = 0;
         this.lives = 3;
         this.gameOver = false;
-        this.pacman.x = this.canvas.width / 2;
-        this.pacman.y = this.canvas.height / 2;
+        this.resetPositions();
         this.setupDots();
-        this.setupGhosts();
+        this.setupPowerUps();
     }
 }
 
