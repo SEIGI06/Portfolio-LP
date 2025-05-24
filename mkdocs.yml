@@ -29,8 +29,11 @@ nav:
   - Administration Système:
     - Active Directory: active-directory/index.md
     - pfSense: pfsense/index.md
+    - GLPI: glpi/index.md
   - Sécurité:
     - Nmap: nmap/index.md
+  - Linux:
+    - Commandes Linux: linux/index.md
   - À propos: about.md
 
 markdown_extensions:
