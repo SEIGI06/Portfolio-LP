@@ -6,6 +6,11 @@
     margin-top: 20px;
 }
 
+/* Container spécifique pour la documentation */
+#documentation .container {
+    max-width: 1600px;
+}
+
 .documentation-header {
     text-align: center;
     margin-bottom: 20px;
