@@ -98,145 +98,154 @@ function initializeGame() {
 function createWalls() {
     walls = []; // Réinitialiser les murs
 
-    // Définition du labyrinthe basée sur l'image fournie
-    const maze = [
-        // Murs horizontaux extérieurs
-        {x: 0, y: 0, w: 28, h: 1},
-        {x: 0, y: 30, w: 28, h: 1},
+    // Définition du labyrinthe basé sur l'image GOOGLE Pacman
+    // Chaque objet représente un segment de mur {x, y, w, h} en unités de grille
+    const mazeStructure = [
+        // Cadre extérieur
+        {x: 0, y: 0, w: 28, h: 1}, // Haut
+        {x: 0, y: 30, w: 28, h: 1}, // Bas
+        {x: 0, y: 1, w: 1, h: 14}, // Gauche (haut)
+        {x: 0, y: 16, w: 1, h: 14}, // Gauche (bas)
+        {x: 27, y: 1, w: 1, h: 14}, // Droite (haut)
+        {x: 27, y: 16, w: 1, h: 14}, // Droite (bas)
 
-        // Murs verticaux extérieurs
-        {x: 0, y: 1, w: 1, h: 11},
-        {x: 0, y: 15, w: 1, h: 15},
-        {x: 27, y: 1, w: 1, h: 11},
-        {x: 27, y: 15, w: 1, h: 15},
+        // Tunnels (espaces vides dans le cadre extérieur)
+        // {x: 0, y: 14, w: 1, h: 2} est l'espace pour le tunnel gauche
+        // {x: 27, y: 14, w: 1, h: 2} est l'espace pour le tunnel droit
 
-        // Murs horizontaux intérieurs
-        {x: 2, y: 2, w: 5, h: 1},
-        {x: 9, y: 2, w: 4, h: 1},
-        {x: 15, y: 2, w: 4, h: 1},
-        {x: 21, y: 2, w: 5, h: 1},
+        // Structures intérieures
+        // Top block
+        {x: 2, y: 2, w: 5, h: 3}, // Top left
+        {x: 9, y: 2, w: 4, h: 3}, // Top middle-left
+        {x: 15, y: 2, w: 4, h: 3}, // Top middle-right
+        {x: 21, y: 2, w: 5, h: 3}, // Top right
 
-        {x: 2, y: 5, w: 5, h: 1},
-        {x: 9, y: 5, w: 2, h: 1},
-        {x: 17, y: 5, w: 2, h: 1},
-        {x: 21, y: 5, w: 5, h: 1},
+        // Side blocks (level below top)
+        {x: 2, y: 5, w: 5, h: 2}, // Mid-top left
+        {x: 9, y: 5, w: 2, h: 5}, // Vertical left of G
+        {x: 17, y: 5, w: 2, h: 5}, // Vertical right of G
+        {x: 21, y: 5, w: 5, h: 2}, // Mid-top right
 
-        {x: 2, y: 8, w: 5, h: 1},
-        {x: 9, y: 8, w: 4, h: 1},
-        {x: 15, y: 8, w: 4, h: 1},
-        {x: 21, y: 8, w: 5, h: 1},
+        // Horizontal separators
+        {x: 7, y: 8, w: 2, h: 1}, // Between top-left and G
+        {x: 19, y: 8, w: 2, h: 1}, // Between G and top-right
+        {x: 12, y: 8, w: 3, h: 1}, // Inside G (top bar)
+        {x: 12, y: 17, w: 3, h: 1}, // Inside G (bottom bar)
 
-        {x: 0, y: 11, w: 6, h: 1},
-        {x: 7, y: 11, w: 5, h: 1},
-        {x: 16, y: 11, w: 5, h: 1},
-        {x: 22, y: 11, w: 6, h: 1},
+        // Structures around G
+        {x: 7, y: 9, w: 2, h: 2}, // Vertical left of first O
+        {x: 19, y: 9, w: 2, h: 2}, // Vertical right of second O
 
-        {x: 7, y: 17, w: 5, h: 1},
-        {x: 16, y: 17, w: 5, h: 1},
+        // G shape
+        {x: 10, y: 6, w: 2, h: 1}, // Top horizontal of G
+        {x: 10, y: 6, w: 1, h: 4}, // Left vertical of G
+        {x: 10, y: 10, w: 2, h: 1}, // Bottom horizontal of G
+        {x: 11, y: 8, w: 1, h: 2}, // Inner vertical of G
+        {x: 11, y: 9, w: 2, h: 1}, // Inner horizontal of G arm
 
-        {x: 0, y: 20, w: 6, h: 1},
-        {x: 7, y: 20, w: 5, h: 1},
-        {x: 16, y: 20, w: 5, h: 1},
-        {x: 22, y: 20, w: 6, h: 1},
+        // O shapes
+        {x: 13, y: 6, w: 3, h: 1}, // First O top
+        {x: 12, y: 7, w: 1, h: 3}, // First O left
+        {x: 16, y: 7, w: 1, h: 3}, // First O right
+        {x: 13, y: 10, w: 3, h: 1}, // First O bottom
 
-        {x: 2, y: 23, w: 5, h: 1},
-        {x: 9, y: 23, w: 4, h: 1},
-        {x: 15, y: 23, w: 4, h: 1},
-        {x: 21, y: 23, w: 5, h: 1},
+        {x: 17, y: 6, w: 3, h: 1}, // Second O top
+        {x: 16, y: 7, w: 1, h: 3}, // Second O left (shared with first O right)
+        {x: 20, y: 7, w: 1, h: 3}, // Second O right
+        {x: 17, y: 10, w: 3, h: 1}, // Second O bottom
 
-        {x: 4, y: 26, w: 2, h: 1},
-        {x: 9, y: 26, w: 4, h: 1},
-        {x: 15, y: 26, w: 4, h: 1},
-        {x: 22, y: 26, w: 2, h: 1},
+        // Vertical bars (E and L)
+        {x: 22, y: 6, w: 1, h: 5}, // Left vertical of E
+        {x: 23, y: 6, w: 3, h: 1}, // Top horizontal of E
+        {x: 23, y: 8, w: 3, h: 1}, // Middle horizontal of E
+        {x: 23, y: 10, w: 3, h: 1}, // Bottom horizontal of E
 
-        {x: 0, y: 29, w: 3, h: 1},
-        {x: 25, y: 29, w: 3, h: 1},
+        {x: 2, y: 12, w: 5, h: 1}, // Horizontal below top-left block
+        {x: 7, y: 12, w: 2, h: 1}, // Horizontal to the right of the above
+        {x: 19, y: 12, w: 2, h: 1}, // Horizontal to the left of the right block
+        {x: 21, y: 12, w: 5, h: 1}, // Horizontal below top-right block
 
-        // Murs verticaux intérieurs
-        {x: 6, y: 2, w: 1, h: 4},
-        {x: 6, y: 7, w: 1, h: 5},
-        {x: 6, y: 14, w: 1, h: 4},
-        {x: 6, y: 19, w: 1, h: 5},
-        {x: 6, y: 25, w: 1, h: 4},
+        {x: 9, y: 12, w: 1, h: 3}, // Vertical left of first O
+        {x: 18, y: 12, w: 1, h: 3}, // Vertical right of second O
 
-        {x: 12, y: 2, w: 1, h: 4},
-        {x: 12, y: 7, w: 1, h: 2},
-        {x: 12, y: 10, w: 1, h: 2},
-        {x: 12, y: 13, w: 1, h: 5},
-        {x: 12, y: 19, w: 1, h: 5},
-        {x: 12, y: 22, w: 1, h: 5},
+        // Ghost cage
+        {x: 11, y: 13, w: 6, h: 1}, // Top bar of cage
+        {x: 11, y: 14, w: 1, h: 3}, // Left bar of cage
+        {x: 16, y: 14, w: 1, h: 3}, // Right bar of cage
+        {x: 11, y: 16, w: 6, h: 1}, // Bottom bar of cage
+        // Note: The opening is between (13, 14) and (15, 14) - this area should NOT have a wall
 
-        {x: 15, y: 2, w: 1, h: 4},
-        {x: 15, y: 7, w: 1, h: 2},
-        {x: 15, y: 10, w: 1, h: 2},
-        {x: 15, y: 13, w: 1, h: 5},
-        {x: 15, y: 19, w: 1, h: 5},
-        {x: 15, y: 22, w: 1, h: 5},
+        // Structures below cage
+        {x: 2, y: 18, w: 5, h: 3}, // Bottom-left block
+        {x: 9, y: 18, w: 4, h: 3}, // Bottom-middle-left block
+        {x: 15, y: 18, w: 4, h: 3}, // Bottom-middle-right block
+        {x: 21, y: 18, w: 5, h: 3}, // Bottom-right block
 
-        {x: 21, y: 2, w: 1, h: 4},
-        {x: 21, y: 7, w: 1, h: 5},
-        {x: 21, y: 14, w: 1, h: 4},
-        {x: 21, y: 19, w: 1, h: 5},
-        {x: 21, y: 25, w: 1, h: 4},
+        // Horizontal connectors below cage blocks
+        {x: 7, y: 20, w: 2, h: 1}, // Between bottom-left and middle-left
+        {x: 19, y: 20, w: 2, h: 1}, // Between bottom-middle-right and bottom-right
+        {x: 12, y: 20, w: 3, h: 1}, // Between bottom-middle blocks
 
-        {x: 3, y: 26, w: 1, h: 4},
-        {x: 24, y: 26, w: 1, h: 4},
+        // Structures at the bottom
+        {x: 0, y: 22, w: 3, h: 1}, // Far bottom left horizontal
+        {x: 25, y: 22, w: 3, h: 1}, // Far bottom right horizontal
+        {x: 3, y: 22, w: 1, h: 4}, // Vertical above tunnel entry
+        {x: 24, y: 22, w: 1, h: 4}, // Vertical above tunnel entry
+        {x: 4, y: 23, w: 2, h: 1}, // Horizontal next to vertical
+        {x: 22, y: 23, w: 2, h: 1}, // Horizontal next to vertical
 
-        // Cage des fantômes
-        {x: 11, y: 13, w: 6, h: 1},
-        {x: 11, y: 14, w: 1, h: 3},
-        {x: 16, y: 14, w: 1, h: 3},
-        {x: 11, y: 16, w: 6, h: 1},
-        {x: 13, y: 14, w: 2, h: 1}, // Entrée de la cage (espace vide)
+        {x: 6, y: 23, w: 1, h: 4}, // Vertical above bottom-left corner
+        {x: 21, y: 23, w: 1, h: 4}, // Vertical above bottom-right corner
+        {x: 7, y: 26, w: 5, h: 1}, // Horizontal below vertical
+        {x: 16, y: 26, w: 5, h: 1}, // Horizontal below vertical
 
-        // Connexions entre murs
-        {x: 9, y: 5, w: 4, h: 1},
-        {x: 15, y: 5, w: 4, h: 1},
-        {x: 9, y: 20, w: 4, h: 1},
-        {x: 15, y: 20, w: 4, h: 1},
-        {x: 12, y: 8, w: 3, h: 1},
-        {x: 12, y: 23, w: 3, h: 1},
+        {x: 12, y: 24, w: 3, h: 1}, // Horizontal below middle blocks
+        {x: 13, y: 25, w: 1, h: 2}, // Vertical middle bottom
 
-        // Tunnels (visuellement des espaces sans murs - assurons qu'il n'y a pas de murs à ces positions)
+        {x: 0, y: 25, w: 1, h: 5}, // Vertical outer left (bottom)
+        {x: 27, y: 25, w: 1, h: 5}, // Vertical outer right (bottom)
 
+        {x: 3, y: 28, w: 2, h: 1}, // Horizontal near bottom corners
+        {x: 23, y: 28, w: 2, h: 1}, // Horizontal near bottom corners
+
+        {x: 6, y: 29, w: 2, h: 1}, // Horizontal near bottom
+        {x: 19, y: 29, w: 2, h: 1}, // Horizontal near bottom
+        {x: 9, y: 29, w: 4, h: 1}, // Horizontal bottom-middle-left
+        {x: 15, y: 29, w: 4, h: 1}, // Horizontal bottom-middle-right
+
+        {x: 12, y: 27, w: 3, h: 1}, // Horizontal above vertical middle bottom
     ];
     
-    maze.forEach(wall => {
+    mazeStructure.forEach(wall => {
         for (let x = wall.x; x < wall.x + wall.w; x++) {
             for (let y = wall.y; y < wall.y + wall.h; y++) {
-                walls.push(new Wall(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE));
+                // S'assurer que nous ne créons pas de mur dans l'ouverture de la cage des fantômes
+                if (!((x >= 13 && x <= 14) && y === 13)) { // Vérifie si la position n'est PAS l'ouverture de la cage
+                     walls.push(new Wall(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE));
+                }
             }
         }
     });
 
-    // Les tunnels sont des espaces vides aux bords
-    // S'assurer qu'il n'y a pas de murs aux positions des tunnels (0, 14) et (27, 14)
-    walls = walls.filter(wall => 
-        !(wall.x === 0 * CELL_SIZE && wall.y === 14 * CELL_SIZE) &&
-        !(wall.x === 27 * CELL_SIZE && wall.y === 14 * CELL_SIZE)
-    );
+    // Les tunnels sont des espaces vides aux bords (0, 14) et (27, 14)
+    // Assurons-nous qu'il n'y a pas de murs à ces positions, bien que le cadre extérieur les exclut déjà.
+    // walls = walls.filter(wall => 
+    //     !(wall.x === 0 * CELL_SIZE && wall.y === 14 * CELL_SIZE) &&
+    //     !(wall.x === 27 * CELL_SIZE && wall.y === 14 * CELL_SIZE)
+    // );
 
-
-    // Ajuster les positions de départ si nécessaire en fonction du nouveau labyrinthe
-    // Pacman: (13.5, 26.5) est une position ouverte sous la cage (vérifié)
-    // Fantômes: Positions de départ (13.5, 14.5), (11.5, 14.5), (15.5, 14.5), (13.5, 16.5) sont à l'intérieur de la cage (vérifié)
-
-    // Recréer Pacman et les fantômes avec les positions vérifiées
-    pacman = new Pacman(13.5 * CELL_SIZE, 26.5 * CELL_SIZE); // Position vérifiée pour être ouverte
+    // Ajuster les positions de départ de Pacman et des fantômes pour le nouveau labyrinthe
+    // Pacman commence généralement en bas au centre (13.5, 26.5)
+    pacman = new Pacman(13.5 * CELL_SIZE, 26.5 * CELL_SIZE);
     
+    // Les fantômes commencent dans la cage
     ghosts = [
-        new Ghost(13.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_RED, 'red'), // Blinky
-        new Ghost(11.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_PINK, 'pink'), // Pinky (à gauche de Blinky)
-        new Ghost(15.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_CYAN, 'cyan'), // Inky (à droite de Blinky)
-        new Ghost(13.5 * CELL_SIZE, 16.5 * CELL_SIZE, COLORS.GHOST_ORANGE, 'orange') // Clyde (en dessous de Blinky)
+        new Ghost(13.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_RED, 'red'), // Blinky (dans la porte de la cage)
+        new Ghost(11.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_PINK, 'pink'), // Pinky (à gauche dans la cage)
+        new Ghost(15.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_CYAN, 'cyan'), // Inky (à droite dans la cage)
+        new Ghost(13.5 * CELL_SIZE, 16.5 * CELL_SIZE, COLORS.GHOST_ORANGE, 'orange') // Clyde (en bas dans la cage)
     ];
      ghosts.forEach(ghost => ghost.inCage = true);
-
-    // Supprimer les points et power-ups dans les murs de la nouvelle carte et ajuster leurs positions
-    dots = [];
-    powerUps = [];
-    createDots(); // Recréer les points pour le nouveau labyrinthe
-    createPowerUps(); // Recréer les power-ups pour le nouveau labyrinthe
 }
 
 // Création des points
@@ -246,28 +255,34 @@ function createDots() {
         for (let y = 1; y < GRID_HEIGHT - 1; y++) {
             const pixelX = x * CELL_SIZE + CELL_SIZE / 2; // Centrer le point dans la cellule
             const pixelY = y * CELL_SIZE + CELL_SIZE / 2; // Centrer le point dans la cellule
-            // Vérifier si la position n'est pas un mur et n'est pas dans la zone des fantômes
-            if (!isWall(pixelX, pixelY) && !(y >= 13 && y <= 17 && x >= 10 && x <= 17)) {
-                dots.push(new Dot(pixelX, pixelY));
+            // Vérifier si la position n'est pas un mur et n'est pas dans la zone des fantômes ou l'ouverture de la cage
+            // Zone des fantômes: y >= 13 && y <= 17 && x >= 10 && x <= 17
+            // Ouverture de la cage: (x >= 13 && x <= 14) && y === 13
+            if (!isWall(pixelX, pixelY) && !((y >= 13 && y <= 17) && (x >= 10 && x <= 17))) {
+                 dots.push(new Dot(pixelX, pixelY));
             }
         }
     }
+     // Assurer que les points sont retirés de la zone de la cage et de l'ouverture
+     dots = dots.filter(dot => !((dot.y >= 13 * CELL_SIZE && dot.y <= 17 * CELL_SIZE) && (dot.x >= 10 * CELL_SIZE && dot.x <= 17 * CELL_SIZE)));
 }
 
 // Création des power-ups
 function createPowerUps() {
     powerUps = []; // Réinitialiser les power-ups
+    // Positions des power-ups dans le labyrinthe GOOGLE Pacman (approximatif)
     const powerUpPositions = [
-        {x: 1.5, y: 3.5}, // Position basée sur la grille et centrée
+        {x: 1.5, y: 3.5}, 
         {x: GRID_WIDTH - 2.5, y: 3.5},
-        {x: 1.5, y: GRID_HEIGHT - 3.5},
-        {x: GRID_WIDTH - 2.5, y: GRID_HEIGHT - 3.5}
+        {x: 1.5, y: GRID_HEIGHT - 6.5}, // Ajusté pour le nouveau labyrinthe
+        {x: GRID_WIDTH - 2.5, y: GRID_HEIGHT - 6.5} // Ajusté pour le nouveau labyrinthe
     ];
     
     powerUpPositions.forEach(pos => {
-         const pixelX = pos.x * CELL_SIZE; // Positionnement basé sur la grille
-         const pixelY = pos.y * CELL_SIZE; // Positionnement basé sur la grille
-        if (!isWall(pixelX, pixelY)) {
+         const pixelX = pos.x * CELL_SIZE; 
+         const pixelY = pos.y * CELL_SIZE; 
+        // Vérifier si la position n'est pas un mur avant d'ajouter le power-up
+        if (!isWall(pixelX + CELL_SIZE/2, pixelY + CELL_SIZE/2)) { // Vérifier le centre de la cellule
             powerUps.push(new PowerUp(pixelX, pixelY));
         }
     });
@@ -276,8 +291,9 @@ function createPowerUps() {
 // Vérification des collisions avec les murs
 function isWall(x, y) {
      // Vérifie si le point donné (par exemple, le centre de l'entité) est à l'intérieur d'un mur
-     // Ajout d'une petite tolérance pour éviter les blocages sur les bords
-     const tolerance = 1;
+     // Utilise une petite tolérance pour un mouvement plus fluide
+     const tolerance = 5; // Augmenter la tolérance si nécessaire
+
      return walls.some(wall => 
         x > wall.x + tolerance && 
         x < wall.x + wall.w - tolerance &&
@@ -552,11 +568,11 @@ class Ghost {
     }
     
     update() {
-        // Logique de sortie de la cage (pour les fantômes qui ne sont PAS Blinky initialement)
+        // Logique de sortie de la cage
         if (this.inCage) {
-             // Fantômes dans la cage se déplacent vers leur point initial dans la porte, puis vers la sortie
-             const targetX = (this.type === 'red') ? this.exitCageTarget.x : 13.5 * CELL_SIZE; // Blinky va direct à la sortie, autres au centre porte
-             const targetY = (this.type === 'red') ? this.exitCageTarget.y : 14.5 * CELL_SIZE; // Blinky va direct à la sortie, autres au centre porte
+             // Déplacer les fantômes dans la cage vers la cible de sortie de la cage
+             const targetX = this.exitCageTarget.x;
+             const targetY = this.exitCageTarget.y;
 
              const angleToTarget = atan2(targetY - this.y, targetX - this.x);
              const nextX = this.x + cos(angleToTarget) * this.speed;
@@ -566,18 +582,12 @@ class Ghost {
               this.x = nextX;
               this.y = nextY;
 
-             // Si le fantôme atteint presque sa cible de sortie ou de regroupement dans la porte
+             // Si le fantôme atteint presque la sortie de la cage
              if (dist(this.x, this.y, targetX, targetY) < this.speed * 1.5) { // Utiliser une petite tolérance
                  this.x = targetX; // Snap to target
                  this.y = targetY;
-                 if (this.type !== 'red' && targetX === 13.5 * CELL_SIZE && targetY === 14.5 * CELL_SIZE) {
-                     // Si pas Blinky et atteint le centre de la porte, prochaine cible est la sortie
-                      this.exitCageTarget = {x: 13.5 * CELL_SIZE, y: 12.5 * CELL_SIZE};
-                 } else if (targetX === this.exitCageTarget.x && targetY === this.exitCageTarget.y) {
-                     // Si atteint la sortie de la cage
-                      this.inCage = false; // Le fantôme est sorti
-                      this.mode = 'scatter'; // Revenir en mode scatter (ou chase selon le design)
-                 }
+                 this.inCage = false; // Le fantôme est sorti
+                 this.mode = 'scatter'; // Revenir en mode scatter (ou chase selon le design)
              }
             return; // Ne pas appliquer la logique de poursuite/dispersion tant qu'il est dans la cage ou en cours de sortie interne
         }
@@ -590,7 +600,8 @@ class Ghost {
              const nextY = this.y + sin(angleToPostExit) * this.speed;
 
              // Vérifier les collisions avec les murs avant de bouger vers le point post-sortie
-             if (!isWall(nextX, nextY)) {
+             // Permettre le passage à travers la barrière de la cage s'ils remontent
+             if (!isWall(nextX, nextY) || (this.y >= 13 * CELL_SIZE && nextY < 13 * CELL_SIZE)) {
                   this.x = nextX;
                   this.y = nextY;
              } else {
@@ -618,7 +629,7 @@ class Ghost {
 
         if (this.isFrightened) {
             // Mouvement aléatoire en mode frightened
-             const possibleDirections = [-PI, -PI/2, 0, PI/2]; // gauche, haut, droite, bas
+             const possibleDirections = [-PI, -PI/2, 0, PI/2]; // gauche, haut, droite, bas (en radians)
              let chosenDirection = random(possibleDirections);
              targetX = this.x + cos(chosenDirection) * CELL_SIZE;
              targetY = this.y + sin(chosenDirection) * CELL_SIZE;
@@ -648,12 +659,12 @@ class Ghost {
                     break;
             }
         } else if (this.mode === 'scatter') {
-            // Cibles pour le mode scatter (coins du labyrinthe)
+            // Cibles pour le mode scatter (coins du labyrinthe - ajusté pour le nouveau labyrinthe)
              switch(this.type) {
-                 case 'red': targetX = GRID_WIDTH * CELL_SIZE; targetY = 0; break;
-                 case 'pink': targetX = 0; targetY = 0; break;
-                 case 'cyan': targetX = GRID_WIDTH * CELL_SIZE; targetY = GRID_HEIGHT * CELL_SIZE; break;
-                 case 'orange': targetX = 0; targetY = GRID_HEIGHT * CELL_SIZE; break;
+                 case 'red': targetX = GRID_WIDTH * CELL_SIZE; targetY = 0; break; // Top right
+                 case 'pink': targetX = 0; targetY = 0; break; // Top left
+                 case 'cyan': targetX = GRID_WIDTH * CELL_SIZE; targetY = GRID_HEIGHT * CELL_SIZE; break; // Bottom right
+                 case 'orange': targetX = 0; targetY = GRID_HEIGHT * CELL_SIZE; break; // Bottom left
              }
         }
         
@@ -678,7 +689,8 @@ class Ghost {
 
             for (let dir of possibleDirections) {
                  // Éviter de faire demi-tour (angle différent de PI ou -PI)
-                 if (abs(dir - this.direction) !== PI) {
+                 // Ajouter une petite tolérance pour les comparaisons d'angles flottants
+                 if (abs(dir - this.direction) > 0.1 && abs(dir - this.direction) < PI * 1.9) { // Moins strict que !== PI
                     const testX = this.x + cos(dir) * this.speed;
                     const testY = this.y + sin(dir) * this.speed;
                          // Vérifier si la direction alternative n'est pas un mur
