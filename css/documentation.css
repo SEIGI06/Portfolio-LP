@@ -27,6 +27,7 @@
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     margin-top: 15px;
+    height: calc(100vh - 60px); /* Hauteur totale moins la hauteur du header */
 }
 
 /* Tentative de masquer la barre de navigation de l'iframe */
@@ -119,6 +120,21 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    #documentation {
+        height: calc(100vh - 60px); /* Ajustement pour le header fixe */
+    }
+
+    .documentation-container {
+        height: calc(100vh - 120px); /* Ajustement pour le header et le footer */
+        margin-top: 60px; /* Espace pour le header fixe */
+        border: none;
+        box-shadow: none;
+    }
+
+    .documentation-page {
+        padding-top: 0;
+    }
+
     .documentation-tree {
         margin: 1rem;
     }
