@@ -126,7 +126,12 @@ nav {
     margin-bottom: 2rem;
 }
 
-.logo-container .logo {
+.logo-link {
+    display: inline-block;
+    text-decoration: none;
+}
+
+.logo {
     max-width: 200px;
     height: auto;
     border-radius: 10px;
@@ -134,7 +139,7 @@ nav {
     transition: transform var(--transition-speed);
 }
 
-.logo-container .logo:hover {
+.logo:hover {
     transform: scale(1.05);
 }
 
