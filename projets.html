@@ -7,28 +7,31 @@
     <meta name="keywords" content="Projets, BTS SIO, SISR, Développement, Administration Système">
     <meta name="author" content="Lilian Peyr">
     <title>Mes Projets - Portfolio BTS SIO SISR</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
     <script src="js/header.js" defer></script>
     <script src="js/main.js" defer></script>
 </head>
 <body>
-    <main>
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+    <main id="main-content" role="main">
         <section id="projets" class="section">
             <div class="container">
                 <h1>Projets</h1>
                 <div class="projects-grid">
-                    <article class="project-card">
-                        <div class="project-image">
-                            <div class="placeholder-image" role="img" aria-label="Image du projet">Image Projet</div>
+                    <article class="card">
+                        <div class="card__image">
+                            <div class="card__placeholder" role="img" aria-label="Image du projet">Image Projet</div>
                         </div>
-                        <div class="project-info">
-                            <h3>Nom du Projet</h3>
-                            <p>Description du projet</p>
-                            <div class="project-tech" role="list">
+                        <div class="card__content">
+                            <h3 class="card__title">Nom du Projet</h3>
+                            <p class="card__description">Description du projet</p>
+                            <div class="card__tech" role="list">
                                 <span role="listitem">Technologie 1</span>
                                 <span role="listitem">Technologie 2</span>
                             </div>
-                            <a href="#" class="btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Voir le projet sur GitHub">Voir sur GitHub</a>
+                            <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Voir le projet sur GitHub">Voir sur GitHub</a>
                         </div>
                     </article>
                 </div>
@@ -36,13 +39,13 @@
         </section>
     </main>
 
-    <footer>
+    <footer class="footer" role="contentinfo">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-links">
+            <div class="footer__content">
+                <nav class="footer__links" aria-label="Liens de réseaux sociaux">
                     <a href="https://github.com/seigi06" target="_blank" rel="noopener noreferrer" aria-label="Profil GitHub">GitHub</a>
                     <a href="https://www.linkedin.com/in/lilian-peyr/" target="_blank" rel="noopener noreferrer" aria-label="Profil LinkedIn">LinkedIn</a>
-                </div>
+                </nav>
                 <p>&copy; 2024 - Tous droits réservés</p>
             </div>
         </div>

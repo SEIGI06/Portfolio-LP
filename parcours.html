@@ -7,40 +7,43 @@
     <meta name="description" content="Parcours académique et professionnel - Portfolio BTS SIO SISR">
     <meta name="keywords" content="Parcours, Formation, BTS SIO, SISR, Lycée Félix Le Dantec, Lycée Chaptal">
     <meta name="author" content="Lilian Peyr">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
     <script src="js/header.js" defer></script>
     <script src="js/main.js" defer></script>
 </head>
 <body>
-    <main>
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+    <main id="main-content" role="main">
         <section id="parcours" class="section">
             <div class="container">
                 <h1>Mon Parcours</h1>
                 <div class="certifications-grid">
-                    <article class="certification-card">
-                        <div class="certification-image">
-                            <img src="assets/images/slide01.webp" alt="Lycée Félix Le Dantec à Lannion" class="certification-badge" loading="lazy">
+                    <article class="card">
+                        <div class="card__image">
+                            <img src="assets/images/slide01.webp" alt="Lycée Félix Le Dantec à Lannion" loading="lazy">
                         </div>
-                        <div class="certification-info">
-                            <h3>BTS SIO option SISR</h3>
+                        <div class="card__content">
+                            <h3 class="card__title">BTS SIO option SISR</h3>
                             <p>Lycée Félix Le Dantec - Lannion</p>
                             <p>Formation en Systèmes d'Information et Réseaux</p>
                             <p>En cours d'obtention</p>
-                            <p class="certification-description">
+                            <p class="card__description">
                                 Formation complète en administration système et réseaux, cybersécurité et gestion d'infrastructure.
                             </p>
                         </div>
                     </article>
-                    <article class="certification-card">
-                        <div class="certification-image">
-                            <img src="assets/images/lycee-chaptal-vue-arriere.webp" alt="Lycée Chaptal à Saint-Brieuc" class="certification-badge" loading="lazy">
+                    <article class="card">
+                        <div class="card__image">
+                            <img src="assets/images/lycee-chaptal-vue-arriere.webp" alt="Lycée Chaptal à Saint-Brieuc" loading="lazy">
                         </div>
-                        <div class="certification-info">
-                            <h3>Lycée Chaptal</h3>
+                        <div class="card__content">
+                            <h3 class="card__title">Lycée Chaptal</h3>
                             <p>Saint-Brieuc</p>
                             <p>Formation générale</p>
                             <p>Mention Très Bien</p>
-                            <p class="certification-description">
+                            <p class="card__description">
                                 Formation générale avec un focus sur les mathématiques et les sciences.
                             </p>
                         </div>
@@ -50,13 +53,13 @@
         </section>
     </main>
 
-    <footer>
+    <footer class="footer" role="contentinfo">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-links">
+            <div class="footer__content">
+                <nav class="footer__links" aria-label="Liens de réseaux sociaux">
                     <a href="https://github.com/seigi06" target="_blank" rel="noopener noreferrer" aria-label="Profil GitHub">GitHub</a>
                     <a href="https://www.linkedin.com/in/lilian-peyr/" target="_blank" rel="noopener noreferrer" aria-label="Profil LinkedIn">LinkedIn</a>
-                </div>
+                </nav>
                 <p>&copy; 2024 - Tous droits réservés</p>
             </div>
         </div>
