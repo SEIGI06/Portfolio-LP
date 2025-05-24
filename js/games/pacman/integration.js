@@ -13,7 +13,7 @@ document.body.appendChild(gameWindow);
 
 // Création de l'iframe pour le jeu
 const gameFrame = document.createElement('iframe');
-gameFrame.src = 'js/games/pacman/index.html';
+gameFrame.src = './js/games/pacman/index.html';
 gameFrame.style.width = '100%';
 gameFrame.style.height = '100%';
 gameFrame.style.border = 'none';
