@@ -8,7 +8,7 @@ Cette documentation regroupe les différentes ressources et guides techniques po
 - [Active Directory](active-directory/index.md) - Gestion des utilisateurs et des politiques de groupe
 - [pfSense](pfsense/index.md) - Configuration et administration du pare-feu
 - [GLPI](glpi/index.md) - Gestion de parc informatique et helpdesk
-- [Proxmox](proxmox/index.md) - Virtualisation et gestion des machines virtuelles
+- [Proxmox](Proxmox/index.md) - Virtualisation et gestion des machines virtuelles
 
 ### Sécurité
 - [Nmap](nmap/index.md) - Guide d'utilisation des commandes Nmap
