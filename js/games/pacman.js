@@ -125,11 +125,12 @@ class Pacman {
         this.dots = [];
         this.ghosts = [];
         this.gameOver = false;
+        this.animationId = null;
+        this.isRunning = false;
+        
         this.setupDots();
         this.setupGhosts();
         this.setupEventListeners();
-        this.lastTime = performance.now();
-        this.gameLoop(this.lastTime);
     }
 
     setupDots() {
@@ -158,22 +159,30 @@ class Pacman {
     }
 
     setupEventListeners() {
-        window.addEventListener('keydown', (e) => {
+        const handleKeyDown = (e) => {
             if (this.keys.hasOwnProperty(e.key)) {
                 this.keys[e.key] = true;
-                console.log('Touche pressée:', e.key);
             }
-        });
+        };
 
-        window.addEventListener('keyup', (e) => {
+        const handleKeyUp = (e) => {
             if (this.keys.hasOwnProperty(e.key)) {
                 this.keys[e.key] = false;
             }
-        });
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+
+        // Nettoyer les événements quand le jeu est arrêté
+        this.cleanup = () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+        };
     }
 
     update() {
-        if (this.gameOver) return;
+        if (this.gameOver || !this.isRunning) return;
 
         // Mise à jour de la position de Pacman
         if (this.keys.ArrowUp) {
@@ -218,22 +227,18 @@ class Pacman {
 
         // Mise à jour des fantômes
         this.ghosts.forEach(ghost => {
-            // Mouvement aléatoire avec tendance à suivre Pacman
             const dx = this.pacman.x - ghost.x;
             const dy = this.pacman.y - ghost.y;
             const angle = Math.atan2(dy, dx);
             
-            // Ajouter un peu d'aléatoire au mouvement
             ghost.direction += (angle - ghost.direction) * 0.1 + (Math.random() - 0.5) * 0.2;
             
             ghost.x += Math.cos(ghost.direction) * ghost.speed;
             ghost.y += Math.sin(ghost.direction) * ghost.speed;
 
-            // Limites du canvas pour les fantômes
             ghost.x = Math.max(20, Math.min(this.canvas.width - 20, ghost.x));
             ghost.y = Math.max(20, Math.min(this.canvas.height - 20, ghost.y));
             
-            // Collision avec les fantômes
             const ghostDx = this.pacman.x - ghost.x;
             const ghostDy = this.pacman.y - ghost.y;
             const ghostDistance = Math.sqrt(ghostDx * ghostDx + ghostDy * ghostDy);
@@ -242,21 +247,18 @@ class Pacman {
                 if (this.lives <= 0) {
                     this.gameOver = true;
                 } else {
-                    // Réinitialiser la position de Pacman
                     this.pacman.x = this.canvas.width / 2;
                     this.pacman.y = this.canvas.height / 2;
                 }
             }
         });
 
-        // Vérifier si tous les points sont collectés
         if (this.dots.every(dot => dot.collected)) {
             this.setupDots();
         }
     }
 
     draw() {
-        // Effacer le canvas
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Dessiner les points
@@ -280,7 +282,6 @@ class Pacman {
             this.ctx.fill();
             this.ctx.closePath();
 
-            // Yeux
             this.ctx.fillStyle = 'white';
             this.ctx.beginPath();
             this.ctx.arc(ghost.x - 5, ghost.y - 2, 3, 0, Math.PI * 2);
@@ -309,7 +310,6 @@ class Pacman {
         this.ctx.fillText(`Score: ${this.score}`, 10, 30);
         this.ctx.fillText(`Vies: ${this.lives}`, 10, 60);
 
-        // Afficher Game Over si nécessaire
         if (this.gameOver) {
             this.ctx.fillStyle = 'red';
             this.ctx.font = '48px Arial';
@@ -320,34 +320,57 @@ class Pacman {
         }
     }
 
-    gameLoop(timestamp) {
-        // Calculer le delta time
-        const deltaTime = timestamp - this.lastTime;
-        this.lastTime = timestamp;
-
-        // Mettre à jour et dessiner seulement si assez de temps s'est écoulé
-        if (deltaTime > 16) { // environ 60 FPS
-            this.update();
-            this.draw();
+    start() {
+        if (!this.isRunning) {
+            this.isRunning = true;
+            this.animationId = setInterval(() => {
+                this.update();
+                this.draw();
+            }, 16);
         }
+    }
 
-        requestAnimationFrame((timestamp) => this.gameLoop(timestamp));
+    stop() {
+        if (this.isRunning) {
+            this.isRunning = false;
+            clearInterval(this.animationId);
+            this.animationId = null;
+        }
+    }
+
+    reset() {
+        this.score = 0;
+        this.lives = 3;
+        this.gameOver = false;
+        this.pacman.x = this.canvas.width / 2;
+        this.pacman.y = this.canvas.height / 2;
+        this.setupDots();
+        this.setupGhosts();
     }
 }
 
-// Initialisation du jeu
-window.addEventListener('load', () => {
-    console.log('Chargement de la page');
+// Attendre que le DOM soit complètement chargé
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM chargé, initialisation du jeu Pacman');
+    
+    // Vérifier si le canvas est supporté
     const canvas = document.createElement('canvas');
+    if (!canvas.getContext) {
+        console.error('Canvas non supporté par votre navigateur');
+        return;
+    }
+
+    // Configuration du canvas
     canvas.width = 400;
     canvas.height = 400;
     canvas.style.border = '2px solid black';
-    canvas.style.display = 'none'; // Caché par défaut
+    canvas.style.display = 'none';
+    canvas.style.backgroundColor = 'black';
     document.body.appendChild(canvas);
-    
+
     let game = null;
 
-    // Ajouter un bouton pour afficher/masquer le jeu
+    // Création du bouton
     const toggleButton = document.createElement('button');
     toggleButton.textContent = '🎮 Pacman';
     toggleButton.style.position = 'fixed';
@@ -367,14 +390,19 @@ window.addEventListener('load', () => {
             canvas.style.position = 'fixed';
             canvas.style.bottom = '80px';
             canvas.style.right = '20px';
-            canvas.style.backgroundColor = 'black';
             canvas.style.zIndex = '999';
+            
             if (!game) {
-                console.log('Initialisation du jeu');
                 game = new Pacman(canvas);
+            } else {
+                game.reset();
             }
+            game.start();
         } else {
             canvas.style.display = 'none';
+            if (game) {
+                game.stop();
+            }
         }
     });
 
