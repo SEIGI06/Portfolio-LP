@@ -247,24 +247,29 @@ function createPowerUps() {
 }
 
 // Vérification des collisions avec les murs
-function isWall(x, y) {
-     // Convertir les coordonnées pixel en coordonnées de grille
-     const gridX = Math.floor(x / CELL_SIZE);
-     const gridY = Math.floor(y / CELL_SIZE);
+function isWall(x, y, w = CELL_SIZE, h = CELL_SIZE) {
+     // Vérifie si la boîte définie par (x, y, w, h) chevauche l'un des murs.
+     // Nous allons utiliser collideRectRect de p5.js
 
-     // Vérifier si les coordonnées de grille sont hors limites
-     if (gridX < 0 || gridX >= GRID_WIDTH || gridY < 0 || gridY >= GRID_HEIGHT) {
-         // Check for tunnels explicitly at the edges
-         const isTunnel = (gridX < 0 && gridY === Math.floor((GRID_HEIGHT / 2) - 0.5)) || // Left tunnel
-                          (gridX >= GRID_WIDTH && gridY === Math.floor((GRID_HEIGHT / 2) - 0.5)); // Right tunnel
-         return !isTunnel; // If out of bounds, it's a wall unless it's a tunnel location
+     for (const wall of walls) {
+         if (collideRectRect(x, y, w, h, wall.x, wall.y, wall.w, wall.h)) {
+             return true; // Collision détectée avec un mur
+         }
      }
 
-     // Vérifier si la cellule de grille correspond à un mur dans la liste des murs
-     return walls.some(wall =>
-        gridX === Math.floor(wall.x / CELL_SIZE) &&
-        gridY === Math.floor(wall.y / CELL_SIZE)
-    );
+     // Vérifier aussi les limites de la grille comme des murs (sauf les tunnels)
+     // Tunnels sont approximativement au milieu de la hauteur
+     const tunnelYStart = Math.floor((GRID_HEIGHT / 2) - 1) * CELL_SIZE; // Approximation de la ligne supérieure du tunnel
+     const tunnelYEnd = Math.floor((GRID_HEIGHT / 2) + 1) * CELL_SIZE; // Approximation de la ligne inférieure du tunnel
+
+     const isAtTunnelHeight = (y + h > tunnelYStart && y < tunnelYEnd);
+
+     if (x < 0 && !isAtTunnelHeight) return true; // Collision avec bord gauche (pas un tunnel)
+     if (x + w > GAME_WIDTH && !isAtTunnelHeight) return true; // Collision avec bord droit (pas un tunnel)
+     if (y < 0) return true; // Collision avec bord supérieur
+     if (y + h > GAME_HEIGHT) return true; // Collision avec bord inférieur
+
+     return false; // Aucune collision
 }
 
 // Mise à jour du jeu
@@ -558,8 +563,11 @@ class Ghost {
              const nextX = this.x + cos(angleToTarget) * this.speed;
              const nextY = this.y + sin(angleToTarget) * this.speed;
 
-              this.x = nextX;
-              this.y = nextY;
+             // Check for wall collision for the ghost's bounding box at the next position
+             if (!isWall(nextX - this.size/2, nextY - this.size/2, this.size, this.size)) {
+                  this.x = nextX;
+                  this.y = nextY;
+             }
 
              // If reached the exit target
              if (dist(this.x, this.y, targetX, targetY) < this.speed) { // Further reduced tolerance for snapping
@@ -574,21 +582,19 @@ class Ghost {
 
         // Once out of the cage, move towards the post-exit target if not there yet
          if (dist(this.x, this.y, this.postExitTarget.x, this.postExitTarget.y) > this.speed) { // Further reduced tolerance
-             const angleToPostExit = atan2(this.postExitTarget.y - this.y, this.postExitTarget.x - this.x);
-             const nextX = this.x + cos(angleToPostExit) * this.speed;
-             const nextY = this.y + sin(angleToPostExit) * this.speed;
-
              // Allow upward movement from the cage exit regardless of wall presence check at that specific point
              // Simplified check for moving upwards out of the cage
-             const movingUpOutOfCageArea = this.y >= (14 * CELL_SIZE - this.speed) && nextY < (14 * CELL_SIZE) && this.x > (13 * CELL_SIZE - CELL_SIZE/4) && this.x < (15 * CELL_SIZE + CELL_SIZE/4);
+             const movingUpOutOfCageArea = this.y >= (14 * CELL_SIZE - this.speed) && nextY < (14 * CELL_SIZE) && this.x > (13 * CELL_SIZE - CELL_SIZE/2) && this.x < (15 * CELL_SIZE + CELL_SIZE/2); // Use full cell size tolerance
 
-             if (!isWall(nextX, nextY) || movingUpOutOfCageArea) {
+             // Check for wall collision for the ghost's bounding box at the next position, or allow movement if exiting cage upwards
+             if (!isWall(nextX - this.size/2, nextY - this.size/2, this.size, this.size) || movingUpOutOfCageArea) {
                   this.x = nextX;
                   this.y = nextY;
              } else {
                  // If blocked, try moving purely upwards as a fallback
                  const checkUpY = this.y + sin(-PI/2) * this.speed;
-                  if (!isWall(this.x, checkUpY)) {
+                 // Check collision for moving purely upwards
+                  if (!isWall(this.x - this.size/2, checkUpY - this.size/2, this.size, this.size)) { // Pass bounding box
                        this.y = checkUpY;
                        this.direction = -PI/2; // Set direction to upwards
                   } else {
@@ -652,106 +658,96 @@ class Ghost {
              }
         }
 
-        // --- Advanced Movement Logic ---
+        // --- Grid Alignment and Movement Logic ---
+        const gridTolerance = this.speed / 2; // Tolerance for being considered aligned with grid center
+        const isAligned = (Math.abs((this.x % CELL_SIZE) - CELL_SIZE / 2) < gridTolerance) &&\
+                          (Math.abs((this.y % CELL_SIZE) - CELL_SIZE / 2) < gridTolerance);
 
-        // Possible directions (angles in radians)
-        const directions = [0, PI/2, PI, -PI/2]; // Right, Down, Left, Up
-        let bestDirection = this.direction; // Keep current direction as default
-        let minDistanceToTarget = Infinity;
-        let canMoveInCurrentDirection = false;
+        // If ghost is aligned or close to aligned, potentially change direction
+        if (isAligned) {
+             // Snap to grid center to avoid minor misalignment issues
+             this.x = round(this.x / CELL_SIZE) * CELL_SIZE + CELL_SIZE / 2;
+             this.y = round(this.y / CELL_SIZE) * CELL_SIZE + CELL_SIZE / 2;
 
-        // Evaluate each possible direction
-        let validMoves = [];
-        const currentGridX = Math.floor(this.x / CELL_SIZE);
-        const currentGridY = Math.floor(this.y / CELL_SIZE);
+            const directions = [0, PI/2, PI, -PI/2]; // Right, Down, Left, Up
+            let possibleMoves = [];
 
-        for (const angle of directions) {
-            const nextX = this.x + cos(angle) * this.speed;
-            const nextY = this.y + sin(angle) * this.speed;
+            for (const angle of directions) {
+                // Calculate potential next grid cell center
+                const nextCellX = this.x + cos(angle) * CELL_SIZE;
+                const nextCellY = this.y + sin(angle) * CELL_SIZE;
 
-            // Check for wall collision at the next position's bounding box corners
-            // Consider a simplified bounding box check around the ghost's next position
-            const corners = [
-                 { x: nextX - CELL_SIZE / 4, y: nextY - CELL_SIZE / 4 },
-                 { x: nextX + CELL_SIZE / 4, y: nextY - CELL_SIZE / 4 },
-                 { x: nextX - CELL_SIZE / 4, y: nextY + CELL_SIZE / 4 },
-                 { x: nextX + CELL_SIZE / 4, y: nextY + CELL_SIZE / 4 }
-            ];
-
-            let collision = false;
-            for(const corner of corners) {
-                if (isWall(corner.x, corner.y)) {
-                    collision = true;
-                    break;
-                }
+                 // Check for wall collision in the next cell's area
+                 if (!isWall(nextCellX - CELL_SIZE/2, nextCellY - CELL_SIZE/2, CELL_SIZE, CELL_SIZE)) {
+                     const isReversing = abs(angle - (this.direction + PI)) < 0.1 || abs(angle - (this.direction - PI)) < 0.1;
+                      if (!isReversing || this.isFrightened) { // Allow reversing if frightened or as a last resort
+                         possibleMoves.push({ angle: angle, nextX: nextCellX, nextY: nextCellY });
+                      }
+                 }
             }
 
-            const isReversing = abs(angle - (this.direction + PI)) < 0.1 || abs(angle - (this.direction - PI)) < 0.1;
+            // If frightened, pick a random valid move from possible grid-aligned moves
+            if (this.isFrightened && possibleMoves.length > 0) {
+                 const chosenMove = random(possibleMoves);
+                 this.direction = chosenMove.angle;
+            } else if (!this.isFrightened && possibleMoves.length > 0) { // If not frightened, choose the best grid-aligned move
+                let bestAngle = this.direction; // Default to current direction if valid
+                let minDistance = Infinity;
 
-            // If not a wall and not a direct reversal (unless frightened), it's a valid move
-            if (!collision && (!isReversing || this.isFrightened)) {
-                validMoves.push({ angle: angle, nextX: nextX, nextY: nextY });
-                if (abs(angle - this.direction) < 0.1) { // Check if current direction is valid
-                    canMoveInCurrentDirection = true;
+                // Find the move that minimizes distance to target (among valid non-reversing moves initially)
+                let nonReversingMoves = possibleMoves.filter(move => abs(move.angle - (this.direction + PI)) > 0.1 && abs(move.angle - (this.direction - PI)) > 0.1);
+
+                if (nonReversingMoves.length > 0) {
+                     // Sort non-reversing moves by distance to target
+                     nonReversingMoves.sort((a, b) => dist(a.nextX, a.nextY, targetX, targetY) - dist(b.nextX, b.nextY, targetX, targetY));
+                     bestAngle = nonReversingMoves[0].angle; // Choose the non-reversing move closest to target
+                } else {
+                    // If only reversing move is possible, take it
+                    if(possibleMoves.length > 0) {
+                        bestAngle = possibleMoves[0].angle; // This will be the reverse move's angle
+                    }
                 }
+                this.direction = bestAngle; // Update ghost direction
             }
+            // If no valid moves from this aligned position, ghost stays in this cell directionless until a path opens
         }
 
-        // If frightened, pick a random valid move
-        if (this.isFrightened && validMoves.length > 0) {
-             const chosenMove = random(validMoves);
-             this.direction = chosenMove.angle;
-             this.x = chosenMove.nextX;
-             this.y = chosenMove.nextY;
+        // Move in the current direction if it's not blocked by a wall for the next small step
+        const nextStepX = this.x + cos(this.direction) * this.speed;
+        const nextStepY = this.y + sin(this.direction) * this.speed;
 
-        } else if (!this.isFrightened) { // If not frightened, choose the best move
-
-            // Filter valid moves: keep only the best options towards the target
-            if (validMoves.length > 0) {
-                 bestDirection = this.direction; // Start with current direction as best if it's valid
-                 minDistanceToTarget = dist(this.x + cos(bestDirection) * this.speed, this.y + sin(bestDirection) * this.speed, targetX, targetY);
-
-                 let consideredMoves = [];
-
-                 // Prioritize current direction if valid
-                 const currentMove = validMoves.find(move => abs(move.angle - this.direction) < 0.1);
-                 if (currentMove) consideredMoves.push(currentMove);
-
-                 // Then consider other valid moves that are not reversing
-                 const nonReversingMoves = validMoves.filter(move => abs(move.angle - (this.direction + PI)) > 0.1 && abs(move.angle - (this.direction - PI)) > 0.1);
-                 // Sort non-reversing moves by distance to target (closest first)
-                 nonReversingMoves.sort((a, b) => dist(a.nextX, a.nextY, targetX, targetY) - dist(b.nextX, b.nextY, targetX, targetY));
-                 consideredMoves = consideredMoves.concat(nonReversingMoves);
-
-                 // If no non-reversing moves are valid or current is blocked, consider reversing as a last resort
-                 if (consideredMoves.length === 0 && validMoves.length > 0) {
-                     const reverseMove = validMoves.find(move => abs(move.angle - (this.direction + PI)) < 0.1 || abs(move.angle - (this.direction - PI)) < 0.1);
-                     if (reverseMove) consideredMoves.push(reverseMove);
-                 }
-
-                 // Choose the first move in the prioritized list
-                 if (consideredMoves.length > 0) {
-                     const chosenMove = consideredMoves[0];
-                     this.direction = chosenMove.angle;
-                     this.x = chosenMove.nextX;
-                     this.y = chosenMove.nextY;
-                 } else {
-                    // If no valid moves at all, ghost stays put
-                 }
-            } else {
-                // If no valid moves at all from current position, ghost stays put
-            }
+        // Check wall collision for the next small step using bounding box
+        if (!isWall(nextStepX - this.size/2, nextStepY - this.size/2, this.size, this.size)) {
+            this.x = nextStepX;
+            this.y = nextStepY;
+        } else {
+            // If next step is blocked, snap back to the last valid position or grid center if aligned
+             if(isAligned) { // If blocked while aligned, stay snapped
+                 this.x = round(this.x / CELL_SIZE) * CELL_SIZE + CELL_SIZE / 2;
+                 this.y = round(this.y / CELL_SIZE) * CELL_SIZE + CELL_SIZE / 2;
+             } else { // If blocked between cells, this might still allow getting stuck. More advanced would be path interruption handling.
+                 // Simple fallback: stay put
+             }
         }
 
         // --- Basic Ghost Separation ---
         // Discourage ghosts from occupying the exact same spot
         for (const otherGhost of ghosts) {
-            if (otherGhost !== this && dist(this.x, this.y, otherGhost.x, otherGhost.y) < CELL_SIZE * 0.8) { // Check if too close to another ghost
+            if (otherGhost !== this && dist(this.x, this.y, otherGhost.x, otherGhost.y) < CELL_SIZE * 0.9) { // Check if too close, slightly larger threshold
                  // If too close, slightly push this ghost away from the other
                  const angleAway = atan2(this.y - otherGhost.y, this.x - otherGhost.x);
-                 this.x += cos(angleAway) * (CELL_SIZE * 0.8 - dist(this.x, this.y, otherGhost.x, otherGhost.y)) / 2; // Push proportionally to how close they are
-                 this.y += sin(angleAway) * (CELL_SIZE * 0.8 - dist(this.x, this.y, otherGhost.x, otherGhost.y)) / 2;
-                 // Optionally, reconsider direction after separation push, but might complicate logic
+                 // Calculate push distance based on how much they overlap
+                 const overlap = (CELL_SIZE * 0.9) - dist(this.x, this.y, otherGhost.x, otherGhost.y);
+                 const pushMagnitude = overlap / 2; // Push by half of the overlap distance
+
+                 const pushX = cos(angleAway) * pushMagnitude;
+                 const pushY = sin(angleAway) * pushMagnitude;
+
+                 // Apply push only if it doesn't push into a wall
+                 if (!isWall(this.x + pushX - this.size/2, this.y + pushY - this.size/2, this.size, this.size)){
+                      this.x += pushX;
+                      this.y += pushY;
+                 }
             }
         }
 
