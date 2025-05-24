@@ -102,6 +102,7 @@ class Ghost {
 
 class Pacman {
     constructor(canvas) {
+        console.log('Initialisation du jeu Pacman');
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.pacman = {
@@ -127,8 +128,8 @@ class Pacman {
         this.setupDots();
         this.setupGhosts();
         this.setupEventListeners();
-        this.lastTime = 0;
-        this.gameLoop(0);
+        this.lastTime = performance.now();
+        this.gameLoop(this.lastTime);
     }
 
     setupDots() {
@@ -160,6 +161,7 @@ class Pacman {
         window.addEventListener('keydown', (e) => {
             if (this.keys.hasOwnProperty(e.key)) {
                 this.keys[e.key] = true;
+                console.log('Touche pressée:', e.key);
             }
         });
 
@@ -335,6 +337,7 @@ class Pacman {
 
 // Initialisation du jeu
 window.addEventListener('load', () => {
+    console.log('Chargement de la page');
     const canvas = document.createElement('canvas');
     canvas.width = 400;
     canvas.height = 400;
@@ -342,7 +345,7 @@ window.addEventListener('load', () => {
     canvas.style.display = 'none'; // Caché par défaut
     document.body.appendChild(canvas);
     
-    const game = new Pacman(canvas);
+    let game = null;
 
     // Ajouter un bouton pour afficher/masquer le jeu
     const toggleButton = document.createElement('button');
@@ -366,6 +369,10 @@ window.addEventListener('load', () => {
             canvas.style.right = '20px';
             canvas.style.backgroundColor = 'black';
             canvas.style.zIndex = '999';
+            if (!game) {
+                console.log('Initialisation du jeu');
+                game = new Pacman(canvas);
+            }
         } else {
             canvas.style.display = 'none';
         }
