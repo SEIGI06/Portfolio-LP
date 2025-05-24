@@ -660,8 +660,7 @@ class Ghost {
 
         // --- Grid Alignment and Movement Logic ---
         const gridTolerance = this.speed / 2; // Tolerance for being considered aligned with grid center
-        const isAligned = (Math.abs((this.x % CELL_SIZE) - CELL_SIZE / 2) < gridTolerance) &&\
-                          (Math.abs((this.y % CELL_SIZE) - CELL_SIZE / 2) < gridTolerance);
+        const isAligned = (Math.abs((this.x % CELL_SIZE) - CELL_SIZE / 2) < gridTolerance) && (Math.abs((this.y % CELL_SIZE) - CELL_SIZE / 2) < gridTolerance);
 
         // If ghost is aligned or close to aligned, potentially change direction
         if (isAligned) {
