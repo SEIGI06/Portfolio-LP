@@ -30,6 +30,10 @@ pacmanButton.addEventListener('click', () => {
     if (gameWindow.style.display === 'none') {
         gameWindow.style.display = 'block';
         loadingMessage.style.display = 'block';
+        
+        // Réinitialiser l'iframe
+        gameFrame.src = 'js/games/pacman/index.html';
+        
         // Attendre que l'iframe soit chargé
         gameFrame.onload = () => {
             loadingMessage.style.display = 'none';
@@ -44,10 +48,16 @@ pacmanButton.addEventListener('click', () => {
     }
 });
 
-// Empêcher la propagation des événements clavier
-gameWindow.addEventListener('keydown', (e) => {
-    e.stopPropagation();
-});
+// Empêcher la propagation des événements clavier sur la page principale
+document.addEventListener('keydown', (e) => {
+    if (gameWindow.style.display === 'block') {
+        // Si la fenêtre du jeu est ouverte, empêcher la propagation des touches
+        if ([32, 37, 38, 39, 40].includes(e.keyCode)) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }
+}, true);
 
 // Styles CSS
 const styles = `

@@ -19,9 +19,25 @@
             border: 2px solid #2121DE;
             display: block;
         }
+        #error-message {
+            color: #FFB897;
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            display: none;
+        }
     </style>
 </head>
 <body>
+    <div id="error-message">Erreur de chargement du jeu. Veuillez vérifier votre connexion Internet.</div>
+    <script>
+        // Vérifier si p5.js est chargé
+        window.addEventListener('error', function(e) {
+            if (e.target.tagName === 'SCRIPT') {
+                document.getElementById('error-message').style.display = 'block';
+            }
+        }, true);
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
     <script src="sketch.js"></script>
     <script>
