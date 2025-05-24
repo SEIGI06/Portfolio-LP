@@ -68,14 +68,15 @@ nav {
 }
 
 .logo {
-    color: white;
-    font-size: 1.5rem;
-    font-weight: bold;
+    max-width: 200px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform var(--transition-speed);
 }
 
-.logo-img {
-    height: 50px;
-    width: auto;
+.logo:hover {
+    transform: scale(1.05);
 }
 
 .nav-links {
