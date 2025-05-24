@@ -73,16 +73,19 @@ function initializeGame() {
     // Créer les power-ups
     createPowerUps();
 
-     // Créer Pacman
-    pacman = new Pacman(13.5 * CELL_SIZE, 23.5 * CELL_SIZE);
+    // Créer Pacman à sa position de départ
+    pacman = new Pacman(13.5 * CELL_SIZE, 26.5 * CELL_SIZE);
     
-    // Créer les fantômes
+    // Créer les fantômes à leurs positions de départ dans la cage
     ghosts = [
         new Ghost(13.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_RED, 'red'), // Blinky
         new Ghost(11.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_PINK, 'pink'), // Pinky
         new Ghost(15.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_CYAN, 'cyan'), // Inky
         new Ghost(13.5 * CELL_SIZE, 16.5 * CELL_SIZE, COLORS.GHOST_ORANGE, 'orange') // Clyde
     ];
+    
+    // Marquer les fantômes comme étant dans la cage initialement
+    ghosts.forEach(ghost => ghost.inCage = true);
 }
 
 // Création des murs
@@ -264,11 +267,14 @@ function createPowerUps() {
 
 // Vérification des collisions avec les murs
 function isWall(x, y) {
+     // Vérifie si le centre du cercle est à l'intérieur d'un mur
+     const halfSize = CELL_SIZE / 2; // Utiliser la moitié de la taille de la cellule pour la collision
+
      return walls.some(wall => 
-        x + CELL_SIZE/4 > wall.x && // Ajouter un petit offset pour la collision
-        x - CELL_SIZE/4 < wall.x + wall.w &&
-        y + CELL_SIZE/4 > wall.y && 
-        y - CELL_SIZE/4 < wall.y + wall.h
+        x > wall.x && 
+        x < wall.x + wall.w &&
+        y > wall.y && 
+        y < wall.y + wall.h
     );
 }
 
@@ -469,52 +475,99 @@ class Ghost {
     constructor(x, y, color, type) {
         this.x = x;
         this.y = y;
+        this.initialX = x;
+        this.initialY = y;
         this.color = color;
         this.type = type;
         this.speed = 2;
         this.direction = 0;
         this.isFrightened = false;
         this.frightenedTimer = 0;
-        this.mode = 'scatter'; // 'scatter', 'chase', 'frightened'
+        this.mode = 'scatter'; // 'scatter', 'chase', 'frightened', 'exit'
         this.scatterTimer = 0;
+        this.inCage = true; // Nouveau flag pour la cage
+        this.exitCageTarget = {x: 13.5 * CELL_SIZE, y: 12.5 * CELL_SIZE}; // Cible juste au-dessus de la barrière
     }
     
     update() {
+        // Logique de sortie de la cage
+        if (this.inCage) {
+            // Déplacer le fantôme vers la cible de sortie de la cage
+            const targetX = this.exitCageTarget.x;
+            const targetY = this.exitCageTarget.y;
+
+            const angleToTarget = atan2(targetY - this.y, targetX - this.x);
+            const nextX = this.x + cos(angleToTarget) * this.speed;
+            const nextY = this.y + sin(angleToTarget) * this.speed;
+
+            // Si le fantôme atteint presque la sortie de la cage
+            if (dist(this.x, this.y, targetX, targetY) < this.speed) {
+                 this.x = targetX;
+                 this.y = targetY;
+                 this.inCage = false;
+                 this.mode = 'scatter'; // Revenir en mode scatter après être sorti
+            } else {
+                // Mouvement vers la sortie
+                 this.x = nextX;
+                 this.y = nextY;
+            }
+            return; // Ne pas appliquer la logique de poursuite/dispersion tant qu'il est dans la cage
+        }
+
+        // Logique de changement de mode (scatter/chase) - à implémenter plus tard pour plus de fidélité
+
         if (this.isFrightened) {
             this.frightenedTimer--;
             if (this.frightenedTimer <= 0) {
                 this.isFrightened = false;
-                this.speed = 2;
+                this.speed = 2; // Vitesse normale
+            } else {
+                 this.speed = 1; // Vitesse réduite en mode frightened
             }
         }
         
-        // Logique de mouvement basée sur le type de fantôme
-        let targetX = pacman.x;
-        let targetY = pacman.y;
-        
-        switch(this.type) {
-            case 'red': // Blinky
-                // Suit directement Pacman
-                break;
-            case 'pink': // Pinky
-                // Vise 4 cases devant Pacman
-                targetX = pacman.x + cos(pacman.direction) * 4 * CELL_SIZE;
-                targetY = pacman.y + sin(pacman.direction) * 4 * CELL_SIZE;
-                break;
-            case 'cyan': // Inky
-                // Utilise la position de Blinky
-                const blinky = ghosts.find(g => g.type === 'red');
-                targetX = blinky.x + (pacman.x - blinky.x) * 2;
-                targetY = blinky.y + (pacman.y - blinky.y) * 2;
-                break;
-            case 'orange': // Clyde
-                // S'éloigne si trop proche
-                const distance = dist(this.x, this.y, pacman.x, pacman.y);
-                if (distance < 8 * CELL_SIZE) {
-                    targetX = 0;
-                    targetY = height;
-                }
-                break;
+        // Logique de mouvement basée sur le type de fantôme et le mode
+        let targetX, targetY;
+
+        if (this.isFrightened) {
+            // Mouvement aléatoire en mode frightened
+             const possibleDirections = [-PI, -PI/2, 0, PI/2]; // gauche, haut, droite, bas
+             let chosenDirection = random(possibleDirections);
+             targetX = this.x + cos(chosenDirection) * CELL_SIZE;
+             targetY = this.y + sin(chosenDirection) * CELL_SIZE;
+
+        } else if (this.mode === 'chase') {
+            // Logique de poursuite (basée sur le type de fantôme)
+            switch(this.type) {
+                case 'red': // Blinky
+                    targetX = pacman.x;
+                    targetY = pacman.y;
+                    break;
+                case 'pink': // Pinky
+                    targetX = pacman.x + cos(pacman.direction) * 4 * CELL_SIZE;
+                    targetY = pacman.y + sin(pacman.direction) * 4 * CELL_SIZE;
+                    break;
+                case 'cyan': // Inky
+                    const blinky = ghosts.find(g => g.type === 'red');
+                    if (blinky) {
+                        targetX = blinky.x + (pacman.x - blinky.x) * 2;
+                        targetY = blinky.y + (pacman.y - blinky.y) * 2;
+                    } else { targetX = pacman.x; targetY = pacman.y; }
+                    break;
+                case 'orange': // Clyde
+                    const distance = dist(this.x, this.y, pacman.x, pacman.y);
+                    if (distance < 8 * CELL_SIZE) { targetX = 0; targetY = height; }
+                    else { targetX = pacman.x; targetY = pacman.y; }
+                    break;
+            }
+        } else if (this.mode === 'scatter') {
+            // Cibles pour le mode scatter (coins du labyrinthe)
+             switch(this.type) {
+                 case 'red': targetX = GRID_WIDTH * CELL_SIZE; targetY = 0; break;
+                 case 'pink': targetX = 0; targetY = 0; break;
+                 case 'cyan': targetX = GRID_WIDTH * CELL_SIZE; targetY = GRID_HEIGHT * CELL_SIZE; break;
+                 case 'orange': targetX = 0; targetY = GRID_HEIGHT * CELL_SIZE; break;
+             }
         }
         
         // Calculer la direction vers la cible
@@ -524,10 +577,35 @@ class Ghost {
         let nextX = this.x + cos(angle) * this.speed;
         let nextY = this.y + sin(angle) * this.speed;
         
+        // Vérifier les collisions avec les murs
         if (!isWall(nextX, nextY)) {
-            this.x = nextX;
-            this.y = nextY;
+             this.x = nextX;
+             this.y = nextY;
+        } else {
+            // Si collision, trouver une direction alternative (éviter de faire demi-tour instantanément)
+            const possibleDirections = [-PI, -PI/2, 0, PI/2]; // gauche, haut, droite, bas
+            let bestDirection = this.direction; // Garder la direction actuelle par défaut
+            let minDistance = Infinity;
+
+            for (let dir of possibleDirections) {
+                 // Éviter de faire demi-tour
+                 if (abs(dir - this.direction) !== PI) {
+                    const testX = this.x + cos(dir) * this.speed;
+                    const testY = this.y + sin(dir) * this.speed;
+                     if (!isWall(testX, testY)) {
+                         const distToTarget = dist(testX, testY, targetX, targetY);
+                         if (distToTarget < minDistance) {
+                            minDistance = distToTarget;
+                            bestDirection = dir;
+                         }
+                     }
+                 }
+            }
+             this.direction = bestDirection;
+             this.x += cos(this.direction) * this.speed;
+             this.y += sin(this.direction) * this.speed;
         }
+
         
         // Gestion des tunnels
         if (this.x < 0) this.x = width;
@@ -565,10 +643,11 @@ class Ghost {
     }
     
     reset() {
-        this.x = 13 * CELL_SIZE;
-        this.y = 11 * CELL_SIZE;
+        this.x = this.initialX;
+        this.y = this.initialY;
         this.isFrightened = false;
-        this.speed = 2;
+        this.speed = 2; // Vitesse normale
+        this.inCage = true; // Retourne dans la cage après avoir été mangé
     }
 }
 
