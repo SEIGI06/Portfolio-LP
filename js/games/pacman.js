@@ -111,9 +111,7 @@ class Pacman {
             speed: 3,
             direction: 0,
             mouthOpen: 0,
-            mouthSpeed: 0.15,
-            poweredUp: false,
-            powerUpTimer: 0
+            mouthSpeed: 0.15
         };
         this.keys = {
             ArrowUp: false,
@@ -124,36 +122,13 @@ class Pacman {
         this.score = 0;
         this.lives = 3;
         this.dots = [];
-        this.powerUps = [];
         this.ghosts = [];
-        this.walls = [];
         this.gameOver = false;
-        this.setupMaze();
         this.setupDots();
-        this.setupPowerUps();
         this.setupGhosts();
         this.setupEventListeners();
-        this.gameLoop();
-    }
-
-    setupMaze() {
-        // Murs extérieurs
-        this.walls = [
-            { x: 0, y: 0, width: this.canvas.width, height: 20 },
-            { x: 0, y: 0, width: 20, height: this.canvas.height },
-            { x: 0, y: this.canvas.height - 20, width: this.canvas.width, height: 20 },
-            { x: this.canvas.width - 20, y: 0, width: 20, height: this.canvas.height }
-        ];
-
-        // Ajouter quelques murs intérieurs
-        const wallPositions = [
-            { x: 100, y: 100, width: 200, height: 20 },
-            { x: 100, y: 200, width: 20, height: 200 },
-            { x: 280, y: 200, width: 20, height: 200 },
-            { x: 100, y: 400, width: 200, height: 20 }
-        ];
-
-        this.walls.push(...wallPositions);
+        this.lastTime = 0;
+        this.gameLoop(0);
     }
 
     setupDots() {
@@ -161,54 +136,23 @@ class Pacman {
         const padding = 30;
         for (let x = padding; x < this.canvas.width - padding; x += gridSize) {
             for (let y = padding; y < this.canvas.height - padding; y += gridSize) {
-                // Vérifier si le point n'est pas dans un mur
-                if (!this.isInWall(x, y)) {
-                    this.dots.push({ x, y, radius: 3, collected: false });
-                }
+                this.dots.push({ x, y, radius: 3, collected: false });
             }
         }
-    }
-
-    setupPowerUps() {
-        const powerUpPositions = [
-            { x: 50, y: 50 },
-            { x: this.canvas.width - 50, y: 50 },
-            { x: 50, y: this.canvas.height - 50 },
-            { x: this.canvas.width - 50, y: this.canvas.height - 50 }
-        ];
-
-        powerUpPositions.forEach(pos => {
-            if (!this.isInWall(pos.x, pos.y)) {
-                this.powerUps.push({ ...pos, radius: 8, collected: false });
-            }
-        });
-    }
-
-    isInWall(x, y) {
-        for (let wall of this.walls) {
-            if (x > wall.x && x < wall.x + wall.width &&
-                y > wall.y && y < wall.y + wall.height) {
-                return true;
-            }
-        }
-        return false;
     }
 
     setupGhosts() {
         const colors = ['red', 'pink', 'cyan', 'orange'];
-        const startPositions = [
-            { x: 50, y: 50 },
-            { x: this.canvas.width - 50, y: 50 },
-            { x: 50, y: this.canvas.height - 50 },
-            { x: this.canvas.width - 50, y: this.canvas.height - 50 }
-        ];
-
         for (let i = 0; i < 4; i++) {
-            this.ghosts.push(new Ghost(
-                startPositions[i].x,
-                startPositions[i].y,
-                colors[i]
-            ));
+            const x = Math.random() * (this.canvas.width - 100) + 50;
+            const y = Math.random() * (this.canvas.height - 100) + 50;
+            this.ghosts.push({
+                x: x,
+                y: y,
+                color: colors[i],
+                speed: 2,
+                direction: Math.random() * Math.PI * 2
+            });
         }
     }
 
@@ -230,30 +174,21 @@ class Pacman {
         if (this.gameOver) return;
 
         // Mise à jour de la position de Pacman
-        let nextX = this.pacman.x;
-        let nextY = this.pacman.y;
-
         if (this.keys.ArrowUp) {
-            nextY -= this.pacman.speed;
+            this.pacman.y -= this.pacman.speed;
             this.pacman.direction = -Math.PI / 2;
         }
         if (this.keys.ArrowDown) {
-            nextY += this.pacman.speed;
+            this.pacman.y += this.pacman.speed;
             this.pacman.direction = Math.PI / 2;
         }
         if (this.keys.ArrowLeft) {
-            nextX -= this.pacman.speed;
+            this.pacman.x -= this.pacman.speed;
             this.pacman.direction = Math.PI;
         }
         if (this.keys.ArrowRight) {
-            nextX += this.pacman.speed;
+            this.pacman.x += this.pacman.speed;
             this.pacman.direction = 0;
-        }
-
-        // Vérifier les collisions avec les murs
-        if (!this.isInWall(nextX, nextY)) {
-            this.pacman.x = nextX;
-            this.pacman.y = nextY;
         }
 
         // Animation de la bouche
@@ -261,6 +196,10 @@ class Pacman {
         if (this.pacman.mouthOpen > 0.5 || this.pacman.mouthOpen < 0) {
             this.pacman.mouthSpeed = -this.pacman.mouthSpeed;
         }
+
+        // Limites du canvas
+        this.pacman.x = Math.max(this.pacman.radius, Math.min(this.canvas.width - this.pacman.radius, this.pacman.x));
+        this.pacman.y = Math.max(this.pacman.radius, Math.min(this.canvas.height - this.pacman.radius, this.pacman.y));
 
         // Collecte des points
         this.dots.forEach(dot => {
@@ -275,52 +214,35 @@ class Pacman {
             }
         });
 
-        // Collecte des power-ups
-        this.powerUps.forEach(powerUp => {
-            if (!powerUp.collected) {
-                const dx = this.pacman.x - powerUp.x;
-                const dy = this.pacman.y - powerUp.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < this.pacman.radius + powerUp.radius) {
-                    powerUp.collected = true;
-                    this.pacman.poweredUp = true;
-                    this.pacman.powerUpTimer = 300; // 5 secondes à 60 FPS
-                    this.ghosts.forEach(ghost => ghost.setFrightened());
-                }
-            }
-        });
-
-        // Mise à jour du timer de power-up
-        if (this.pacman.poweredUp) {
-            this.pacman.powerUpTimer--;
-            if (this.pacman.powerUpTimer <= 0) {
-                this.pacman.poweredUp = false;
-            }
-        }
-
         // Mise à jour des fantômes
         this.ghosts.forEach(ghost => {
-            ghost.update(this.pacman, this.walls);
-            
-            // Collision avec les fantômes
+            // Mouvement aléatoire avec tendance à suivre Pacman
             const dx = this.pacman.x - ghost.x;
             const dy = this.pacman.y - ghost.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < this.pacman.radius + ghost.radius) {
-                if (this.pacman.poweredUp) {
-                    // Manger le fantôme
-                    ghost.x = this.canvas.width / 2;
-                    ghost.y = this.canvas.height / 2;
-                    this.score += 200;
+            const angle = Math.atan2(dy, dx);
+            
+            // Ajouter un peu d'aléatoire au mouvement
+            ghost.direction += (angle - ghost.direction) * 0.1 + (Math.random() - 0.5) * 0.2;
+            
+            ghost.x += Math.cos(ghost.direction) * ghost.speed;
+            ghost.y += Math.sin(ghost.direction) * ghost.speed;
+
+            // Limites du canvas pour les fantômes
+            ghost.x = Math.max(20, Math.min(this.canvas.width - 20, ghost.x));
+            ghost.y = Math.max(20, Math.min(this.canvas.height - 20, ghost.y));
+            
+            // Collision avec les fantômes
+            const ghostDx = this.pacman.x - ghost.x;
+            const ghostDy = this.pacman.y - ghost.y;
+            const ghostDistance = Math.sqrt(ghostDx * ghostDx + ghostDy * ghostDy);
+            if (ghostDistance < this.pacman.radius + 15) {
+                this.lives--;
+                if (this.lives <= 0) {
+                    this.gameOver = true;
                 } else {
-                    this.lives--;
-                    if (this.lives <= 0) {
-                        this.gameOver = true;
-                    } else {
-                        // Réinitialiser la position de Pacman
-                        this.pacman.x = this.canvas.width / 2;
-                        this.pacman.y = this.canvas.height / 2;
-                    }
+                    // Réinitialiser la position de Pacman
+                    this.pacman.x = this.canvas.width / 2;
+                    this.pacman.y = this.canvas.height / 2;
                 }
             }
         });
@@ -328,19 +250,12 @@ class Pacman {
         // Vérifier si tous les points sont collectés
         if (this.dots.every(dot => dot.collected)) {
             this.setupDots();
-            this.setupPowerUps();
         }
     }
 
     draw() {
         // Effacer le canvas
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // Dessiner les murs
-        this.ctx.fillStyle = 'blue';
-        this.walls.forEach(wall => {
-            this.ctx.fillRect(wall.x, wall.y, wall.width, wall.height);
-        });
 
         // Dessiner les points
         this.dots.forEach(dot => {
@@ -353,19 +268,24 @@ class Pacman {
             }
         });
 
-        // Dessiner les power-ups
-        this.powerUps.forEach(powerUp => {
-            if (!powerUp.collected) {
-                this.ctx.beginPath();
-                this.ctx.arc(powerUp.x, powerUp.y, powerUp.radius, 0, Math.PI * 2);
-                this.ctx.fillStyle = 'yellow';
-                this.ctx.fill();
-                this.ctx.closePath();
-            }
-        });
-
         // Dessiner les fantômes
-        this.ghosts.forEach(ghost => ghost.draw(this.ctx));
+        this.ghosts.forEach(ghost => {
+            this.ctx.beginPath();
+            this.ctx.arc(ghost.x, ghost.y, 15, 0, Math.PI, true);
+            this.ctx.lineTo(ghost.x + 15, ghost.y + 15);
+            this.ctx.lineTo(ghost.x - 15, ghost.y + 15);
+            this.ctx.fillStyle = ghost.color;
+            this.ctx.fill();
+            this.ctx.closePath();
+
+            // Yeux
+            this.ctx.fillStyle = 'white';
+            this.ctx.beginPath();
+            this.ctx.arc(ghost.x - 5, ghost.y - 2, 3, 0, Math.PI * 2);
+            this.ctx.arc(ghost.x + 5, ghost.y - 2, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.closePath();
+        });
 
         // Dessiner Pacman
         this.ctx.beginPath();
@@ -377,7 +297,7 @@ class Pacman {
             this.pacman.direction + 2 * Math.PI - this.pacman.mouthOpen
         );
         this.ctx.lineTo(this.pacman.x, this.pacman.y);
-        this.ctx.fillStyle = this.pacman.poweredUp ? '#FFD700' : 'yellow';
+        this.ctx.fillStyle = 'yellow';
         this.ctx.fill();
         this.ctx.closePath();
 
@@ -398,10 +318,18 @@ class Pacman {
         }
     }
 
-    gameLoop() {
-        this.update();
-        this.draw();
-        requestAnimationFrame(() => this.gameLoop());
+    gameLoop(timestamp) {
+        // Calculer le delta time
+        const deltaTime = timestamp - this.lastTime;
+        this.lastTime = timestamp;
+
+        // Mettre à jour et dessiner seulement si assez de temps s'est écoulé
+        if (deltaTime > 16) { // environ 60 FPS
+            this.update();
+            this.draw();
+        }
+
+        requestAnimationFrame((timestamp) => this.gameLoop(timestamp));
     }
 }
 
