@@ -89,16 +89,101 @@ function createWalls() {
         walls.push(new Wall((GRID_WIDTH - 1) * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE));
     }
     
-    // Murs intérieurs (simplifiés pour l'exemple)
-    const innerWalls = [
+    // Définition du labyrinthe
+    const maze = [
+        // Ligne 1
         {x: 2, y: 2, w: 5, h: 1},
-        {x: 2, y: 2, w: 1, h: 5},
-        {x: 6, y: 2, w: 1, h: 5},
-        {x: 2, y: 6, w: 5, h: 1},
-        // Ajoutez plus de murs ici
+        {x: 8, y: 2, w: 3, h: 1},
+        {x: 14, y: 2, w: 3, h: 1},
+        {x: 20, y: 2, w: 5, h: 1},
+        
+        // Ligne 2
+        {x: 2, y: 3, w: 1, h: 5},
+        {x: 8, y: 3, w: 1, h: 2},
+        {x: 14, y: 3, w: 1, h: 2},
+        {x: 20, y: 3, w: 1, h: 5},
+        
+        // Ligne 3
+        {x: 5, y: 4, w: 2, h: 1},
+        {x: 8, y: 5, w: 3, h: 1},
+        {x: 14, y: 5, w: 3, h: 1},
+        {x: 18, y: 4, w: 2, h: 1},
+        
+        // Ligne 4
+        {x: 2, y: 8, w: 5, h: 1},
+        {x: 8, y: 8, w: 3, h: 1},
+        {x: 14, y: 8, w: 3, h: 1},
+        {x: 20, y: 8, w: 5, h: 1},
+        
+        // Ligne 5
+        {x: 2, y: 9, w: 1, h: 5},
+        {x: 8, y: 9, w: 1, h: 2},
+        {x: 14, y: 9, w: 1, h: 2},
+        {x: 20, y: 9, w: 1, h: 5},
+        
+        // Ligne 6
+        {x: 5, y: 10, w: 2, h: 1},
+        {x: 8, y: 11, w: 3, h: 1},
+        {x: 14, y: 11, w: 3, h: 1},
+        {x: 18, y: 10, w: 2, h: 1},
+        
+        // Ligne 7
+        {x: 2, y: 14, w: 5, h: 1},
+        {x: 8, y: 14, w: 3, h: 1},
+        {x: 14, y: 14, w: 3, h: 1},
+        {x: 20, y: 14, w: 5, h: 1},
+        
+        // Ligne 8
+        {x: 2, y: 15, w: 1, h: 5},
+        {x: 8, y: 15, w: 1, h: 2},
+        {x: 14, y: 15, w: 1, h: 2},
+        {x: 20, y: 15, w: 1, h: 5},
+        
+        // Ligne 9
+        {x: 5, y: 16, w: 2, h: 1},
+        {x: 8, y: 17, w: 3, h: 1},
+        {x: 14, y: 17, w: 3, h: 1},
+        {x: 18, y: 16, w: 2, h: 1},
+        
+        // Ligne 10
+        {x: 2, y: 20, w: 5, h: 1},
+        {x: 8, y: 20, w: 3, h: 1},
+        {x: 14, y: 20, w: 3, h: 1},
+        {x: 20, y: 20, w: 5, h: 1},
+        
+        // Ligne 11
+        {x: 2, y: 21, w: 1, h: 5},
+        {x: 8, y: 21, w: 1, h: 2},
+        {x: 14, y: 21, w: 1, h: 2},
+        {x: 20, y: 21, w: 1, h: 5},
+        
+        // Ligne 12
+        {x: 5, y: 22, w: 2, h: 1},
+        {x: 8, y: 23, w: 3, h: 1},
+        {x: 14, y: 23, w: 3, h: 1},
+        {x: 18, y: 22, w: 2, h: 1},
+        
+        // Murs verticaux centraux
+        {x: 11, y: 8, w: 1, h: 3},
+        {x: 11, y: 14, w: 1, h: 3},
+        {x: 16, y: 8, w: 1, h: 3},
+        {x: 16, y: 14, w: 1, h: 3},
+        
+        // Murs horizontaux centraux
+        {x: 11, y: 11, w: 5, h: 1},
+        {x: 11, y: 17, w: 5, h: 1},
+        
+        // Murs de la cage des fantômes
+        {x: 11, y: 12, w: 5, h: 1},
+        {x: 11, y: 13, w: 1, h: 1},
+        {x: 15, y: 13, w: 1, h: 1},
+        
+        // Tunnels
+        {x: 0, y: 14, w: 1, h: 1},
+        {x: 27, y: 14, w: 1, h: 1}
     ];
     
-    innerWalls.forEach(wall => {
+    maze.forEach(wall => {
         for (let x = wall.x; x < wall.x + wall.w; x++) {
             for (let y = wall.y; y < wall.y + wall.h; y++) {
                 walls.push(new Wall(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE));
