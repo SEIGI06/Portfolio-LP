@@ -52,7 +52,7 @@ main {
 /* Header & Navigation */
 header {
     background-color: var(--primary-color);
-    padding: 1.5rem 0;
+    padding: 0.8rem 0;
     position: fixed;
     width: 100%;
     top: 0;
@@ -74,7 +74,7 @@ nav {
 }
 
 .logo-img {
-    height: 50px;
+    height: 40px;
     width: auto;
     transition: transform var(--transition-speed);
 }
