@@ -56,17 +56,14 @@ function draw() {
 
 // Initialisation du jeu
 function initializeGame() {
-    // Créer Pacman
-    pacman = new Pacman(14 * CELL_SIZE, 23 * CELL_SIZE);
-    
-    // Créer les fantômes
-    ghosts = [
-        new Ghost(13 * CELL_SIZE, 11 * CELL_SIZE, COLORS.GHOST_RED, 'red'),
-        new Ghost(14 * CELL_SIZE, 11 * CELL_SIZE, COLORS.GHOST_PINK, 'pink'),
-        new Ghost(13 * CELL_SIZE, 12 * CELL_SIZE, COLORS.GHOST_CYAN, 'cyan'),
-        new Ghost(14 * CELL_SIZE, 12 * CELL_SIZE, COLORS.GHOST_ORANGE, 'orange')
-    ];
-    
+    score = 0;
+    lives = 3;
+    gameOver = false;
+    walls = [];
+    dots = [];
+    powerUps = [];
+    ghosts = [];
+
     // Créer les murs
     createWalls();
     
@@ -75,75 +72,124 @@ function initializeGame() {
     
     // Créer les power-ups
     createPowerUps();
+
+     // Créer Pacman
+    pacman = new Pacman(13.5 * CELL_SIZE, 23.5 * CELL_SIZE);
+    
+    // Créer les fantômes
+    ghosts = [
+        new Ghost(13.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_RED, 'red'), // Blinky
+        new Ghost(11.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_PINK, 'pink'), // Pinky
+        new Ghost(15.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_CYAN, 'cyan'), // Inky
+        new Ghost(13.5 * CELL_SIZE, 16.5 * CELL_SIZE, COLORS.GHOST_ORANGE, 'orange') // Clyde
+    ];
 }
 
 // Création des murs
 function createWalls() {
-    // Murs extérieurs
-    for (let x = 0; x < GRID_WIDTH; x++) {
-        walls.push(new Wall(x * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE));
-        walls.push(new Wall(x * CELL_SIZE, (GRID_HEIGHT - 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE));
-    }
-    for (let y = 0; y < GRID_HEIGHT; y++) {
-        walls.push(new Wall(0, y * CELL_SIZE, CELL_SIZE, CELL_SIZE));
-        walls.push(new Wall((GRID_WIDTH - 1) * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE));
-    }
-    
-    // Définition du labyrinthe
+    walls = []; // Réinitialiser les murs
+
+    // Définition du labyrinthe basée sur l'image fournie
     const maze = [
-        // En haut à gauche
+        // Murs horizontaux extérieurs
+        {x: 0, y: 0, w: 28, h: 1},
+        {x: 0, y: 30, w: 28, h: 1},
+
+        // Murs verticaux extérieurs
+        {x: 0, y: 1, w: 1, h: 11},
+        {x: 0, y: 15, w: 1, h: 15},
+        {x: 27, y: 1, w: 1, h: 11},
+        {x: 27, y: 15, w: 1, h: 15},
+
+        // Murs horizontaux intérieurs
         {x: 2, y: 2, w: 5, h: 1},
-        {x: 2, y: 3, w: 1, h: 5},
-        {x: 5, y: 3, w: 1, h: 2},
-        
-        // En haut à droite
+        {x: 9, y: 2, w: 4, h: 1},
+        {x: 15, y: 2, w: 4, h: 1},
         {x: 21, y: 2, w: 5, h: 1},
-        {x: 25, y: 3, w: 1, h: 5},
-        {x: 22, y: 3, w: 1, h: 2},
-        
-        // En bas à gauche
-        {x: 2, y: 24, w: 5, h: 1},
-        {x: 2, y: 23, w: 1, h: 5},
-        {x: 5, y: 24, w: 1, h: 2},
-        
-        // En bas à droite
-        {x: 21, y: 24, w: 5, h: 1},
-        {x: 25, y: 23, w: 1, h: 5},
-        {x: 22, y: 24, w: 1, h: 2},
-        
-        // Murs centraux
-        {x: 11, y: 2, w: 6, h: 1},
-        {x: 11, y: 3, w: 1, h: 5},
-        {x: 16, y: 3, w: 1, h: 5},
-        
-        // Murs du milieu
-        {x: 11, y: 8, w: 6, h: 1},
-        {x: 11, y: 9, w: 1, h: 2},
-        {x: 16, y: 9, w: 1, h: 2},
-        
-        // Murs du bas
-        {x: 11, y: 24, w: 6, h: 1},
-        {x: 11, y: 22, w: 1, h: 2},
-        {x: 16, y: 22, w: 1, h: 2},
-        
-        // Murs verticaux centraux
-        {x: 11, y: 11, w: 1, h: 3},
-        {x: 16, y: 11, w: 1, h: 3},
-        
-        // Murs horizontaux centraux
-        {x: 11, y: 14, w: 6, h: 1},
-        {x: 11, y: 15, w: 1, h: 2},
-        {x: 16, y: 15, w: 1, h: 2},
-        
-        // Murs de la cage des fantômes
-        {x: 11, y: 17, w: 6, h: 1},
-        {x: 11, y: 18, w: 1, h: 1},
-        {x: 16, y: 18, w: 1, h: 1},
-        {x: 12, y: 19, w: 4, h: 1},
-        
-        // Tunnels
-        {x: 0, y: 14, w: 1, h: 1},
-        {x: 27, y: 14, w: 1, h: 1}
+
+        {x: 2, y: 5, w: 5, h: 1},
+        {x: 9, y: 5, w: 2, h: 1},
+        {x: 17, y: 5, w: 2, h: 1},
+        {x: 21, y: 5, w: 5, h: 1},
+
+        {x: 2, y: 8, w: 5, h: 1},
+        {x: 9, y: 8, w: 4, h: 1},
+        {x: 15, y: 8, w: 4, h: 1},
+        {x: 21, y: 8, w: 5, h: 1},
+
+        {x: 0, y: 11, w: 6, h: 1},
+        {x: 7, y: 11, w: 5, h: 1},
+        {x: 16, y: 11, w: 5, h: 1},
+        {x: 22, y: 11, w: 6, h: 1},
+
+        {x: 7, y: 17, w: 5, h: 1},
+        {x: 16, y: 17, w: 5, h: 1},
+
+        {x: 0, y: 20, w: 6, h: 1},
+        {x: 7, y: 20, w: 5, h: 1},
+        {x: 16, y: 20, w: 5, h: 1},
+        {x: 22, y: 20, w: 6, h: 1},
+
+        {x: 2, y: 23, w: 5, h: 1},
+        {x: 9, y: 23, w: 4, h: 1},
+        {x: 15, y: 23, w: 4, h: 1},
+        {x: 21, y: 23, w: 5, h: 1},
+
+        {x: 4, y: 26, w: 2, h: 1},
+        {x: 9, y: 26, w: 4, h: 1},
+        {x: 15, y: 26, w: 4, h: 1},
+        {x: 22, y: 26, w: 2, h: 1},
+
+        {x: 0, y: 29, w: 3, h: 1},
+        {x: 25, y: 29, w: 3, h: 1},
+
+        // Murs verticaux intérieurs
+        {x: 6, y: 2, w: 1, h: 4},
+        {x: 6, y: 7, w: 1, h: 5},
+        {x: 6, y: 14, w: 1, h: 4},
+        {x: 6, y: 19, w: 1, h: 5},
+        {x: 6, y: 25, w: 1, h: 4},
+
+        {x: 12, y: 2, w: 1, h: 4},
+        {x: 12, y: 7, w: 1, h: 2},
+        {x: 12, y: 10, w: 1, h: 2},
+        {x: 12, y: 13, w: 1, h: 5},
+        {x: 12, y: 19, w: 1, h: 5},
+        {x: 12, y: 22, w: 1, h: 5},
+
+        {x: 15, y: 2, w: 1, h: 4},
+        {x: 15, y: 7, w: 1, h: 2},
+        {x: 15, y: 10, w: 1, h: 2},
+        {x: 15, y: 13, w: 1, h: 5},
+        {x: 15, y: 19, w: 1, h: 5},
+        {x: 15, y: 22, w: 1, h: 5},
+
+        {x: 21, y: 2, w: 1, h: 4},
+        {x: 21, y: 7, w: 1, h: 5},
+        {x: 21, y: 14, w: 1, h: 4},
+        {x: 21, y: 19, w: 1, h: 5},
+        {x: 21, y: 25, w: 1, h: 4},
+
+        {x: 3, y: 26, w: 1, h: 4},
+        {x: 24, y: 26, w: 1, h: 4},
+
+        // Cage des fantômes
+        {x: 11, y: 13, w: 6, h: 1},
+        {x: 11, y: 14, w: 1, h: 3},
+        {x: 16, y: 14, w: 1, h: 3},
+        {x: 11, y: 16, w: 6, h: 1},
+        {x: 13, y: 14, w: 2, h: 1}, // Entrée de la cage (espace vide)
+
+        // Connexions entre murs
+        {x: 9, y: 5, w: 4, h: 1},
+        {x: 15, y: 5, w: 4, h: 1},
+        {x: 9, y: 20, w: 4, h: 1},
+        {x: 15, y: 20, w: 4, h: 1},
+        {x: 12, y: 8, w: 3, h: 1},
+        {x: 12, y: 23, w: 3, h: 1},
+
+        // Tunnels (visuellement des espaces sans murs - assurons qu'il n'y a pas de murs à ces positions)
+
     ];
     
     maze.forEach(wall => {
@@ -153,15 +199,45 @@ function createWalls() {
             }
         }
     });
+
+    // Les tunnels sont des espaces vides aux bords
+    // S'assurer qu'il n'y a pas de murs aux positions des tunnels (0, 14) et (27, 14)
+    walls = walls.filter(wall => 
+        !(wall.x === 0 * CELL_SIZE && wall.y === 14 * CELL_SIZE) &&
+        !(wall.x === 27 * CELL_SIZE && wall.y === 14 * CELL_SIZE)
+    );
+
+
+    // Ajuster les positions de départ si nécessaire en fonction du nouveau labyrinthe
+    // Pacman: (14, 26) dans la grille originale -> (13.5 * CELL_SIZE, 26.5 * CELL_SIZE) en pixels centrés
+    // Fantômes: Blinky (13.5, 14.5), Pinky (11.5, 14.5), Inky (15.5, 14.5), Clyde (13.5, 16.5) en pixels centrés
+
+    pacman = new Pacman(13.5 * CELL_SIZE, 26.5 * CELL_SIZE); // Position approximative
+    
+    ghosts = [
+        new Ghost(13.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_RED, 'red'), // Blinky
+        new Ghost(11.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_PINK, 'pink'), // Pinky (à gauche de Blinky)
+        new Ghost(15.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_CYAN, 'cyan'), // Inky (à droite de Blinky)
+        new Ghost(13.5 * CELL_SIZE, 16.5 * CELL_SIZE, COLORS.GHOST_ORANGE, 'orange') // Clyde (en dessous de Blinky)
+    ];
+
+    // Supprimer les points et power-ups dans les murs de la nouvelle carte et ajuster leurs positions
+    dots = [];
+    powerUps = [];
+    createDots(); // Recréer les points pour le nouveau labyrinthe
+    createPowerUps(); // Recréer les power-ups pour le nouveau labyrinthe
 }
 
 // Création des points
 function createDots() {
+    dots = []; // Réinitialiser les points
     for (let x = 1; x < GRID_WIDTH - 1; x++) {
         for (let y = 1; y < GRID_HEIGHT - 1; y++) {
-            // Vérifier si la position n'est pas un mur
-            if (!isWall(x * CELL_SIZE, y * CELL_SIZE)) {
-                dots.push(new Dot(x * CELL_SIZE, y * CELL_SIZE));
+            const pixelX = x * CELL_SIZE + CELL_SIZE / 2; // Centrer le point dans la cellule
+            const pixelY = y * CELL_SIZE + CELL_SIZE / 2; // Centrer le point dans la cellule
+            // Vérifier si la position n'est pas un mur et n'est pas dans la zone des fantômes
+            if (!isWall(pixelX, pixelY) && !(y >= 13 && y <= 17 && x >= 10 && x <= 17)) {
+                dots.push(new Dot(pixelX, pixelY));
             }
         }
     }
@@ -169,25 +245,30 @@ function createDots() {
 
 // Création des power-ups
 function createPowerUps() {
+    powerUps = []; // Réinitialiser les power-ups
     const powerUpPositions = [
-        {x: 2, y: 2},
-        {x: GRID_WIDTH - 3, y: 2},
-        {x: 2, y: GRID_HEIGHT - 3},
-        {x: GRID_WIDTH - 3, y: GRID_HEIGHT - 3}
+        {x: 1.5, y: 3.5}, // Position basée sur la grille et centrée
+        {x: GRID_WIDTH - 2.5, y: 3.5},
+        {x: 1.5, y: GRID_HEIGHT - 3.5},
+        {x: GRID_WIDTH - 2.5, y: GRID_HEIGHT - 3.5}
     ];
     
     powerUpPositions.forEach(pos => {
-        if (!isWall(pos.x * CELL_SIZE, pos.y * CELL_SIZE)) {
-            powerUps.push(new PowerUp(pos.x * CELL_SIZE, pos.y * CELL_SIZE));
+         const pixelX = pos.x * CELL_SIZE; // Positionnement basé sur la grille
+         const pixelY = pos.y * CELL_SIZE; // Positionnement basé sur la grille
+        if (!isWall(pixelX, pixelY)) {
+            powerUps.push(new PowerUp(pixelX, pixelY));
         }
     });
 }
 
 // Vérification des collisions avec les murs
 function isWall(x, y) {
-    return walls.some(wall => 
-        x >= wall.x && x < wall.x + wall.w &&
-        y >= wall.y && y < wall.y + wall.h
+     return walls.some(wall => 
+        x + CELL_SIZE/4 > wall.x && // Ajouter un petit offset pour la collision
+        x - CELL_SIZE/4 < wall.x + wall.w &&
+        y + CELL_SIZE/4 > wall.y && 
+        y - CELL_SIZE/4 < wall.y + wall.h
     );
 }
 
