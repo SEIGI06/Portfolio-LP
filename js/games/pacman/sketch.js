@@ -98,154 +98,192 @@ function initializeGame() {
 function createWalls() {
     walls = []; // Réinitialiser les murs
 
-    // Définition du labyrinthe basé sur l'image GOOGLE Pacman
-    // Chaque objet représente un segment de mur {x, y, w, h} en unités de grille
-    const mazeStructure = [
+    // Définition du labyrinthe basée sur la structure extraite et interprétée du code Google Pacman
+    // Les coordonnées et dimensions sont en unités de grille de 8x8 (basé sur l'analyse du code Google).
+    // Nous convertissons ces unités en unités de grille de CELL_SIZE (20x20).
+    // Facteur de conversion approximatif: 8 Google units -> CELL_SIZE (20) pixels
+    // Donc, 1 Google unit ≈ 2.5 pixels
+    // Les coordonnées x, y, w (T) et h sont dans la grille Google.
+    const googleMazeDefinition = [
+        // Format original Google: {x: grid_x, y: grid_y, T: width_in_grid_units, h: height_in_grid_units}
+        // Interprétation: Les coordonnées x, y sont le coin supérieur gauche du segment.
+        // T indique une extension horizontale, h une extension verticale.
+
+        // Les données semblent lister des segments de murs.
+        // Convertissons ces segments en blocs individuels pour notre grille.
+        
         // Cadre extérieur
-        {x: 0, y: 0, w: 28, h: 1}, // Haut
-        {x: 0, y: 30, w: 28, h: 1}, // Bas
-        {x: 0, y: 1, w: 1, h: 14}, // Gauche (haut)
-        {x: 0, y: 16, w: 1, h: 14}, // Gauche (bas)
-        {x: 27, y: 1, w: 1, h: 14}, // Droite (haut)
-        {x: 27, y: 16, w: 1, h: 14}, // Droite (bas)
+        {gx: 0, gy: 0, gw: 56, gh: 2}, // Haut
+        {gx: 0, gy: 60, gw: 56, gh: 2}, // Bas (approx gy=60*8=480px, GRID_HEIGHT*CELL_SIZE = 31*20=620px. C'est une approximation.)
+        // Les tunnels (espaces vides aux bords)
+        {gx: 0, gy: 2, gw: 2, gh: 24}, // Gauche (haut) (y=1 à 13 dans notre grille)
+        {gx: 0, gy: 32, gw: 2, gh: 28}, // Gauche (bas) (y=16 à 30 dans notre grille)
+        {gx: 54, gy: 2, gw: 2, gh: 24}, // Droite (haut) (x=27 dans notre grille)
+        {gx: 54, gy: 32, gw: 2, gh: 28}, // Droite (bas)
 
-        // Tunnels (espaces vides dans le cadre extérieur)
-        // {x: 0, y: 14, w: 1, h: 2} est l'espace pour le tunnel gauche
-        // {x: 27, y: 14, w: 1, h: 2} est l'espace pour le tunnel droit
-
-        // Structures intérieures
-        // Top block
-        {x: 2, y: 2, w: 5, h: 3}, // Top left
-        {x: 9, y: 2, w: 4, h: 3}, // Top middle-left
-        {x: 15, y: 2, w: 4, h: 3}, // Top middle-right
-        {x: 21, y: 2, w: 5, h: 3}, // Top right
+        // Structures intérieures (approximation basée sur l'analyse visuelle et les données Google)
+        // Top blocks
+        {gx: 10, gy: 4, gw: 10, gh: 6}, 
+        {gx: 18, gy: 4, gw: 8, gh: 6}, 
+        {gx: 30, gy: 4, gw: 8, gh: 6}, 
+        {gx: 44, gy: 4, gw: 10, gh: 6}, 
 
         // Side blocks (level below top)
-        {x: 2, y: 5, w: 5, h: 2}, // Mid-top left
-        {x: 9, y: 5, w: 2, h: 5}, // Vertical left of G
-        {x: 17, y: 5, w: 2, h: 5}, // Vertical right of G
-        {x: 21, y: 5, w: 5, h: 2}, // Mid-top right
+        {gx: 10, gy: 10, gw: 10, gh: 4}, 
+        {gx: 18, gy: 10, gw: 4, gh: 10}, 
+        {gx: 34, gy: 10, gw: 4, gh: 10}, 
+        {gx: 44, gy: 10, gw: 10, gh: 4}, 
 
         // Horizontal separators
-        {x: 7, y: 8, w: 2, h: 1}, // Between top-left and G
-        {x: 19, y: 8, w: 2, h: 1}, // Between G and top-right
-        {x: 12, y: 8, w: 3, h: 1}, // Inside G (top bar)
-        {x: 12, y: 17, w: 3, h: 1}, // Inside G (bottom bar)
+        {gx: 14, gy: 16, gw: 4, gh: 2}, 
+        {gx: 38, gy: 16, gw: 4, gh: 2}, 
+        {gx: 24, gy: 16, gw: 6, gh: 2}, 
+        {gx: 24, gy: 34, gw: 6, gh: 2}, 
 
         // Structures around G
-        {x: 7, y: 9, w: 2, h: 2}, // Vertical left of first O
-        {x: 19, y: 9, w: 2, h: 2}, // Vertical right of second O
+        {gx: 14, gy: 18, gw: 4, gh: 4}, 
+        {gx: 38, gy: 18, gw: 4, gh: 4}, 
 
-        // G shape
-        {x: 10, y: 6, w: 2, h: 1}, // Top horizontal of G
-        {x: 10, y: 6, w: 1, h: 4}, // Left vertical of G
-        {x: 10, y: 10, w: 2, h: 1}, // Bottom horizontal of G
-        {x: 11, y: 8, w: 1, h: 2}, // Inner vertical of G
-        {x: 11, y: 9, w: 2, h: 1}, // Inner horizontal of G arm
+        // G shape (simplifié)
+        {gx: 20, gy: 12, gw: 4, gh: 2}, // Top horizontal
+        {gx: 20, gy: 12, gw: 2, gh: 8}, // Left vertical
+        {gx: 20, gy: 20, gw: 4, gh: 2}, // Bottom horizontal
+        {gx: 22, gy: 16, gw: 2, gh: 4}, // Inner vertical
+        {gx: 22, gy: 18, gw: 4, gh: 2}, // Inner horizontal arm
 
-        // O shapes
-        {x: 13, y: 6, w: 3, h: 1}, // First O top
-        {x: 12, y: 7, w: 1, h: 3}, // First O left
-        {x: 16, y: 7, w: 1, h: 3}, // First O right
-        {x: 13, y: 10, w: 3, h: 1}, // First O bottom
+        // O shapes (simplifié)
+        {gx: 26, gy: 12, gw: 6, gh: 2}, // First O top
+        {gx: 24, gy: 14, gw: 2, gh: 6}, // First O left
+        {gx: 32, gy: 14, gw: 2, gh: 6}, // First O right
+        {gx: 26, gy: 20, gw: 6, gh: 2}, // First O bottom
 
-        {x: 17, y: 6, w: 3, h: 1}, // Second O top
-        {x: 16, y: 7, w: 1, h: 3}, // Second O left (shared with first O right)
-        {x: 20, y: 7, w: 1, h: 3}, // Second O right
-        {x: 17, y: 10, w: 3, h: 1}, // Second O bottom
+        {gx: 34, gy: 12, gw: 6, gh: 2}, // Second O top
+        // Shared vertical {gx: 32, gy: 14, gw: 2, gh: 6}
+        {gx: 40, gy: 14, gw: 2, gh: 6}, // Second O right
+        {gx: 34, gy: 20, gw: 6, gh: 2}, // Second O bottom
 
-        // Vertical bars (E and L)
-        {x: 22, y: 6, w: 1, h: 5}, // Left vertical of E
-        {x: 23, y: 6, w: 3, h: 1}, // Top horizontal of E
-        {x: 23, y: 8, w: 3, h: 1}, // Middle horizontal of E
-        {x: 23, y: 10, w: 3, h: 1}, // Bottom horizontal of E
+        // Vertical bars (E and L) (simplifié)
+        {gx: 44, gy: 12, gw: 2, gh: 10}, // Left vertical of E
+        {gx: 46, gy: 12, gw: 6, gh: 2}, // Top horizontal of E
+        {gx: 46, gy: 16, gw: 6, gh: 2}, // Middle horizontal of E
+        {gx: 46, gy: 20, gw: 6, gh: 2}, // Bottom horizontal of E
 
-        {x: 2, y: 12, w: 5, h: 1}, // Horizontal below top-left block
-        {x: 7, y: 12, w: 2, h: 1}, // Horizontal to the right of the above
-        {x: 19, y: 12, w: 2, h: 1}, // Horizontal to the left of the right block
-        {x: 21, y: 12, w: 5, h: 1}, // Horizontal below top-right block
+        {gx: 10, gy: 24, gw: 10, gh: 2}, 
+        {gx: 14, gy: 24, gw: 4, gh: 2}, 
+        {gx: 38, gy: 24, gw: 4, gh: 2}, 
+        {gx: 44, gy: 24, gw: 10, gh: 2}, 
 
-        {x: 9, y: 12, w: 1, h: 3}, // Vertical left of first O
-        {x: 18, y: 12, w: 1, h: 3}, // Vertical right of second O
+        {gx: 18, gy: 24, gw: 2, gh: 6}, 
+        {gx: 36, gy: 24, gw: 2, gh: 6}, 
 
-        // Ghost cage
-        {x: 11, y: 13, w: 6, h: 1}, // Top bar of cage
-        {x: 11, y: 14, w: 1, h: 3}, // Left bar of cage
-        {x: 16, y: 14, w: 1, h: 3}, // Right bar of cage
-        {x: 11, y: 16, w: 6, h: 1}, // Bottom bar of cage
-        // Note: The opening is between (13, 14) and (15, 14) - this area should NOT have a wall
+        // Ghost cage (simplifié - l'ouverture sera gérée par exclusion)
+        {gx: 22, gy: 26, gw: 12, gh: 2}, // Top bar of cage
+        {gx: 22, gy: 28, gw: 2, gh: 6}, // Left bar of cage
+        {gx: 32, gy: 28, gw: 2, gh: 6}, // Right bar of cage
+        {gx: 22, gy: 32, gw: 12, gh: 2}, // Bottom bar of cage
+        // Note: L'ouverture est au centre en haut de la cage.
 
-        // Structures below cage
-        {x: 2, y: 18, w: 5, h: 3}, // Bottom-left block
-        {x: 9, y: 18, w: 4, h: 3}, // Bottom-middle-left block
-        {x: 15, y: 18, w: 4, h: 3}, // Bottom-middle-right block
-        {x: 21, y: 18, w: 5, h: 3}, // Bottom-right block
+        // Structures below cage (simplifié)
+        {gx: 10, gy: 36, gw: 10, gh: 6}, 
+        {gx: 18, gy: 36, gw: 8, gh: 6}, 
+        {gx: 30, gy: 36, gw: 8, gh: 6}, 
+        {gx: 44, gy: 36, gw: 10, gh: 6}, 
 
         // Horizontal connectors below cage blocks
-        {x: 7, y: 20, w: 2, h: 1}, // Between bottom-left and middle-left
-        {x: 19, y: 20, w: 2, h: 1}, // Between bottom-middle-right and bottom-right
-        {x: 12, y: 20, w: 3, h: 1}, // Between bottom-middle blocks
+        {gx: 14, gy: 40, gw: 4, gh: 2}, 
+        {gx: 38, gy: 40, gw: 4, gh: 2}, 
+        {gx: 24, gy: 40, gw: 6, gh: 2}, 
 
         // Structures at the bottom
-        {x: 0, y: 22, w: 3, h: 1}, // Far bottom left horizontal
-        {x: 25, y: 22, w: 3, h: 1}, // Far bottom right horizontal
-        {x: 3, y: 22, w: 1, h: 4}, // Vertical above tunnel entry
-        {x: 24, y: 22, w: 1, h: 4}, // Vertical above tunnel entry
-        {x: 4, y: 23, w: 2, h: 1}, // Horizontal next to vertical
-        {x: 22, y: 23, w: 2, h: 1}, // Horizontal next to vertical
+        {gx: 0, gy: 44, gw: 6, gh: 2}, 
+        {gx: 50, gy: 44, gw: 6, gh: 2}, 
+        {gx: 6, gy: 44, gw: 2, gh: 8}, 
+        {gx: 48, gy: 44, gw: 2, gh: 8}, 
+        {gx: 8, gy: 46, gw: 4, gh: 2}, 
+        {gx: 44, gy: 46, gw: 4, gh: 2}, 
 
-        {x: 6, y: 23, w: 1, h: 4}, // Vertical above bottom-left corner
-        {x: 21, y: 23, w: 1, h: 4}, // Vertical above bottom-right corner
-        {x: 7, y: 26, w: 5, h: 1}, // Horizontal below vertical
-        {x: 16, y: 26, w: 5, h: 1}, // Horizontal below vertical
+        {gx: 12, gy: 46, gw: 2, gh: 8}, 
+        {gx: 42, gy: 46, gw: 2, gh: 8}, 
+        {gx: 14, gy: 52, gw: 10, gh: 2}, 
+        {gx: 30, gy: 52, gw: 10, gh: 2}, 
 
-        {x: 12, y: 24, w: 3, h: 1}, // Horizontal below middle blocks
-        {x: 13, y: 25, w: 1, h: 2}, // Vertical middle bottom
+        {gx: 24, gy: 48, gw: 6, gh: 2}, 
+        {gx: 26, gy: 50, gw: 2, gh: 4}, 
 
-        {x: 0, y: 25, w: 1, h: 5}, // Vertical outer left (bottom)
-        {x: 27, y: 25, w: 1, h: 5}, // Vertical outer right (bottom)
+        {gx: 0, gy: 50, gw: 2, gh: 10}, 
+        {gx: 54, gy: 50, gw: 2, gh: 10}, 
 
-        {x: 3, y: 28, w: 2, h: 1}, // Horizontal near bottom corners
-        {x: 23, y: 28, w: 2, h: 1}, // Horizontal near bottom corners
+        {gx: 6, gy: 56, gw: 4, gh: 2}, 
+        {gx: 46, gy: 56, gw: 4, gh: 2}, 
 
-        {x: 6, y: 29, w: 2, h: 1}, // Horizontal near bottom
-        {x: 19, y: 29, w: 2, h: 1}, // Horizontal near bottom
-        {x: 9, y: 29, w: 4, h: 1}, // Horizontal bottom-middle-left
-        {x: 15, y: 29, w: 4, h: 1}, // Horizontal bottom-middle-right
+        {gx: 12, gy: 58, gw: 4, gh: 2}, 
+        {gx: 38, gy: 58, gw: 4, gh: 2}, 
+        {gx: 18, gy: 58, gw: 8, gh: 2}, 
+        {gx: 30, gy: 58, gw: 8, gh: 2}, 
 
-        {x: 12, y: 27, w: 3, h: 1}, // Horizontal above vertical middle bottom
+        {gx: 24, gy: 54, gw: 6, gh: 2}, 
     ];
     
-    mazeStructure.forEach(wall => {
-        for (let x = wall.x; x < wall.x + wall.w; x++) {
-            for (let y = wall.y; y < wall.y + wall.h; y++) {
-                // S'assurer que nous ne créons pas de mur dans l'ouverture de la cage des fantômes
-                if (!((x >= 13 && x <= 14) && y === 13)) { // Vérifie si la position n'est PAS l'ouverture de la cage
+    // Facteur de conversion approximatif des coordonnées Google (base 8) en pixels (base 1)
+    const googleToPixel = (coord) => coord * (CELL_SIZE / 8);
+
+    googleMazeDefinition.forEach(segment => {
+        const startPixelX = googleToPixel(segment.gx);
+        const startPixelY = googleToPixel(segment.gy);
+        const widthPixel = googleToPixel(segment.gw || 0); // Use gw for width, default 0
+        const heightPixel = googleToPixel(segment.gh || 0); // Use gh for height, default 0
+
+        // Convertir les segments en blocs de taille CELL_SIZE pour notre grille
+        // Itérer sur les cellules couvertes par ce segment dans notre grille
+        const startGridX = Math.round(startPixelX / CELL_SIZE);
+        const startGridY = Math.round(startPixelY / CELL_SIZE);
+        const endGridX = Math.round((startPixelX + widthPixel) / CELL_SIZE);
+        const endGridY = Math.round((startPixelY + heightPixel) / CELL_SIZE);
+
+        for (let x = startGridX; x < endGridX; x++) {
+            for (let y = startGridY; y < endGridY; y++) {
+                 // Vérifier si cette cellule n'est pas l'ouverture de la cage des fantômes (approximation based on google grid 27, 28, 29 ; 14)
+                 // En unités de notre grille: x >= 13 && x <= 14 && y === 13
+                if (!((x >= 13 && x <= 14) && y === 13)) {
                      walls.push(new Wall(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE));
                 }
             }
         }
     });
 
-    // Les tunnels sont des espaces vides aux bords (0, 14) et (27, 14)
-    // Assurons-nous qu'il n'y a pas de murs à ces positions, bien que le cadre extérieur les exclut déjà.
-    // walls = walls.filter(wall => 
-    //     !(wall.x === 0 * CELL_SIZE && wall.y === 14 * CELL_SIZE) &&
-    //     !(wall.x === 27 * CELL_SIZE && wall.y === 14 * CELL_SIZE)
-    // );
+    // Assurons-nous que les positions des tunnels (0, 14) et (27, 14) dans notre grille n'ont pas de murs
+    walls = walls.filter(wall => 
+        !((wall.x / CELL_SIZE === 0 || wall.x / CELL_SIZE === 27) && wall.y / CELL_SIZE === 14)
+    );
 
-    // Ajuster les positions de départ de Pacman et des fantômes pour le nouveau labyrinthe
-    // Pacman commence généralement en bas au centre (13.5, 26.5)
-    pacman = new Pacman(13.5 * CELL_SIZE, 26.5 * CELL_SIZE);
+    // Ajuster les positions de départ de Pacman et des fantômes pour ce labyrinthe
+    // Basé sur l'image Google Pacman (Pacman en bas au centre, fantômes dans la cage)
+    // Positions en unités de grille Google (approximatif) converties en pixels pour Pacman et fantômes
+    // Pacman: google grid (28, 52) -> our grid (14, 26) -> pixels (14*20, 26*20)
+    // Ghosts initial positions seem centered around google grid (27, 29)
+    // Ghost cage center in our grid is around (13.5, 15.5)
+
+    pacman = new Pacman(13.5 * CELL_SIZE, 26.5 * CELL_SIZE); // Position en bas au centre (notre grille)
     
-    // Les fantômes commencent dans la cage
+    // Positions initiales des fantômes dans la cage (basé sur l'image Google Pacman et conversion)
     ghosts = [
-        new Ghost(13.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_RED, 'red'), // Blinky (dans la porte de la cage)
-        new Ghost(11.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_PINK, 'pink'), // Pinky (à gauche dans la cage)
-        new Ghost(15.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_CYAN, 'cyan'), // Inky (à droite dans la cage)
-        new Ghost(13.5 * CELL_SIZE, 16.5 * CELL_SIZE, COLORS.GHOST_ORANGE, 'orange') // Clyde (en bas dans la cage)
+        new Ghost(13.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_RED, 'red'), // Blinky (dans la porte)
+        new Ghost(11.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_PINK, 'pink'), // Pinky (gauche)
+        new Ghost(15.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_CYAN, 'cyan'), // Inky (droite)
+        new Ghost(13.5 * CELL_SIZE, 16.5 * CELL_SIZE, COLORS.GHOST_ORANGE, 'orange') // Clyde (bas)
     ];
      ghosts.forEach(ghost => ghost.inCage = true);
+     // Ajuster les cibles de sortie de cage pour les fantômes si nécessaire
+     ghosts.forEach(ghost => {
+         ghost.exitCageTarget = {x: 13.5 * CELL_SIZE, y: 12.5 * CELL_SIZE};
+         ghost.postExitTarget = {x: 13.5 * CELL_SIZE, y: 10.5 * CELL_SIZE};
+     });
+
+    // Supprimer et recréer les points et power-ups pour le nouveau labyrinthe
+    dots = [];
+    powerUps = [];
+    createDots(); // Recréer les points
+    createPowerUps(); // Recréer les power-ups
 }
 
 // Création des points
@@ -255,35 +293,41 @@ function createDots() {
         for (let y = 1; y < GRID_HEIGHT - 1; y++) {
             const pixelX = x * CELL_SIZE + CELL_SIZE / 2; // Centrer le point dans la cellule
             const pixelY = y * CELL_SIZE + CELL_SIZE / 2; // Centrer le point dans la cellule
-            // Vérifier si la position n'est pas un mur et n'est pas dans la zone des fantômes ou l'ouverture de la cage
-            // Zone des fantômes: y >= 13 && y <= 17 && x >= 10 && x <= 17
-            // Ouverture de la cage: (x >= 13 && x <= 14) && y === 13
-            if (!isWall(pixelX, pixelY) && !((y >= 13 && y <= 17) && (x >= 10 && x <= 17))) {
-                 dots.push(new Dot(pixelX, pixelY));
+            // Vérifier si la position n'est pas un mur et n'est pas dans la zone des fantômes (incluant la cage et l'ouverture)
+            // Utiliser une vérification de collision simple avec les murs créés
+            if (!isWall(pixelX, pixelY)) {
+                // Vérifier si la position n'est pas dans la zone approximative de la cage des fantômes
+                const isGhostArea = (y >= 13 && y <= 17 && x >= 10 && x <= 17);
+                if (!isGhostArea) {
+                     dots.push(new Dot(pixelX, pixelY));
+                }
             }
         }
     }
-     // Assurer que les points sont retirés de la zone de la cage et de l'ouverture
-     dots = dots.filter(dot => !((dot.y >= 13 * CELL_SIZE && dot.y <= 17 * CELL_SIZE) && (dot.x >= 10 * CELL_SIZE && dot.x <= 17 * CELL_SIZE)));
+     // Affiner la suppression des points dans la zone de la cage (y=13 à 17, x=10 à 17) et l'ouverture (y=13, x=13 à 14)
+     dots = dots.filter(dot => 
+         !((dot.y / CELL_SIZE >= 13 && dot.y / CELL_SIZE <= 17) && (dot.x / CELL_SIZE >= 10 && dot.x / CELL_SIZE <= 17))
+         && !((dot.x / CELL_SIZE >= 13 && dot.x / CELL_SIZE <= 14) && dot.y / CELL_SIZE === 13)
+     );
 }
 
 // Création des power-ups
 function createPowerUps() {
     powerUps = []; // Réinitialiser les power-ups
-    // Positions des power-ups dans le labyrinthe GOOGLE Pacman (approximatif)
+    // Positions des power-ups basées sur l'image Google Pacman (approximatif)
     const powerUpPositions = [
         {x: 1.5, y: 3.5}, 
         {x: GRID_WIDTH - 2.5, y: 3.5},
-        {x: 1.5, y: GRID_HEIGHT - 6.5}, // Ajusté pour le nouveau labyrinthe
-        {x: GRID_WIDTH - 2.5, y: GRID_HEIGHT - 6.5} // Ajusté pour le nouveau labyrinthe
+        {x: 1.5, y: GRID_HEIGHT - 6.5}, 
+        {x: GRID_WIDTH - 2.5, y: GRID_HEIGHT - 6.5} 
     ];
     
     powerUpPositions.forEach(pos => {
          const pixelX = pos.x * CELL_SIZE; 
          const pixelY = pos.y * CELL_SIZE; 
-        // Vérifier si la position n'est pas un mur avant d'ajouter le power-up
-        if (!isWall(pixelX + CELL_SIZE/2, pixelY + CELL_SIZE/2)) { // Vérifier le centre de la cellule
-            powerUps.push(new PowerUp(pixelX, pixelY));
+        // Vérifier si la position (centrée dans la cellule) n'est pas un mur avant d'ajouter le power-up
+        if (!isWall(pixelX + CELL_SIZE/2, pixelY + CELL_SIZE/2)) { 
+            powerUps.push(new PowerUp(pixelX + CELL_SIZE/2, pixelY + CELL_SIZE/2)); // Centrer le power-up
         }
     });
 }
@@ -292,7 +336,7 @@ function createPowerUps() {
 function isWall(x, y) {
      // Vérifie si le point donné (par exemple, le centre de l'entité) est à l'intérieur d'un mur
      // Utilise une petite tolérance pour un mouvement plus fluide
-     const tolerance = 5; // Augmenter la tolérance si nécessaire
+     const tolerance = 5; 
 
      return walls.some(wall => 
         x > wall.x + tolerance && 
