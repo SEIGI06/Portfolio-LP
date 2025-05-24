@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const header = `
         <header class="header" role="banner">
             <nav class="nav" role="navigation" aria-label="Navigation principale">
-                <a href="#accueil" class="nav__logo" aria-label="Retour à l'accueil">
+                <a href="index.html" class="nav__logo" aria-label="Retour à l'accueil">
                     <img src="assets/images/Portfolio LP.png" alt="Logo Portfolio LP" class="nav__logo-img" loading="lazy">
                 </a>
                 <button class="menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
