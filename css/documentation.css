@@ -9,6 +9,10 @@
     overflow: hidden;
 }
 
+.documentation-page {
+    overflow: hidden;
+}
+
 .documentation-header {
     text-align: center;
     padding: 20px;
