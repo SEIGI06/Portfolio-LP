@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
     const header = `
-        <header>
-            <nav>
-                <a href="#accueil" class="logo">
-                    <img src="assets/images/Portfolio LP.png" alt="Logo Portfolio LP" class="logo-img">
+        <header role="banner">
+            <nav role="navigation" aria-label="Navigation principale">
+                <a href="#accueil" class="logo" aria-label="Retour à l'accueil">
+                    <img src="assets/images/Portfolio LP.png" alt="Logo Portfolio LP" class="logo-img" loading="lazy">
                 </a>
                 <div class="nav-links">
-                    <a href="index.html">Accueil</a>
+                    <a href="index.html" aria-current="page">Accueil</a>
                     <a href="parcours.html">Parcours</a>
                     <a href="certifications.html">Certifications</a>
                     <a href="veille.html">Veille</a>
@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', function() {
     navLinks.forEach(link => {
         if (link.getAttribute('href') === currentPage) {
             link.classList.add('active');
+            link.setAttribute('aria-current', 'page');
+        } else {
+            link.removeAttribute('aria-current');
         }
     });
 }); 
