@@ -6,6 +6,7 @@
     --gray-light: #f5f5f5;
     --gray-dark: #757575;
     --transition-speed: 0.3s;
+    --focus-outline: 3px solid #4a90e2;
 }
 
 /* Style de base */
@@ -173,18 +174,20 @@ nav {
 }
 
 .contact-link {
-    color: var(--primary-color);
-    text-decoration: none;
+    color: #0056b3;
+    text-decoration: underline;
     font-size: 1.1rem;
     transition: color var(--transition-speed);
     padding: 0.5rem;
     border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.95);
 }
 
-.contact-link:hover {
-    color: var(--secondary-color);
-    background-color: rgba(255, 255, 255, 0.95);
+.contact-link:hover,
+.contact-link:focus {
+    color: #003d82;
+    background-color: #ffffff;
+    text-decoration: none;
 }
 
 /* Buttons */
@@ -205,8 +208,8 @@ nav {
 
 /* Footer */
 footer {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: #0d1b3e;
+    color: #ffffff;
     padding: 2rem 0;
 }
 
@@ -222,13 +225,15 @@ footer {
 }
 
 .footer-links a {
-    color: white;
-    text-decoration: none;
+    color: #ffffff;
+    text-decoration: underline;
     transition: color var(--transition-speed);
 }
 
-.footer-links a:hover {
-    color: var(--gray-light);
+.footer-links a:hover,
+.footer-links a:focus {
+    color: #e0e0e0;
+    text-decoration: none;
 }
 
 /* Dark Mode Toggle */
@@ -429,4 +434,47 @@ footer {
     position: absolute;
     left: 0;
     font-size: 1.2rem;
+}
+
+/* Skip Link */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary-color);
+    color: white;
+    padding: 8px;
+    z-index: 100;
+    transition: top 0.3s;
+}
+
+.skip-link:focus {
+    top: 0;
+    outline: var(--focus-outline);
+}
+
+/* Focus styles */
+:focus {
+    outline: var(--focus-outline);
+    outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+:focus-visible {
+    outline: var(--focus-outline);
+    outline-offset: 2px;
+}
+
+/* Improved contrast for links */
+a {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+a:hover, a:focus {
+    color: #003d82;
+    text-decoration: none;
 } 
