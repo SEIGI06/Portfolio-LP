@@ -4,21 +4,22 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
+    padding: 0;
 }
 
 .documentation-header {
     text-align: center;
     padding: 20px;
     background-color: var(--background-color);
+    border-bottom: 1px solid var(--gray-light);
 }
 
 .documentation-container {
     flex: 1;
     width: 100%;
-    border: 2px solid var(--primary-color);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin: 20px;
+    border: 1px solid #e0e0e0;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* Documentation Tree */
