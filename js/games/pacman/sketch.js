@@ -248,15 +248,22 @@ function createPowerUps() {
 
 // Vérification des collisions avec les murs
 function isWall(x, y) {
-     // Vérifie si le point donné (par exemple, le centre de l'entité) est à l'intérieur d'un mur
-     // Utilise une petite tolérance pour un mouvement plus fluide
-     const tolerance = 5; 
+     // Convertir les coordonnées pixel en coordonnées de grille
+     const gridX = Math.floor(x / CELL_SIZE);
+     const gridY = Math.floor(y / CELL_SIZE);
 
-     return walls.some(wall => 
-        x > wall.x + tolerance && 
-        x < wall.x + wall.w - tolerance &&
-        y > wall.y + tolerance && 
-        y < wall.y + wall.h - tolerance
+     // Vérifier si les coordonnées de grille sont hors limites
+     if (gridX < 0 || gridX >= GRID_WIDTH || gridY < 0 || gridY >= GRID_HEIGHT) {
+         // Check for tunnels explicitly at the edges
+         const isTunnel = (gridX < 0 && gridY === Math.floor((GRID_HEIGHT / 2) - 0.5)) || // Left tunnel
+                          (gridX >= GRID_WIDTH && gridY === Math.floor((GRID_HEIGHT / 2) - 0.5)); // Right tunnel
+         return !isTunnel; // If out of bounds, it's a wall unless it's a tunnel location
+     }
+
+     // Vérifier si la cellule de grille correspond à un mur dans la liste des murs
+     return walls.some(wall =>
+        gridX === Math.floor(wall.x / CELL_SIZE) &&
+        gridY === Math.floor(wall.y / CELL_SIZE)
     );
 }
 
@@ -439,15 +446,22 @@ class Pacman {
              let potentialY = this.y;
 
              // Calculer la position potentielle basée sur la prochaine direction
-             if (this.nextDirection === 0) potentialX += this.speed; // droite
-             else if (this.nextDirection === PI) potentialX -= this.speed; // gauche
-             else if (this.nextDirection === -PI/2) potentialY -= this.speed; // haut
-             else if (this.nextDirection === PI/2) potentialY += this.speed; // bas
+             const step = this.speed; // Use speed for potential step
+             if (this.nextDirection === 0) potentialX += step; // droite
+             else if (this.nextDirection === PI) potentialX -= step; // gauche
+             else if (this.nextDirection === -PI/2) potentialY -= step; // haut
+             else if (this.nextDirection === PI/2) potentialY += step; // bas
 
-             // Vérifier si la nouvelle position potentielle n'est pas un mur
-             // Utiliser le centre de Pacman pour la vérification
-             if (!isWall(potentialX, potentialY)) {
+             // Vérifier si la nouvelle position potentielle (en utilisant le centre de Pacman + direction) n'est pas un mur
+             // Ajouter un petit offset dans la direction du mouvement pour anticiper la collision
+             const checkX = this.x + cos(this.nextDirection) * (this.size / 2 + 1); // Check slightly ahead of center
+             const checkY = this.y + sin(this.nextDirection) * (this.size / 2 + 1); // Check slightly ahead of center
+
+             if (!isWall(checkX, checkY)) {
                  this.direction = this.nextDirection;
+                 this.nextDirection = null;
+             } else {
+                 // Si la direction voulue bloque, annuler la demande de changement de direction
                  this.nextDirection = null;
              }
          }
@@ -456,21 +470,29 @@ class Pacman {
         let nextX = this.x;
         let nextY = this.y;
         
-        if (this.direction === 0) nextX += this.speed; // droite
-        else if (this.direction === PI) nextX -= this.speed; // gauche
-        else if (this.direction === -PI/2) nextY -= this.speed; // haut
-        else if (this.direction === PI/2) nextY += this.speed; // bas
+        const step = this.speed; // Use speed for current step
+        if (this.direction === 0) nextX += step; // droite
+        else if (this.direction === PI) nextX -= step; // gauche
+        else if (this.direction === -PI/2) nextY -= step; // haut
+        else if (this.direction === PI/2) nextY += step; // bas
         
         // Vérifier les collisions avec les murs avant de bouger
-        // Utiliser le centre de Pacman pour la vérification
-        if (!isWall(nextX, nextY)) {
+        // Utiliser le centre de Pacman + un petit offset dans la direction du mouvement
+        const checkX = this.x + cos(this.direction) * (this.size / 2 + 1);
+        const checkY = this.y + sin(this.direction) * (this.size / 2 + 1);
+
+        if (!isWall(checkX, checkY)) {
             this.x = nextX;
             this.y = nextY;
+        } else {
+             // Si collision, arrêter le mouvement dans cette direction
+             // Optionally snap to the edge of the wall
+             // This part might need more complex logic depending on desired behavior
         }
         
         // Gestion des tunnels
-        if (this.x < 0) this.x = width - CELL_SIZE/2; // Apparition de l'autre côté avec offset
-        if (this.x > width) this.x = CELL_SIZE/2; // Apparition de l'autre côté avec offset
+        if (this.x < -CELL_SIZE/2) this.x = width - CELL_SIZE/2; // Apparition de l'autre côté avec offset
+        if (this.x > width + CELL_SIZE/2) this.x = CELL_SIZE/2; // Apparition de l'autre côté avec offset
     }
     
     draw() {
@@ -528,7 +550,7 @@ class Ghost {
     update() {
         // Logique de sortie de la cage
         if (this.inCage) {
-             // Déplacer les fantômes dans la cage vers la cible de sortie de la cage
+             // Move towards the exit target
              const targetX = this.exitCageTarget.x;
              const targetY = this.exitCageTarget.y;
 
@@ -536,146 +558,165 @@ class Ghost {
              const nextX = this.x + cos(angleToTarget) * this.speed;
              const nextY = this.y + sin(angleToTarget) * this.speed;
 
-             // Permettre aux fantômes dans la cage de se déplacer sans collision avec les murs de la cage interne
               this.x = nextX;
               this.y = nextY;
 
-             // Si le fantôme atteint presque la sortie de la cage
-             if (dist(this.x, this.y, targetX, targetY) < this.speed * 1.5) { // Utiliser une petite tolérance
+             // If reached the exit target
+             if (dist(this.x, this.y, targetX, targetY) < this.speed * 2) {
                  this.x = targetX; // Snap to target
                  this.y = targetY;
-                 this.inCage = false; // Le fantôme est sorti
-                 this.mode = 'scatter'; // Revenir en mode scatter (ou chase selon le design)
+                 this.inCage = false; // Ghost is out of the cage
+                 this.mode = 'scatter'; // Or 'chase' based on initial logic
+                 this.direction = -PI/2; // Set initial direction upwards
              }
-            return; // Ne pas appliquer la logique de poursuite/dispersion tant qu'il est dans la cage ou en cours de sortie interne
+            return; // Don't apply normal movement while in cage or exiting it
         }
 
-         // Logique de mouvement une fois sorti de la cage mais avant de rejoindre le labyrinthe principal
-         // Se déplacer vers le point post-sortie (juste au-dessus de la cage) s'il n'est pas déjà là
-         if (dist(this.x, this.y, this.postExitTarget.x, this.postExitTarget.y) > this.speed * 1.5 && !this.inCage) {
-             const angleToPostExit = atan2(this.postExitTarget.y - this.y, this.postExitTarget.x - this.x);
-             const nextX = this.x + cos(angleToPostExit) * this.speed;
-             const nextY = this.y + sin(angleToPostExit) * this.speed;
+         // Once out of the cage, move towards the post-exit target if not there yet
+          if (dist(this.x, this.y, this.postExitTarget.x, this.postExitTarget.y) > this.speed * 2) {
+              const angleToPostExit = atan2(this.postExitTarget.y - this.y, this.postExitTarget.x - this.x);
+              const nextX = this.x + cos(angleToPostExit) * this.speed;
+              const nextY = this.y + sin(angleToPostExit) * this.speed;
 
-             // Vérifier les collisions avec les murs avant de bouger vers le point post-sortie
-             // Permettre le passage à travers la barrière de la cage s'ils remontent
-             if (!isWall(nextX, nextY) || (this.y >= 13 * CELL_SIZE && nextY < 13 * CELL_SIZE)) {
-                  this.x = nextX;
-                  this.y = nextY;
-             } else {
-                 // Si bloqué en allant vers le point post-sortie, tenter de se diriger vers Pacman ou coin scatter
-                  this.mode = (this.type === 'red') ? 'chase' : 'scatter'; // Revenir à la logique normale si bloqué
-             }
-             return; // Continuer vers le point post-sortie s'il n'est pas bloqué
-         }
+              // Allow upward movement from the cage exit regardless of wall presence check at that specific point
+              const movingUpFromCageExit = this.y > this.postExitTarget.y && nextY <= this.postExitTarget.y && this.x > (13 * CELL_SIZE) && this.x < (15 * CELL_SIZE);
 
-         // Une fois au point post-sortie ou déjà dans le labyrinthe principal
-         // Appliquer la logique normale de mouvement (scatter/chase/frightened)
+              if (!isWall(nextX, nextY) || movingUpFromCageExit) {
+                   this.x = nextX;
+                   this.y = nextY;
+              } else {
+                  // If blocked, try moving purely upwards if possible
+                  const checkUpY = this.y + sin(-PI/2) * this.speed;
+                   if (!isWall(this.x, checkUpY)) {
+                       this.y = checkUpY;
+                       this.direction = -PI/2; // Set direction to upwards
+                   } else {
+                       // If still blocked, revert to normal scatter/chase logic
+                       this.mode = (this.type === 'red') ? 'chase' : 'scatter';
+                   }
+              }
+              // Snap to post-exit target if close
+              if (dist(this.x, this.y, this.postExitTarget.x, this.postExitTarget.y) < this.speed * 2) {
+                  this.x = this.postExitTarget.x;
+                  this.y = this.postExitTarget.y;
+              }
+              return; // Continue towards post-exit target
+          }
+
+         // Normal movement logic (scatter/chase/frightened)
 
         if (this.isFrightened) {
             this.frightenedTimer--;
             if (this.frightenedTimer <= 0) {
                 this.isFrightened = false;
-                this.speed = 2; // Vitesse normale
+                this.speed = 2; // Normal speed
             } else {
-                 this.speed = 1; // Vitesse réduite en mode frightened
+                 this.speed = 1; // Reduced speed
             }
         }
         
-        // Logique de mouvement basée sur le type de fantôme et le mode
         let targetX, targetY;
 
         if (this.isFrightened) {
-            // Mouvement aléatoire en mode frightened
-             const possibleDirections = [-PI, -PI/2, 0, PI/2]; // gauche, haut, droite, bas (en radians)
-             let chosenDirection = random(possibleDirections);
-             targetX = this.x + cos(chosenDirection) * CELL_SIZE;
-             targetY = this.y + sin(chosenDirection) * CELL_SIZE;
-
-        } else if (this.mode === 'chase') {
-            // Logique de poursuite (basée sur le type de fantôme)
-            switch(this.type) {
-                case 'red': // Blinky
-                    targetX = pacman.x;
-                    targetY = pacman.y;
-                    break;
-                case 'pink': // Pinky
-                    targetX = pacman.x + cos(pacman.direction) * 4 * CELL_SIZE;
-                    targetY = pacman.y + sin(pacman.direction) * 4 * CELL_SIZE;
-                    break;
-                case 'cyan': // Inky
-                    const blinky = ghosts.find(g => g.type === 'red');
-                    if (blinky) {
-                        targetX = blinky.x + (pacman.x - blinky.x) * 2;
-                        targetY = blinky.y + (pacman.y - blinky.y) * 2;
-                    } else { targetX = pacman.x; targetY = pacman.y; }
-                    break;
-                case 'orange': // Clyde
-                    const distance = dist(this.x, this.y, pacman.x, pacman.y);
-                    if (distance < 8 * CELL_SIZE) { targetX = 0; targetY = height; }
-                    else { targetX = pacman.x; targetY = pacman.y; }
-                    break;
-            }
-        } else if (this.mode === 'scatter') {
-            // Cibles pour le mode scatter (coins du labyrinthe - ajusté pour le nouveau labyrinthe)
-             switch(this.type) {
-                 case 'red': targetX = GRID_WIDTH * CELL_SIZE; targetY = 0; break; // Top right
-                 case 'pink': targetX = 0; targetY = 0; break; // Top left
-                 case 'cyan': targetX = GRID_WIDTH * CELL_SIZE; targetY = GRID_HEIGHT * CELL_SIZE; break; // Bottom right
-                 case 'orange': targetX = 0; targetY = GRID_HEIGHT * CELL_SIZE; break; // Bottom left
+            // Random movement in frightened mode
+             const possibleDirections = [-PI, -PI/2, 0, PI/2];
+             let validDirections = [];
+             for(let dir of possibleDirections) {
+                 const testX = this.x + cos(dir) * this.speed;
+                 const testY = this.y + sin(dir) * this.speed;
+                 if (!isWall(testX, testY)) {
+                     validDirections.push(dir);
+                 }
              }
-        }
-        
-        // Calculer la direction vers la cible
-        const angle = atan2(targetY - this.y, targetX - this.x);
-        
-        // Mouvement
-        let nextX = this.x + cos(angle) * this.speed;
-        let nextY = this.y + sin(angle) * this.speed;
-        
-        // Vérifier les collisions avec les murs et ajuster la direction si nécessaire
-        if (!isWall(nextX, nextY)) {
-             this.x = nextX;
-             this.y = nextY;
-             // Mettre à jour la direction basée sur le mouvement réussi
-             this.direction = angle; // Mettre à jour la direction pour la logique future
-        } else {
-            // Si collision, trouver une direction alternative (éviter de faire demi-tour instantanément)
-            const possibleDirections = [-PI, -PI/2, 0, PI/2]; // gauche, haut, droite, bas (en radians)
-            let bestDirection = this.direction; // Garder la direction actuelle par défaut
-            let minDistance = Infinity;
+             let chosenDirection = validDirections.length > 0 ? random(validDirections) : this.direction;
+             this.direction = chosenDirection;
 
-            for (let dir of possibleDirections) {
-                 // Éviter de faire demi-tour (angle différent de PI ou -PI)
-                 // Ajouter une petite tolérance pour les comparaisons d'angles flottants
-                 if (abs(dir - this.direction) > 0.1 && abs(dir - this.direction) < PI * 1.9) { // Moins strict que !== PI
+             targetX = this.x + cos(this.direction) * CELL_SIZE;
+             targetY = this.y + sin(this.direction) * CELL_SIZE;
+
+        } else { // Chase or Scatter mode
+            if (this.mode === 'chase') {
+                switch(this.type) {
+                    case 'red': targetX = pacman.x; targetY = pacman.y; break;
+                    case 'pink': 
+                         targetX = pacman.x + cos(pacman.direction) * 4 * CELL_SIZE;
+                         targetY = pacman.y + sin(pacman.direction) * 4 * CELL_SIZE;
+                         break;
+                    case 'cyan':
+                         const blinky = ghosts.find(g => g.type === 'red');
+                         if (blinky) {
+                             const pacmanTargetX = pacman.x + cos(pacman.direction) * 2 * CELL_SIZE;
+                             const pacmanTargetY = pacman.y + sin(pacman.direction) * 2 * CELL_SIZE;
+                             targetX = blinky.x + (pacmanTargetX - blinky.x) * 2;
+                             targetY = blinky.y + (pacmanTargetY - blinky.y) * 2;
+                         } else { targetX = pacman.x; targetY = pacman.y; }
+                         break;
+                    case 'orange':
+                         const distance = dist(this.x, this.y, pacman.x, pacman.y);
+                         if (distance < 8 * CELL_SIZE) { targetX = 0; targetY = height; }
+                         else { targetX = pacman.x; targetY = pacman.y; }
+                         break;
+                }
+            } else { // Scatter mode
+                 switch(this.type) {
+                     case 'red': targetX = (GRID_WIDTH - 1) * CELL_SIZE; targetY = 0; break;
+                     case 'pink': targetX = 0; targetY = 0; break;
+                     case 'cyan': targetX = (GRID_WIDTH - 1) * CELL_SIZE; targetY = (GRID_HEIGHT - 1) * CELL_SIZE; break;
+                     case 'orange': targetX = 0; targetY = (GRID_HEIGHT - 1) * CELL_SIZE; break;
+                 }
+            }
+
+            // --- Simplified Movement Logic ---
+            let nextX = this.x + cos(this.direction) * this.speed;
+            let nextY = this.y + sin(this.direction) * this.speed;
+
+            // Check for wall collision at the next position
+            if (!isWall(nextX, nextY)) {
+                this.x = nextX;
+                this.y = nextY;
+            } else {
+                // If blocked, find a random valid direction that isn't reversing
+                const possibleDirections = [-PI, -PI/2, 0, PI/2];
+                const reverseDirection = (this.direction + PI) % TWO_PI;
+                let validDirections = [];
+
+                for (let dir of possibleDirections) {
                     const testX = this.x + cos(dir) * this.speed;
                     const testY = this.y + sin(dir) * this.speed;
-                         // Vérifier si la direction alternative n'est pas un mur
-                         if (!isWall(testX, testY)) {
-                             const distToTarget = dist(testX, testY, targetX, targetY);
-                             // Choisir la direction alternative qui rapproche le plus de la cible
-                             if (distToTarget < minDistance) {
-                                minDistance = distToTarget;
-                                bestDirection = dir;
-                             }
-                         }
+                    const isReversing = abs(dir - this.direction) > PI - 0.1 && abs(dir - this.direction) < PI + 0.1;
+
+                    if (!isWall(testX, testY) && !isReversing) {
+                        validDirections.push(dir);
+                    }
+                }
+
+                // If there are valid non-reversing directions, pick one randomly
+                if (validDirections.length > 0) {
+                    this.direction = random(validDirections);
+                } else {
+                    // If only option is reversing or completely blocked, try reversing
+                     const testX = this.x + cos(reverseDirection) * this.speed;
+                     const testY = this.y + sin(reverseDirection) * this.speed;
+                     if (!isWall(testX, testY)) {
+                         this.direction = reverseDirection;
                      }
+                    // If still blocked, ghost stays put
+                }
+
+                 // Attempt to move in the new direction after picking one
+                 nextX = this.x + cos(this.direction) * this.speed;
+                 nextY = this.y + sin(this.direction) * this.speed;
+                  if (!isWall(nextX, nextY)) {
+                     this.x = nextX;
+                     this.y = nextY;
+                  }
             }
-             this.direction = bestDirection; // Mettre à jour la direction vers la meilleure alternative
-             // Tenter de bouger dans la meilleure direction alternative trouvée
-             const finalNextX = this.x + cos(this.direction) * this.speed;
-             const finalNextY = this.y + sin(this.direction) * this.speed;
-              if (!isWall(finalNextX, finalNextY)) {
-                  this.x = finalNextX;
-                  this.y = finalNextY;
-              }
+
         }
 
-        
         // Gestion des tunnels
-        if (this.x < 0) this.x = width - CELL_SIZE/2; // Apparition de l'autre côté avec offset
-        if (this.x > width) this.x = CELL_SIZE/2; // Apparition de l'autre côté avec offset
+        if (this.x < -CELL_SIZE/2) this.x = width - CELL_SIZE/2;
+        if (this.x > width + CELL_SIZE/2) this.x = CELL_SIZE/2;
     }
     
     draw() {
@@ -711,6 +752,14 @@ class Ghost {
         // Réinitialiser les cibles de sortie de la cage
          this.exitCageTarget = {x: 13.5 * CELL_SIZE, y: 12.5 * CELL_SIZE};
          this.postExitTarget = {x: 13.5 * CELL_SIZE, y: 10.5 * CELL_SIZE};
+    }
+
+    // Helper to get discrete direction from angle (not strictly used in simplified movement but kept)
+    getDirectionFromAngle(angle) {
+         if (angle > -PI/4 && angle <= PI/4) return 0; // Right
+         if (angle > PI/4 && angle <= 3*PI/4) return PI/2; // Down
+         if (angle > 3*PI/4 || angle <= -3*PI/4) return PI; // Left
+         return -PI/2; // Up
     }
 }
 
