@@ -247,28 +247,164 @@ footer {
     color: white;
 }
 
+/* Menu Toggle Button */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1002;
+}
+
+.hamburger {
+    display: block;
+    position: relative;
+    width: 24px;
+    height: 2px;
+    background: white;
+    transition: all 0.3s ease-in-out;
+}
+
+.hamburger::before,
+.hamburger::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 2px;
+    background: white;
+    transition: all 0.3s ease-in-out;
+}
+
+.hamburger::before {
+    transform: translateY(-8px);
+}
+
+.hamburger::after {
+    transform: translateY(8px);
+}
+
+/* Animation du menu hamburger */
+.menu-toggle.active .hamburger {
+    background: transparent;
+}
+
+.menu-toggle.active .hamburger::before {
+    transform: rotate(45deg);
+}
+
+.menu-toggle.active .hamburger::after {
+    transform: rotate(-45deg);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-    .nav-links {
-        display: none;
+    .menu-toggle {
+        display: block;
     }
-    
+
+    .nav-links {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background: var(--primary-color);
+        padding: 20px;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .nav-links.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .nav-links a {
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+        font-size: 1.1rem;
+    }
+
     .presentation {
         padding: 1rem;
+        margin-top: 1rem;
     }
 
     .profile-info h2 {
         font-size: 2rem;
     }
 
+    .profile-description {
+        font-size: 1rem;
+    }
+
     .contact-info {
         flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .contact-link {
+        padding: 12px;
+        font-size: 1rem;
     }
 
     .footer-content {
         flex-direction: column;
         gap: 1rem;
         text-align: center;
+    }
+
+    .footer-links {
+        justify-content: center;
+    }
+
+    /* Ajustements pour les cartes */
+    .certifications-grid,
+    .projects-grid,
+    .veille-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1rem 0;
+    }
+
+    .certification-card,
+    .project-card {
+        margin: 0 1rem;
+    }
+}
+
+/* Améliorations pour les tablettes */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        padding: 0 30px;
+    }
+
+    .certifications-grid,
+    .projects-grid,
+    .veille-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Optimisations pour les grands écrans */
+@media (min-width: 1025px) {
+    .container {
+        max-width: 1400px;
+    }
+
+    .nav-links {
+        gap: 2.5rem;
+    }
+
+    .nav-links a {
+        font-size: 1.1rem;
     }
 }
 
