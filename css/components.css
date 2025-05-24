@@ -146,17 +146,28 @@
 
 .certifications-grid .card__image {
     height: 250px;
-    background-color: #f8f9fa;
+    background-color: var(--card-bg);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .certifications-grid .card__image img {
     max-height: 100%;
     max-width: 100%;
     object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.certifications-grid .card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
 }
 
 .certifications-grid .card__title {
