@@ -8,7 +8,6 @@
     --gray-dark: #757575;
     --transition-speed: 0.3s;
     --focus-outline: 3px solid #4a90e2;
-    --background-dark: #0a0a0a;
 }
 
 /* Reset & Base Styles */
@@ -18,13 +17,16 @@
     box-sizing: border-box;
 }
 
+html, body {
+    background-color: #000000 !important;
+    min-height: 100vh;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: var(--text-color);
     position: relative;
-    min-height: 100vh;
-    background-color: var(--background-dark);
 }
 
 body::before {
