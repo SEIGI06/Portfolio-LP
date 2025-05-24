@@ -1,108 +1,111 @@
-# Portfolio Étudiant BTS SIO SISR
+# Portfolio BTS SIO SISR - Lilian Peyr
 
-Ce portfolio a été créé pour présenter les compétences et réalisations d'un étudiant en BTS SIO option SISR, dans le cadre de l'épreuve E5 et pour une utilisation professionnelle.
+![Portfolio Preview](assets/images/Portfolio%20LP.png)
 
-## Structure du Site
+## 📋 Description
 
-Le site est composé des sections suivantes :
+Portfolio professionnel présentant mon parcours, mes compétences et mes projets dans le domaine de l'informatique, plus particulièrement en cybersécurité et administration systèmes et réseaux. Ce portfolio a été développé dans le cadre de ma formation en BTS SIO (Services Informatiques aux Organisations) option SISR (Solutions d'Infrastructure, Systèmes et Réseaux).
 
-- **Accueil** : Présentation rapide et coordonnées
-- **Parcours** : Timeline des études et expériences
-- **Certifications** : Grille des certifications obtenues (RGPD, ANSSI, etc.)
-- **Veille informatique** : Présentation des sujets suivis
-- **Projets** : Présentation des projets réalisés
-- **Documentation** : Arborescence des projets et documentations techniques
-- **Épreuve E5** : Présentation de l'épreuve avec accès à la documentation
+## 🚀 Fonctionnalités
 
-## Fonctionnalités
+- Design responsive et moderne
+- Navigation intuitive
+- Présentation détaillée des compétences
+- Galerie de projets
+- Section certifications
+- Formulaire de contact
+- Optimisé pour les performances
+- Accessibilité (WCAG)
 
-- Design responsive (mobile, tablette, desktop)
-- Arrière-plan flouté avec effet de profondeur
-- Animations au défilement
-- Navigation fluide
-- Liens vers les réseaux professionnels
-- Accessibilité améliorée (ARIA labels, rôles sémantiques)
-- Chargement optimisé des images (lazy loading)
-- SEO optimisé (meta tags, descriptions)
-- Mode sombre (en développement)
+## 🛠️ Technologies Utilisées
 
-## Structure des Dossiers
+- HTML5
+- CSS3
+- JavaScript
+- Responsive Design
+- Git/GitHub
+- SEO Optimization
+
+## 📦 Installation
+
+1. Clonez le repository :
+```bash
+git clone https://github.com/seigi06/Portfolio-LP.git
+```
+
+2. Naviguez vers le dossier du projet :
+```bash
+cd Portfolio-LP
+```
+
+3. Ouvrez le fichier `index.html` dans votre navigateur préféré.
+
+## 🎯 Structure du Projet
 
 ```
-portfolio/
+Portfolio-LP/
+│
 ├── assets/
-│   ├── backgrounds/    # Images d'arrière-plan
-│   ├── certifications/ # Badges et images des certifications
-│   └── images/        # Images générales du site
+│   ├── images/
+│   └── icons/
+│
 ├── css/
-│   ├── style.css      # Styles principaux
-│   ├── e5.css         # Styles spécifiques à l'épreuve E5
-│   └── documentation.css # Styles spécifiques à la documentation
+│   ├── base.css
+│   ├── components.css
+│   └── layout.css
+│
 ├── js/
-│   ├── header.js      # Gestion du header
-│   └── main.js        # Fonctionnalités principales
-├── docs_épreuveE5/    # Documentation de l'épreuve E5
-└── *.html            # Pages du site
+│   ├── header.js
+│   └── main.js
+│
+├── index.html
+└── README.md
 ```
 
-## Comment Modifier le Contenu
+## 🔧 Configuration
 
-### Images
-1. Placez vos images dans les dossiers appropriés :
-   - `assets/backgrounds/` pour les images d'arrière-plan
-   - `assets/certifications/` pour les badges de certification
-   - `assets/images/` pour les autres images
-2. Mettez à jour les chemins dans les fichiers HTML correspondants
-3. Utilisez le format WebP pour une meilleure optimisation
+Le projet ne nécessite pas de configuration particulière. Il suffit d'avoir un navigateur web moderne pour visualiser le portfolio.
 
-### Textes
-1. Ouvrez le fichier HTML correspondant à la section à modifier
-2. Modifiez le contenu entre les balises appropriées
-3. Assurez-vous de maintenir la structure sémantique (h1, h2, h3, etc.)
+## 📱 Responsive Design
 
-### Projets
-1. Pour ajouter un projet, copiez le template de projet dans `projets.html`
-2. Mettez à jour les informations (titre, description, technologies, liens)
-3. Ajoutez les attributs ARIA appropriés pour l'accessibilité
+Le portfolio est entièrement responsive et s'adapte à tous les appareils :
+- Ordinateurs de bureau
+- Tablettes
+- Smartphones
 
-## Bonnes Pratiques
+## 🔍 SEO
 
-- Utilisez des balises sémantiques HTML5 (`<article>`, `<section>`, etc.)
-- Ajoutez des attributs ARIA pour l'accessibilité
-- Optimisez les images avant de les ajouter
-- Maintenez une structure de titres cohérente
-- Utilisez des descriptions alt pertinentes pour les images
-- Ajoutez des meta tags pour le SEO
+Le site est optimisé pour les moteurs de recherche avec :
+- Meta tags appropriés
+- Structure HTML sémantique
+- Images optimisées
+- URLs canoniques
 
-## Déploiement sur GitHub Pages
+## 🤝 Contribution
 
-1. Créez un nouveau repository sur GitHub
-2. Clonez le repository en local
-3. Copiez tous les fichiers du portfolio dans le repository
-4. Committez et poussez les changements :
-   ```bash
-   git add .
-   git commit -m "Initial commit"
-   git push origin main
-   ```
-5. Dans les paramètres du repository GitHub :
-   - Allez dans "Settings" > "Pages"
-   - Dans "Source", sélectionnez "main" comme branche
-   - Cliquez sur "Save"
-6. Votre site sera accessible à l'adresse : `https://votre-username.github.io/nom-du-repo`
+Les contributions sont les bienvenues ! N'hésitez pas à :
+1. Fork le projet
+2. Créer une branche pour votre fonctionnalité
+3. Commiter vos changements
+4. Pousser vers la branche
+5. Ouvrir une Pull Request
 
-## Technologies Utilisées
+## 📄 Licence
 
-- HTML5 (avec focus sur l'accessibilité)
-- CSS3 (variables, flexbox, grid)
-- JavaScript (Vanilla)
-- GitHub Pages pour l'hébergement
-- WebP pour l'optimisation des images
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
-## Améliorations Futures
+## 👤 Contact
 
-- [ ] Implémentation complète du mode sombre
-- [ ] Ajout d'animations plus fluides
-- [ ] Optimisation des performances
-- [ ] Ajout de tests d'accessibilité
-- [ ] Intégration d'un système de blog 
+- Email : lilian.peyr@laposte.net
+- LinkedIn : [Lilian Peyr](https://www.linkedin.com/in/lilian-peyr/)
+- GitHub : [seigi06](https://github.com/seigi06)
+
+## 🙏 Remerciements
+
+- Merci à tous les contributeurs
+- Merci à la communauté open source
+- Merci à mes formateurs et mentors
+
+---
+
+⭐️ N'hésitez pas à donner une étoile si ce projet vous a été utile ! 
