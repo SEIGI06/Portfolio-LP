@@ -15,6 +15,8 @@ let score = 0;
 let lives = 3;
 let gameOver = false;
 let gameStarted = false;
+let ghostReleaseTimer = 180; // Timer to release ghosts after a few seconds (e.g., 3 seconds at 60 FPS)
+let ghostsReleased = 0; // Counter for how many ghosts have been released
 
 // Couleurs
 const COLORS = {
@@ -63,6 +65,8 @@ function initializeGame() {
     dots = [];
     powerUps = [];
     ghosts = [];
+    ghostReleaseTimer = 180; // Reset the release timer
+    ghostsReleased = 0; // Reset the released ghost counter
 
     // Créer les murs
     createWalls();
@@ -73,15 +77,17 @@ function initializeGame() {
     // Créer les power-ups
     createPowerUps();
 
-    // Créer Pacman à sa position de départ
+    // Créer Pacman à sa position de départ (ajustée pour être clairement hors mur)
+    // Coordonnées basées sur la grille (13.5, 26.5) converties en pixels centrés
     pacman = new Pacman(13.5 * CELL_SIZE, 26.5 * CELL_SIZE);
     
     // Créer les fantômes à leurs positions de départ dans la cage
+    // Coordonnées basées sur la grille et converties en pixels centrés
     ghosts = [
-        new Ghost(13.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_RED, 'red'), // Blinky
-        new Ghost(11.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_PINK, 'pink'), // Pinky
-        new Ghost(15.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_CYAN, 'cyan'), // Inky
-        new Ghost(13.5 * CELL_SIZE, 16.5 * CELL_SIZE, COLORS.GHOST_ORANGE, 'orange') // Clyde
+        new Ghost(13.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_RED, 'red'), // Blinky (dans la porte de la cage)
+        new Ghost(11.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_PINK, 'pink'), // Pinky (à gauche dans la cage)
+        new Ghost(15.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_CYAN, 'cyan'), // Inky (à droite dans la cage)
+        new Ghost(13.5 * CELL_SIZE, 16.5 * CELL_SIZE, COLORS.GHOST_ORANGE, 'orange') // Clyde (en bas dans la cage)
     ];
     
     // Marquer les fantômes comme étant dans la cage initialement
@@ -212,10 +218,11 @@ function createWalls() {
 
 
     // Ajuster les positions de départ si nécessaire en fonction du nouveau labyrinthe
-    // Pacman: (14, 26) dans la grille originale -> (13.5 * CELL_SIZE, 26.5 * CELL_SIZE) en pixels centrés
-    // Fantômes: Blinky (13.5, 14.5), Pinky (11.5, 14.5), Inky (15.5, 14.5), Clyde (13.5, 16.5) en pixels centrés
+    // Pacman: (13.5, 26.5) est une position ouverte sous la cage (vérifié)
+    // Fantômes: Positions de départ (13.5, 14.5), (11.5, 14.5), (15.5, 14.5), (13.5, 16.5) sont à l'intérieur de la cage (vérifié)
 
-    pacman = new Pacman(13.5 * CELL_SIZE, 26.5 * CELL_SIZE); // Position approximative
+    // Recréer Pacman et les fantômes avec les positions vérifiées
+    pacman = new Pacman(13.5 * CELL_SIZE, 26.5 * CELL_SIZE); // Position vérifiée pour être ouverte
     
     ghosts = [
         new Ghost(13.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_RED, 'red'), // Blinky
@@ -223,6 +230,7 @@ function createWalls() {
         new Ghost(15.5 * CELL_SIZE, 14.5 * CELL_SIZE, COLORS.GHOST_CYAN, 'cyan'), // Inky (à droite de Blinky)
         new Ghost(13.5 * CELL_SIZE, 16.5 * CELL_SIZE, COLORS.GHOST_ORANGE, 'orange') // Clyde (en dessous de Blinky)
     ];
+     ghosts.forEach(ghost => ghost.inCage = true);
 
     // Supprimer les points et power-ups dans les murs de la nouvelle carte et ajuster leurs positions
     dots = [];
@@ -267,19 +275,45 @@ function createPowerUps() {
 
 // Vérification des collisions avec les murs
 function isWall(x, y) {
-     // Vérifie si le centre du cercle est à l'intérieur d'un mur
-     const halfSize = CELL_SIZE / 2; // Utiliser la moitié de la taille de la cellule pour la collision
-
+     // Vérifie si le point donné (par exemple, le centre de l'entité) est à l'intérieur d'un mur
+     // Ajout d'une petite tolérance pour éviter les blocages sur les bords
+     const tolerance = 1;
      return walls.some(wall => 
-        x > wall.x && 
-        x < wall.x + wall.w &&
-        y > wall.y && 
-        y < wall.y + wall.h
+        x > wall.x + tolerance && 
+        x < wall.x + wall.w - tolerance &&
+        y > wall.y + tolerance && 
+        y < wall.y + wall.h - tolerance
     );
 }
 
 // Mise à jour du jeu
 function updateGame() {
+    // Gérer la libération progressive des fantômes
+    if (ghostsReleased < ghosts.length && ghostReleaseTimer > 0) {
+        ghostReleaseTimer--;
+        if (ghostReleaseTimer <= 0) {
+            // Trouver le prochain fantôme dans la cage et le marquer pour la sortie
+            // Priorité : Blinky (rouge), puis Pinky (rose), Inky (cyan), Clyde (orange)
+            let ghostToRelease = null;
+            if (ghostsReleased === 0) ghostToRelease = ghosts.find(ghost => ghost.type === 'red' && ghost.inCage);
+            else if (ghostsReleased === 1) ghostToRelease = ghosts.find(ghost => ghost.type === 'pink' && ghost.inCage);
+            else if (ghostsReleased === 2) ghostToRelease = ghosts.find(ghost => ghost.type === 'cyan' && ghost.inCage);
+            else if (ghostsReleased === 3) ghostToRelease = ghosts.find(ghost => ghost.type === 'orange' && ghost.inCage);
+
+            if (ghostToRelease) {
+                 ghostToRelease.inCage = false; // Le fantôme est maintenant en train de sortir
+                 // Pas besoin de changer le mode ici, la logique de mouvement dans Ghost.update gère la sortie
+                 ghostsReleased++;
+                 // Réinitialiser le timer pour la prochaine libération ou arrêter si tous sont sortis
+                 if (ghostsReleased < ghosts.length) {
+                     ghostReleaseTimer = 180; // Attendre encore 3 secondes pour le prochain
+                 } else {
+                     ghostReleaseTimer = 0; // Tous les fantômes sont sortis
+                 }
+            }
+        }
+    }
+
     pacman.update();
     ghosts.forEach(ghost => ghost.update());
     checkCollisions();
@@ -415,6 +449,7 @@ class Pacman {
         this.mouthOpen = 0;
         this.mouthSpeed = 0.1;
         this.nextDirection = null;
+        this.size = CELL_SIZE; // Ajouter une taille pour une meilleure collision
     }
     
     update() {
@@ -424,7 +459,26 @@ class Pacman {
             this.mouthSpeed = -this.mouthSpeed;
         }
         
-        // Mouvement
+        // Gérer les changements de direction demandés
+         if (this.nextDirection !== null) {
+             let potentialX = this.x;
+             let potentialY = this.y;
+
+             // Calculer la position potentielle basée sur la prochaine direction
+             if (this.nextDirection === 0) potentialX += this.speed; // droite
+             else if (this.nextDirection === PI) potentialX -= this.speed; // gauche
+             else if (this.nextDirection === -PI/2) potentialY -= this.speed; // haut
+             else if (this.nextDirection === PI/2) potentialY += this.speed; // bas
+
+             // Vérifier si la nouvelle position potentielle n'est pas un mur
+             // Utiliser le centre de Pacman pour la vérification
+             if (!isWall(potentialX, potentialY)) {
+                 this.direction = this.nextDirection;
+                 this.nextDirection = null;
+             }
+         }
+
+        // Mouvement dans la direction actuelle
         let nextX = this.x;
         let nextY = this.y;
         
@@ -433,40 +487,45 @@ class Pacman {
         else if (this.direction === -PI/2) nextY -= this.speed; // haut
         else if (this.direction === PI/2) nextY += this.speed; // bas
         
-        // Vérifier les collisions avec les murs
+        // Vérifier les collisions avec les murs avant de bouger
+        // Utiliser le centre de Pacman pour la vérification
         if (!isWall(nextX, nextY)) {
             this.x = nextX;
             this.y = nextY;
         }
         
         // Gestion des tunnels
-        if (this.x < 0) this.x = width;
-        if (this.x > width) this.x = 0;
+        if (this.x < 0) this.x = width - CELL_SIZE/2; // Apparition de l'autre côté avec offset
+        if (this.x > width) this.x = CELL_SIZE/2; // Apparition de l'autre côté avec offset
     }
     
     draw() {
         push();
+        // Pacman est centré sur ses coordonnées x, y
         translate(this.x, this.y);
         rotate(this.direction);
         
         // Corps de Pacman
         fill(COLORS.PACMAN);
-        arc(0, 0, CELL_SIZE, CELL_SIZE, this.mouthOpen, 2*PI - this.mouthOpen);
+        
+        // Dessiner l'arc pour la bouche
+        arc(0, 0, this.size, this.size, this.mouthOpen, TWO_PI - this.mouthOpen);
         
         pop();
     }
     
     handleKeyPress(keyCode) {
-        if (keyCode === RIGHT_ARROW) this.direction = 0;
-        else if (keyCode === LEFT_ARROW) this.direction = PI;
-        else if (keyCode === UP_ARROW) this.direction = -PI/2;
-        else if (keyCode === DOWN_ARROW) this.direction = PI/2;
+        if (keyCode === RIGHT_ARROW) this.nextDirection = 0;
+        else if (keyCode === LEFT_ARROW) this.nextDirection = PI;
+        else if (keyCode === UP_ARROW) this.nextDirection = -PI/2; // Angle vers le haut en radians
+        else if (keyCode === DOWN_ARROW) this.nextDirection = PI/2; // Angle vers le bas en radians
     }
     
     reset() {
-        this.x = 14 * CELL_SIZE;
-        this.y = 23 * CELL_SIZE;
+        this.x = 13.5 * CELL_SIZE; // Position de départ après avoir perdu une vie
+        this.y = 26.5 * CELL_SIZE;
         this.direction = 0;
+        this.nextDirection = null;
     }
 }
 
@@ -475,46 +534,74 @@ class Ghost {
     constructor(x, y, color, type) {
         this.x = x;
         this.y = y;
-        this.initialX = x;
+        this.initialX = x; // Position initiale dans la cage
         this.initialY = y;
         this.color = color;
         this.type = type;
-        this.speed = 2;
-        this.direction = 0;
+        this.speed = 2; // Vitesse par défaut
+        this.direction = 0; // Direction initiale
         this.isFrightened = false;
         this.frightenedTimer = 0;
         this.mode = 'scatter'; // 'scatter', 'chase', 'frightened', 'exit'
-        this.scatterTimer = 0;
-        this.inCage = true; // Nouveau flag pour la cage
-        this.exitCageTarget = {x: 13.5 * CELL_SIZE, y: 12.5 * CELL_SIZE}; // Cible juste au-dessus de la barrière
+        this.scatterTimer = 0; // Timer pour le mode scatter
+        this.inCage = true; // Flag pour indiquer si le fantôme est dans la cage
+        // Cible pour sortir de la cage - un point juste au-dessus de la barrière
+        this.exitCageTarget = {x: 13.5 * CELL_SIZE, y: 12.5 * CELL_SIZE};
+         // Cible une fois sorti de la cage et avant de rejoindre le labyrinthe principal (par exemple, centre au-dessus de la cage)
+        this.postExitTarget = {x: 13.5 * CELL_SIZE, y: 10.5 * CELL_SIZE};
     }
     
     update() {
-        // Logique de sortie de la cage
+        // Logique de sortie de la cage (pour les fantômes qui ne sont PAS Blinky initialement)
         if (this.inCage) {
-            // Déplacer le fantôme vers la cible de sortie de la cage
-            const targetX = this.exitCageTarget.x;
-            const targetY = this.exitCageTarget.y;
+             // Fantômes dans la cage se déplacent vers leur point initial dans la porte, puis vers la sortie
+             const targetX = (this.type === 'red') ? this.exitCageTarget.x : 13.5 * CELL_SIZE; // Blinky va direct à la sortie, autres au centre porte
+             const targetY = (this.type === 'red') ? this.exitCageTarget.y : 14.5 * CELL_SIZE; // Blinky va direct à la sortie, autres au centre porte
 
-            const angleToTarget = atan2(targetY - this.y, targetX - this.x);
-            const nextX = this.x + cos(angleToTarget) * this.speed;
-            const nextY = this.y + sin(angleToTarget) * this.speed;
+             const angleToTarget = atan2(targetY - this.y, targetX - this.x);
+             const nextX = this.x + cos(angleToTarget) * this.speed;
+             const nextY = this.y + sin(angleToTarget) * this.speed;
 
-            // Si le fantôme atteint presque la sortie de la cage
-            if (dist(this.x, this.y, targetX, targetY) < this.speed) {
-                 this.x = targetX;
+             // Permettre aux fantômes dans la cage de se déplacer sans collision avec les murs de la cage interne
+              this.x = nextX;
+              this.y = nextY;
+
+             // Si le fantôme atteint presque sa cible de sortie ou de regroupement dans la porte
+             if (dist(this.x, this.y, targetX, targetY) < this.speed * 1.5) { // Utiliser une petite tolérance
+                 this.x = targetX; // Snap to target
                  this.y = targetY;
-                 this.inCage = false;
-                 this.mode = 'scatter'; // Revenir en mode scatter après être sorti
-            } else {
-                // Mouvement vers la sortie
-                 this.x = nextX;
-                 this.y = nextY;
-            }
-            return; // Ne pas appliquer la logique de poursuite/dispersion tant qu'il est dans la cage
+                 if (this.type !== 'red' && targetX === 13.5 * CELL_SIZE && targetY === 14.5 * CELL_SIZE) {
+                     // Si pas Blinky et atteint le centre de la porte, prochaine cible est la sortie
+                      this.exitCageTarget = {x: 13.5 * CELL_SIZE, y: 12.5 * CELL_SIZE};
+                 } else if (targetX === this.exitCageTarget.x && targetY === this.exitCageTarget.y) {
+                     // Si atteint la sortie de la cage
+                      this.inCage = false; // Le fantôme est sorti
+                      this.mode = 'scatter'; // Revenir en mode scatter (ou chase selon le design)
+                 }
+             }
+            return; // Ne pas appliquer la logique de poursuite/dispersion tant qu'il est dans la cage ou en cours de sortie interne
         }
 
-        // Logique de changement de mode (scatter/chase) - à implémenter plus tard pour plus de fidélité
+         // Logique de mouvement une fois sorti de la cage mais avant de rejoindre le labyrinthe principal
+         // Se déplacer vers le point post-sortie (juste au-dessus de la cage) s'il n'est pas déjà là
+         if (dist(this.x, this.y, this.postExitTarget.x, this.postExitTarget.y) > this.speed * 1.5 && !this.inCage) {
+             const angleToPostExit = atan2(this.postExitTarget.y - this.y, this.postExitTarget.x - this.x);
+             const nextX = this.x + cos(angleToPostExit) * this.speed;
+             const nextY = this.y + sin(angleToPostExit) * this.speed;
+
+             // Vérifier les collisions avec les murs avant de bouger vers le point post-sortie
+             if (!isWall(nextX, nextY)) {
+                  this.x = nextX;
+                  this.y = nextY;
+             } else {
+                 // Si bloqué en allant vers le point post-sortie, tenter de se diriger vers Pacman ou coin scatter
+                  this.mode = (this.type === 'red') ? 'chase' : 'scatter'; // Revenir à la logique normale si bloqué
+             }
+             return; // Continuer vers le point post-sortie s'il n'est pas bloqué
+         }
+
+         // Une fois au point post-sortie ou déjà dans le labyrinthe principal
+         // Appliquer la logique normale de mouvement (scatter/chase/frightened)
 
         if (this.isFrightened) {
             this.frightenedTimer--;
@@ -577,56 +664,59 @@ class Ghost {
         let nextX = this.x + cos(angle) * this.speed;
         let nextY = this.y + sin(angle) * this.speed;
         
-        // Vérifier les collisions avec les murs
+        // Vérifier les collisions avec les murs et ajuster la direction si nécessaire
         if (!isWall(nextX, nextY)) {
              this.x = nextX;
              this.y = nextY;
+             // Mettre à jour la direction basée sur le mouvement réussi
+             this.direction = angle; // Mettre à jour la direction pour la logique future
         } else {
             // Si collision, trouver une direction alternative (éviter de faire demi-tour instantanément)
-            const possibleDirections = [-PI, -PI/2, 0, PI/2]; // gauche, haut, droite, bas
+            const possibleDirections = [-PI, -PI/2, 0, PI/2]; // gauche, haut, droite, bas (en radians)
             let bestDirection = this.direction; // Garder la direction actuelle par défaut
             let minDistance = Infinity;
 
             for (let dir of possibleDirections) {
-                 // Éviter de faire demi-tour
+                 // Éviter de faire demi-tour (angle différent de PI ou -PI)
                  if (abs(dir - this.direction) !== PI) {
                     const testX = this.x + cos(dir) * this.speed;
                     const testY = this.y + sin(dir) * this.speed;
-                     if (!isWall(testX, testY)) {
-                         const distToTarget = dist(testX, testY, targetX, targetY);
-                         if (distToTarget < minDistance) {
-                            minDistance = distToTarget;
-                            bestDirection = dir;
+                         // Vérifier si la direction alternative n'est pas un mur
+                         if (!isWall(testX, testY)) {
+                             const distToTarget = dist(testX, testY, targetX, targetY);
+                             // Choisir la direction alternative qui rapproche le plus de la cible
+                             if (distToTarget < minDistance) {
+                                minDistance = distToTarget;
+                                bestDirection = dir;
+                             }
                          }
                      }
-                 }
             }
-             this.direction = bestDirection;
-             this.x += cos(this.direction) * this.speed;
-             this.y += sin(this.direction) * this.speed;
+             this.direction = bestDirection; // Mettre à jour la direction vers la meilleure alternative
+             // Tenter de bouger dans la meilleure direction alternative trouvée
+             const finalNextX = this.x + cos(this.direction) * this.speed;
+             const finalNextY = this.y + sin(this.direction) * this.speed;
+              if (!isWall(finalNextX, finalNextY)) {
+                  this.x = finalNextX;
+                  this.y = finalNextY;
+              }
         }
 
         
         // Gestion des tunnels
-        if (this.x < 0) this.x = width;
-        if (this.x > width) this.x = 0;
+        if (this.x < 0) this.x = width - CELL_SIZE/2; // Apparition de l'autre côté avec offset
+        if (this.x > width) this.x = CELL_SIZE/2; // Apparition de l'autre côté avec offset
     }
     
     draw() {
         push();
+        // Fantôme centré sur ses coordonnées x, y
         translate(this.x, this.y);
         
         // Corps du fantôme
         fill(this.isFrightened ? COLORS.GHOST_FRIGHTENED : this.color);
-        beginShape();
-        vertex(-CELL_SIZE/2, -CELL_SIZE/2);
-        vertex(CELL_SIZE/2, -CELL_SIZE/2);
-        vertex(CELL_SIZE/2, 0);
-        vertex(CELL_SIZE/4, CELL_SIZE/2);
-        vertex(0, CELL_SIZE/4);
-        vertex(-CELL_SIZE/4, CELL_SIZE/2);
-        vertex(-CELL_SIZE/2, 0);
-        endShape(CLOSE);
+        // Dessiner le corps comme un cercle pour la collision simple avec Pacman
+        ellipse(0, 0, CELL_SIZE, CELL_SIZE);
         
         // Yeux
         fill(255);
@@ -639,15 +729,18 @@ class Ghost {
     setFrightened() {
         this.isFrightened = true;
         this.frightenedTimer = 300; // 5 secondes à 60 FPS
-        this.speed = 1;
+        this.speed = 1; // Vitesse réduite
     }
     
     reset() {
-        this.x = this.initialX;
+        this.x = this.initialX; // Retour à la position initiale dans la cage
         this.y = this.initialY;
         this.isFrightened = false;
         this.speed = 2; // Vitesse normale
         this.inCage = true; // Retourne dans la cage après avoir été mangé
+        // Réinitialiser les cibles de sortie de la cage
+         this.exitCageTarget = {x: 13.5 * CELL_SIZE, y: 12.5 * CELL_SIZE};
+         this.postExitTarget = {x: 13.5 * CELL_SIZE, y: 10.5 * CELL_SIZE};
     }
 }
 
@@ -672,12 +765,14 @@ class Dot {
         this.x = x;
         this.y = y;
         this.collected = false;
+        this.size = CELL_SIZE / 4; // Taille du point
     }
     
     draw() {
         if (!this.collected) {
             fill(COLORS.DOT);
-            ellipse(this.x, this.y, CELL_SIZE/4, CELL_SIZE/4);
+            // Dessiner le point centré sur ses coordonnées x, y
+            ellipse(this.x, this.y, this.size, this.size);
         }
     }
 }
@@ -688,12 +783,14 @@ class PowerUp {
         this.x = x;
         this.y = y;
         this.collected = false;
+        this.size = CELL_SIZE / 2; // Taille du power-up
     }
     
     draw() {
         if (!this.collected) {
             fill(COLORS.POWER_UP);
-            ellipse(this.x, this.y, CELL_SIZE/2, CELL_SIZE/2);
+            // Dessiner le power-up centré sur ses coordonnées x, y
+            ellipse(this.x, this.y, this.size, this.size);
         }
     }
 } 
