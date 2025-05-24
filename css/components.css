@@ -126,11 +126,17 @@
 }
 
 /* Styles spécifiques pour les certifications et le parcours */
-.certifications-grid .card,
-.certifications-grid .card:hover {
+.certifications-grid .card {
     transform: none;
     background: linear-gradient(145deg, #ffffff, #f5f5f5);
     border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.certifications-grid .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-color: var(--primary-color);
 }
 
 .certifications-grid .card__image {
@@ -140,12 +146,22 @@
     align-items: center;
     justify-content: center;
     padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.certifications-grid .card:hover .card__image {
+    background-color: #f0f2f5;
 }
 
 .certifications-grid .card__image img {
     max-height: 100%;
     max-width: 100%;
     object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.certifications-grid .card:hover .card__image img {
+    transform: scale(1.05);
 }
 
 .certifications-grid .card__content {
