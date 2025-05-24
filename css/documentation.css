@@ -1,11 +1,11 @@
 /* Documentation Container */
 #documentation {
     width: 100%;
-    height: calc(100vh - 80px);
+    height: 100vh;
     display: flex;
     flex-direction: column;
     padding: 0;
-    margin-top: 80px;
+    margin-top: 0;
 }
 
 .documentation-header {
@@ -21,7 +21,12 @@
     border: 1px solid #e0e0e0;
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
+}
+
+/* Tentative de masquer la barre de navigation de l'iframe */
+/* Cette règle peut ne pas fonctionner en raison de la politique de même origine */
+.documentation-container iframe .md-header {
+    display: none !important;
 }
 
 /* Documentation Tree */
