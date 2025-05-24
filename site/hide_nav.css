@@ -9,4 +9,9 @@
   .md-header {
     display: none;
   }
+}
+
+/* Increase top margin for content when inside an iframe */
+.md-content__inner {
+  margin-top: 4rem; /* Adjust this value as needed */
 } 
