@@ -11,6 +11,12 @@ gameWindow.className = 'game-window';
 gameWindow.style.display = 'none';
 document.body.appendChild(gameWindow);
 
+// Création du message de chargement
+const loadingMessage = document.createElement('div');
+loadingMessage.className = 'loading-message';
+loadingMessage.textContent = 'Chargement du jeu...';
+gameWindow.appendChild(loadingMessage);
+
 // Création de l'iframe pour le jeu
 const gameFrame = document.createElement('iframe');
 gameFrame.src = 'js/games/pacman/index.html';
@@ -23,8 +29,10 @@ gameWindow.appendChild(gameFrame);
 pacmanButton.addEventListener('click', () => {
     if (gameWindow.style.display === 'none') {
         gameWindow.style.display = 'block';
+        loadingMessage.style.display = 'block';
         // Attendre que l'iframe soit chargé
         gameFrame.onload = () => {
+            loadingMessage.style.display = 'none';
             gameFrame.contentWindow.focus();
             // Empêcher le défilement de la page
             document.body.style.overflow = 'hidden';
@@ -85,6 +93,18 @@ const styles = `
         height: 100%;
         border: none;
         background: #000;
+    }
+
+    .loading-message {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #FFB897;
+        font-size: 24px;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        z-index: 1000;
     }
 `;
 
