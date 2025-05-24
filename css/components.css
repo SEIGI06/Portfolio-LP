@@ -125,6 +125,79 @@
     margin-bottom: 1rem;
 }
 
+/* Styles spécifiques pour les certifications et le parcours */
+.certifications-grid .card,
+.certifications-grid .card:hover {
+    transform: none;
+    background: linear-gradient(145deg, #ffffff, #f5f5f5);
+    border: 1px solid #e0e0e0;
+}
+
+.certifications-grid .card__image {
+    height: 250px;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.certifications-grid .card__image img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.certifications-grid .card__content {
+    padding: 2rem;
+}
+
+.certifications-grid .card__title {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.certifications-grid .card__description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.certifications-grid .card--coming-soon {
+    background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+}
+
+.certifications-grid .card--coming-soon .card__placeholder {
+    font-size: 2rem;
+    color: #6c757d;
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Grille de certifications et parcours */
+.certifications-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+@media (max-width: 768px) {
+    .certifications-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .certifications-grid .card__image {
+        height: 200px;
+    }
+
+    .certifications-grid .card__content {
+        padding: 1.5rem;
+    }
+}
+
 /* Buttons */
 .btn {
     display: inline-block;
