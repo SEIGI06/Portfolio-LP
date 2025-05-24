@@ -13,7 +13,7 @@ document.body.appendChild(gameWindow);
 
 // Création de l'iframe pour le jeu
 const gameFrame = document.createElement('iframe');
-gameFrame.src = './js/games/pacman/index.html';
+gameFrame.src = '/js/games/pacman/index.html';
 gameFrame.style.width = '100%';
 gameFrame.style.height = '100%';
 gameFrame.style.border = 'none';
@@ -23,10 +23,22 @@ gameWindow.appendChild(gameFrame);
 pacmanButton.addEventListener('click', () => {
     if (gameWindow.style.display === 'none') {
         gameWindow.style.display = 'block';
-        gameFrame.contentWindow.focus();
+        // Attendre que l'iframe soit chargé
+        gameFrame.onload = () => {
+            gameFrame.contentWindow.focus();
+            // Empêcher le défilement de la page
+            document.body.style.overflow = 'hidden';
+        };
     } else {
         gameWindow.style.display = 'none';
+        // Réactiver le défilement de la page
+        document.body.style.overflow = 'auto';
     }
+});
+
+// Empêcher la propagation des événements clavier
+gameWindow.addEventListener('keydown', (e) => {
+    e.stopPropagation();
 });
 
 // Styles CSS
@@ -66,6 +78,13 @@ const styles = `
         border: 2px solid #2121DE;
         box-shadow: 0 0 20px rgba(33, 33, 222, 0.5);
         z-index: 999;
+    }
+
+    .game-window iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: #000;
     }
 `;
 
