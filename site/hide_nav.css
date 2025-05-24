@@ -1,0 +1,12 @@
+/* Hide the header when the page is inside an iframe */
+@media screen and (max-width: 76.1875em) {
+  .md-header {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 76.25em) {
+  .md-header {
+    display: none;
+  }
+} 

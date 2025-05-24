@@ -36,6 +36,9 @@ nav:
     - Commandes Linux: linux/index.md
   - À propos: about.md
 
+extra_css:
+  - hide_nav.css
+
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.superfences
