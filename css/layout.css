@@ -34,9 +34,10 @@ main {
 
 /* Footer */
 .footer {
-    background-color: #0d1b3e;
+    background-color: #1a1a1a;
     color: #ffffff;
     padding: 2rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer__content {
@@ -58,7 +59,7 @@ main {
 
 .footer__links a:hover,
 .footer__links a:focus {
-    color: #e0e0e0;
+    color: #4a90e2;
     text-decoration: none;
 }
 
