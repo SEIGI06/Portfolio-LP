@@ -68,14 +68,18 @@ nav {
 }
 
 .logo {
-    max-width: 200px;
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 50px;
+    width: auto;
     transition: transform var(--transition-speed);
 }
 
-.logo:hover {
+.logo:hover .logo-img {
     transform: scale(1.05);
 }
 
