@@ -94,15 +94,18 @@
 
 /* Cards */
 .card {
-    background: white;
+    background: var(--card-bg);
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     transition: transform var(--transition-speed);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
 .card__image {
@@ -121,11 +124,13 @@
 
 .card__content {
     padding: 1.5rem;
+    color: var(--card-text);
 }
 
 .card__title {
-    color: var(--primary-color);
+    color: var(--text-color);
     margin-bottom: 0.5rem;
+    font-weight: 600;
 }
 
 .card__description {
@@ -135,16 +140,8 @@
 
 /* Styles spécifiques pour les certifications et le parcours */
 .certifications-grid .card {
-    transform: none;
-    background: linear-gradient(145deg, #ffffff, #f5f5f5);
-    border: 1px solid #e0e0e0;
-    transition: all 0.3s ease;
-}
-
-.certifications-grid .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    border-color: var(--primary-color);
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .certifications-grid .card__image {
@@ -162,20 +159,16 @@
     object-fit: contain;
 }
 
-.certifications-grid .card__content {
-    padding: 2rem;
-}
-
 .certifications-grid .card__title {
+    color: var(--text-color);
     font-size: 1.5rem;
-    color: var(--primary-color);
     margin-bottom: 1rem;
 }
 
 .certifications-grid .card__description {
+    color: var(--gray-dark);
     font-size: 1.1rem;
     line-height: 1.6;
-    color: #555;
 }
 
 .certifications-grid .card--coming-soon {
