@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interface IA - Portfolio BTS SIO SISR">
+    <meta name="keywords" content="IA, OpenWebUI, BTS SIO, SISR, Intelligence Artificielle">
+    <title>Interface IA - Portfolio BTS SIO SISR</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <style>
+        .ia-container {
+            width: 100%;
+            height: 80vh;
+            margin: 20px 0;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .ia-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Votre header existant -->
+    </header>
+
+    <main>
+        <section class="container">
+            <h1>Interface IA</h1>
+            
+            <div class="ia-warning">
+                <p>⚠️ Cette interface n'est accessible que depuis le réseau local de la classe.</p>
+            </div>
+
+            <iframe 
+                src="http://[ADRESSE_IP_DE_VOTRE_IA]:[PORT]" 
+                class="ia-container"
+                title="Interface IA"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Votre footer existant -->
+    </footer>
+
+    <script src="js/header.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 

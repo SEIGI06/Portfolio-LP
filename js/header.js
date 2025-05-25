@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <a href="projets.html">Projets</a>
                     <a href="documentation.html">Documentation</a>
                     <a href="e5.html">Épreuve E5</a>
+                    <a href="ia.html">IA</a>
                 </div>
             </nav>
         </header>
