@@ -283,4 +283,63 @@ img {
     max-width: 200px;
     height: auto;
     margin: 0 auto;
+}
+
+/* Styles pour le bouton de thème */
+#theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+#theme-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour le thème sombre */
+.dark-theme {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --primary-color: #4a9eff;
+    --secondary-color: #2d2d2d;
+    --accent-color: #64ffda;
+    --card-bg: #2d2d2d;
+    --card-text: #ffffff;
+    --gray-light: #e0e0e0;
+    --gray-dark: #b0b0b0;
+}
+
+.dark-theme body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.dark-theme .container {
+    background-color: var(--secondary-color);
+}
+
+.dark-theme a {
+    color: var(--accent-color);
+}
+
+.dark-theme .footer {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+.dark-theme #theme-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Animation de transition pour le changement de thème */
+:root {
+    transition: background-color 0.3s ease, color 0.3s ease;
 } 
