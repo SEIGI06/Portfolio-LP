@@ -371,12 +371,13 @@ img {
 
 /* Styles pour l'interface IA */
 .ia-container {
-    background-color: #f8f9fa;
+    background-color: var(--card-bg);
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
     margin: 20px 0;
+    color: var(--text-color);
 }
 
 .ia-warning {
@@ -388,23 +389,31 @@ img {
     text-align: center;
 }
 
+.dark-theme .ia-warning {
+    background-color: #2d2d2d;
+    color: #ffd700;
+    border: 1px solid #ffd700;
+}
+
 .ia-button {
     display: inline-block;
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
     padding: 15px 30px;
     border-radius: 5px;
     text-decoration: none;
     font-weight: bold;
     margin: 20px 0;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .ia-button:hover {
-    background-color: #0056b3;
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
 }
 
 .ia-info {
     margin: 20px 0;
     line-height: 1.6;
+    color: var(--text-color);
 } 
