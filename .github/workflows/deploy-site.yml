@@ -1,0 +1,22 @@
+name: Déploiement du site
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout du dépôt
+        uses: actions/checkout@v3
+
+      - name: Déployer sur GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: . # Le dossier à déployer (racine du projet)
+          branch: gh-pages # La branche de déploiement
+          clean: true # Nettoyer les fichiers existants avant le déploiement 
