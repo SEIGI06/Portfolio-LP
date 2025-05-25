@@ -1,45 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>https://seigi06.github.io/Portfolio-LP/</loc>
-        <lastmod>2024-03-20</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
+         <loc>https://seigi06.github.io/Portfolio-LP/</loc>
+         <lastmod>2025-05-25</lastmod>
     </url>
     <url>
-        <loc>https://seigi06.github.io/Portfolio-LP/parcours.html</loc>
-        <lastmod>2024-03-20</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+         <loc>https://seigi06.github.io/Portfolio-LP/about/</loc>
+         <lastmod>2025-05-25</lastmod>
     </url>
     <url>
-        <loc>https://seigi06.github.io/Portfolio-LP/certifications.html</loc>
-        <lastmod>2024-03-20</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+         <loc>https://seigi06.github.io/Portfolio-LP/Proxmox/</loc>
+         <lastmod>2025-05-25</lastmod>
     </url>
     <url>
-        <loc>https://seigi06.github.io/Portfolio-LP/veille.html</loc>
-        <lastmod>2024-03-20</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
+         <loc>https://seigi06.github.io/Portfolio-LP/active-directory/</loc>
+         <lastmod>2025-05-25</lastmod>
     </url>
     <url>
-        <loc>https://seigi06.github.io/Portfolio-LP/projets.html</loc>
-        <lastmod>2024-03-20</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
+         <loc>https://seigi06.github.io/Portfolio-LP/glpi/</loc>
+         <lastmod>2025-05-25</lastmod>
     </url>
     <url>
-        <loc>https://seigi06.github.io/Portfolio-LP/documentation.html</loc>
-        <lastmod>2024-03-20</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
+         <loc>https://seigi06.github.io/Portfolio-LP/linux/</loc>
+         <lastmod>2025-05-25</lastmod>
     </url>
     <url>
-        <loc>https://seigi06.github.io/Portfolio-LP/e5.html</loc>
-        <lastmod>2024-03-20</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
+         <loc>https://seigi06.github.io/Portfolio-LP/nmap/</loc>
+         <lastmod>2025-05-25</lastmod>
     </url>
-</urlset> 
+    <url>
+         <loc>https://seigi06.github.io/Portfolio-LP/pfsense/</loc>
+         <lastmod>2025-05-25</lastmod>
+    </url>
+</urlset>
