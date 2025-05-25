@@ -1,4 +1,4 @@
-# 🖥️ Proxmox VE – Virtualisation Open Source
+# 🖥️ Prxmox VE – Virtualisation Open Source
 
 ---
 
