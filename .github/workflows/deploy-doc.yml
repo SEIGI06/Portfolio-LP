@@ -1,0 +1,29 @@
+name: Déploiement automatique de la documentation
+
+on:
+  push:
+    paths:
+      - 'docs/**.md'
+      - 'mkdocs.yml'
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du dépôt
+        uses: actions/checkout@v3
+
+      - name: Installer Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Installer MkDocs et le thème Material
+        run: |
+          pip install mkdocs-material
+
+      - name: Déployer sur GitHub Pages
+        run: |
+          mkdocs gh-deploy --force
