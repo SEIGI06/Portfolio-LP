@@ -342,4 +342,31 @@ img {
 /* Animation de transition pour le changement de thème */
 :root {
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Styles pour l'effet de parallaxe */
+.parallax-container {
+    position: relative;
+    overflow: hidden;
+    height: 100vh;
+}
+
+.parallax {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    will-change: transform;
+    transition: transform 0.1s linear;
+}
+
+.parallax--slow {
+    data-speed: 0.2;
+}
+
+.parallax--medium {
+    data-speed: 0.5;
+}
+
+.parallax--fast {
+    data-speed: 0.8;
 } 

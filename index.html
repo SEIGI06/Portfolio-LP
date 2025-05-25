@@ -30,30 +30,40 @@
     <link rel="stylesheet" href="css/components.css">
     <script src="js/header.js" defer></script>
     <script src="js/main.js" defer></script>
-    <script src="js/theme.js" defer></script>
+    <script src="js/parallax.js" defer></script>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Aller au contenu principal</a>
     <!-- Le header sera inséré ici par header.js -->
     <main id="main-content" role="main">
-        <section id="accueil" class="section" aria-labelledby="accueil-title">
-            <div class="container">
-                <div class="logo-container">
-                    <a href="#accueil" class="logo-link" aria-label="Retour à l'accueil">
-                        <img src="assets/images/Portfolio LP.png" alt="Logo Portfolio LP - Lilian Peyr" class="logo" loading="lazy" width="200" height="auto">
-                    </a>
+        <section id="accueil" class="section parallax-container" aria-labelledby="accueil-title">
+            <div class="parallax parallax--slow" data-speed="0.2">
+                <div class="container">
+                    <div class="logo-container">
+                        <a href="#accueil" class="logo-link" aria-label="Retour à l'accueil">
+                            <img src="assets/images/Portfolio LP.png" alt="Logo Portfolio LP - Lilian Peyr" class="logo" loading="lazy" width="200" height="auto">
+                        </a>
+                    </div>
                 </div>
-                <h1 id="accueil-title">Bienvenue sur mon Portfolio</h1>
-                <div class="presentation">
-                    <div class="profile-info">
-                        <h2>Lilian Peyr</h2>
-                        <p>Étudiant en BTS SIO option SISR</p>
-                        <p class="profile-description">
-                            Passionné par la cybersécurité et les systèmes d'information, je suis actuellement en formation pour devenir administrateur systèmes et réseaux.
-                        </p>
-                        <div class="contact-info">
-                            <a href="mailto:lilian.peyr@laposte.net" class="contact-link" aria-label="Envoyer un email à Lilian Peyr">✉️ lilian.peyr@laposte.net</a>
-                            <a href="https://www.linkedin.com/in/lilian-peyr/" target="_blank" rel="noopener noreferrer" class="contact-link" aria-label="Voir le profil LinkedIn de Lilian Peyr">💼 LinkedIn</a>
+            </div>
+            <div class="parallax parallax--medium" data-speed="0.5">
+                <div class="container">
+                    <h1 id="accueil-title">Bienvenue sur mon Portfolio</h1>
+                </div>
+            </div>
+            <div class="parallax parallax--fast" data-speed="0.8">
+                <div class="container">
+                    <div class="presentation">
+                        <div class="profile-info">
+                            <h2>Lilian Peyr</h2>
+                            <p>Étudiant en BTS SIO option SISR</p>
+                            <p class="profile-description">
+                                Passionné par la cybersécurité et les systèmes d'information, je suis actuellement en formation pour devenir administrateur systèmes et réseaux.
+                            </p>
+                            <div class="contact-info">
+                                <a href="mailto:lilian.peyr@laposte.net" class="contact-link" aria-label="Envoyer un email à Lilian Peyr">✉️ lilian.peyr@laposte.net</a>
+                                <a href="https://www.linkedin.com/in/lilian-peyr/" target="_blank" rel="noopener noreferrer" class="contact-link" aria-label="Voir le profil LinkedIn de Lilian Peyr">💼 LinkedIn</a>
+                            </div>
                         </div>
                     </div>
                 </div>
