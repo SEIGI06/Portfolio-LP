@@ -1304,4 +1304,155 @@ img {
 
 .quick-action-btn {
     position: relative;
+}
+
+/* Styles pour la page de veille */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.news-item, .cve-item, .trend-item, .crypto-item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: var(--border-radius);
+    background: var(--card-bg);
+    border-left: 4px solid var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.news-item:hover, .cve-item:hover, .trend-item:hover, .crypto-item:hover {
+    transform: translateX(5px);
+    background: var(--hover-bg);
+}
+
+.item-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+.item-meta {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.item-description {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.severity-high { border-left-color: var(--error-color); }
+.severity-medium { border-left-color: var(--warning-color); }
+.severity-low { border-left-color: var(--success-color); }
+
+.crypto-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price-change {
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+}
+
+.positive { 
+    background: var(--success-bg); 
+    color: var(--success-color); 
+}
+
+.negative { 
+    background: var(--error-bg); 
+    color: var(--error-color); 
+}
+
+.loading {
+    text-align: center;
+    padding: 1rem;
+    color: var(--text-secondary);
+}
+
+.error {
+    background: var(--error-bg);
+    color: var(--error-color);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin: 0.5rem 0;
+}
+
+.refresh-btn {
+    display: block;
+    margin: 2rem auto;
+    padding: 0.75rem 1.5rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .crypto-price {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .price-change {
+        margin-top: 0.5rem;
+    }
 } 
