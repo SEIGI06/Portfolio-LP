@@ -32,8 +32,8 @@ nav:
   - Administration Système:
     - Active Directory: active-directory/index.md
     - pfSense: pfsense/index.md
-    - Proxmox: proxmox/index.md
     - GLPI: glpi/index.md
+  - Proxmox: Proxmox/index.md
   - Sécurité:
     - Nmap: nmap/index.md
   - Linux:
