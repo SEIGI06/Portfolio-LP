@@ -19,36 +19,121 @@
     <main id="main-content" role="main">
         <section id="parcours" class="section">
             <div class="container">
-                <h1>Mon Parcours</h1>
-                <div class="certifications-grid">
-                    <article class="card">
-                        <div class="card__image">
-                            <img src="assets/images/slide01.webp" alt="Lycée Félix Le Dantec à Lannion" loading="lazy">
+                <h1 class="section-title">Mon Parcours</h1>
+                <p class="section-description">Découvrez mon parcours académique et professionnel dans le domaine des systèmes d'information et des réseaux.</p>
+
+                <!-- Parcours Académique -->
+                <div class="parcours-section">
+                    <h2 class="parcours-section-title">Parcours Académique</h2>
+                    <div class="timeline">
+                        <article class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content card">
+                                <div class="card__image">
+                                    <img src="assets/images/slide01.webp" alt="Lycée Félix Le Dantec à Lannion" loading="lazy">
+                                    <div class="card__badge">En cours</div>
+                                </div>
+                                <div class="card__content">
+                                    <h3 class="card__title">BTS SIO option SISR</h3>
+                                    <div class="card__meta">
+                                        <span class="card__date">2023 - 2025</span>
+                                        <span class="card__org">Lycée Félix Le Dantec - Lannion</span>
+                                    </div>
+                                    <p class="card__description">
+                                        Formation complète en administration système et réseaux, cybersécurité et gestion d'infrastructure.
+                                    </p>
+                                    <div class="card__skills">
+                                        <span class="skill-tag">Administration Système</span>
+                                        <span class="skill-tag">Réseaux</span>
+                                        <span class="skill-tag">Cybersécurité</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content card">
+                                <div class="card__image">
+                                    <img src="assets/images/lycee-chaptal-vue-arriere.webp" alt="Lycée Chaptal à Saint-Brieuc" loading="lazy">
+                                    <div class="card__badge">Diplômé</div>
+                                </div>
+                                <div class="card__content">
+                                    <h3 class="card__title">Baccalauréat Général</h3>
+                                    <div class="card__meta">
+                                        <span class="card__date">2020 - 2023</span>
+                                        <span class="card__org">Lycée Chaptal - Saint-Brieuc</span>
+                                    </div>
+                                    <p class="card__description">
+                                        Formation générale avec un focus sur les mathématiques et les sciences.
+                                    </p>
+                                    <div class="card__skills">
+                                        <span class="skill-tag">Mathématiques</span>
+                                        <span class="skill-tag">Sciences</span>
+                                        <span class="skill-tag">Mention Très Bien</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- Expériences Professionnelles -->
+                <div class="parcours-section">
+                    <h2 class="parcours-section-title">Expériences Professionnelles</h2>
+                    <div class="timeline">
+                        <article class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content card">
+                                <div class="card__content">
+                                    <h3 class="card__title">Stage en Administration Système</h3>
+                                    <div class="card__meta">
+                                        <span class="card__date">2024</span>
+                                        <span class="card__org">Entreprise XYZ</span>
+                                    </div>
+                                    <p class="card__description">
+                                        Stage en administration système et réseaux, mise en place d'infrastructures et maintenance.
+                                    </p>
+                                    <div class="card__skills">
+                                        <span class="skill-tag">Windows Server</span>
+                                        <span class="skill-tag">Active Directory</span>
+                                        <span class="skill-tag">Maintenance</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- Compétences -->
+                <div class="parcours-section">
+                    <h2 class="parcours-section-title">Compétences</h2>
+                    <div class="skills-grid">
+                        <div class="skill-category">
+                            <h3>Systèmes</h3>
+                            <div class="skill-tags">
+                                <span class="skill-tag">Windows Server</span>
+                                <span class="skill-tag">Linux</span>
+                                <span class="skill-tag">Active Directory</span>
+                            </div>
                         </div>
-                        <div class="card__content">
-                            <h3 class="card__title">BTS SIO option SISR</h3>
-                            <p>Lycée Félix Le Dantec - Lannion</p>
-                            <p>Formation en Systèmes d'Information et Réseaux</p>
-                            <p>En cours d'obtention</p>
-                            <p class="card__description">
-                                Formation complète en administration système et réseaux, cybersécurité et gestion d'infrastructure.
-                            </p>
+                        <div class="skill-category">
+                            <h3>Réseaux</h3>
+                            <div class="skill-tags">
+                                <span class="skill-tag">Cisco</span>
+                                <span class="skill-tag">TCP/IP</span>
+                                <span class="skill-tag">VLAN</span>
+                            </div>
                         </div>
-                    </article>
-                    <article class="card">
-                        <div class="card__image">
-                            <img src="assets/images/lycee-chaptal-vue-arriere.webp" alt="Lycée Chaptal à Saint-Brieuc" loading="lazy">
+                        <div class="skill-category">
+                            <h3>Sécurité</h3>
+                            <div class="skill-tags">
+                                <span class="skill-tag">Cybersécurité</span>
+                                <span class="skill-tag">Pare-feu</span>
+                                <span class="skill-tag">RGPD</span>
+                            </div>
                         </div>
-                        <div class="card__content">
-                            <h3 class="card__title">Lycée Chaptal</h3>
-                            <p>Saint-Brieuc</p>
-                            <p>Formation générale</p>
-                            <p>Mention Très Bien</p>
-                            <p class="card__description">
-                                Formation générale avec un focus sur les mathématiques et les sciences.
-                            </p>
-                        </div>
-                    </article>
+                    </div>
                 </div>
             </div>
         </section>

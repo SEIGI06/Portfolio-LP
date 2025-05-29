@@ -134,4 +134,54 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
+
+    // Parcours Animations
+    document.addEventListener('DOMContentLoaded', () => {
+        // Animation de la timeline
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        const timelineObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    timelineObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.2,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        timelineItems.forEach(item => {
+            timelineObserver.observe(item);
+        });
+
+        // Animation des compétences
+        const skillCategories = document.querySelectorAll('.skill-category');
+        const skillsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    skillsObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        skillCategories.forEach(category => {
+            skillsObserver.observe(category);
+        });
+
+        // Animation des badges
+        const badges = document.querySelectorAll('.card__badge');
+        badges.forEach(badge => {
+            badge.addEventListener('mouseenter', () => {
+                badge.style.transform = 'scale(1.1)';
+            });
+            badge.addEventListener('mouseleave', () => {
+                badge.style.transform = 'scale(1)';
+            });
+        });
+    });
 }); 
