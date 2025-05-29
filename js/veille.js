@@ -16,12 +16,8 @@ const APIs = {
     // Limite : 100 requêtes par heure
     cveApi: 'https://cve.circl.lu/api',
 
-    // GitHub API : https://docs.github.com/en/rest
-    // 1. Créez un compte GitHub si ce n'est pas déjà fait
-    // 2. Allez dans Settings > Developer settings > Personal access tokens
-    // 3. Générez un nouveau token avec les permissions 'repo' et 'read:user'
-    // 4. Copiez le token dans la variable ci-dessous
-    githubApi: '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'
+    // GitHub API n'est plus utilisé pour des raisons de sécurité.
+    // githubApi: '...' // Clé supprimée
 };
 
 // Fonction pour gérer les erreurs CORS avec un proxy
@@ -92,33 +88,28 @@ async function loadCVEData() {
     }
 }
 
-// Chargement des tendances tech
+// Chargement des tendances tech (désactivé pour ne pas utiliser l'API GitHub avec clé)
+/*
 async function loadTechTrends() {
     const container = document.getElementById('trendsContent');
     
     try {
-        const response = await fetch(`${APIs.githubApi}/search/repositories?q=stars:>1000&sort=stars&order=desc`);
-        const data = await response.json();
+        // API GitHub nécessite une clé ou peut être limitée
+        // const response = await fetch(`${APIs.githubApi}/search/repositories?q=stars:>1000&sort=stars&order=desc`);
+        // const data = await response.json();
 
+        // Simulation de données ou message d'indisponibilité
         let html = '';
-        data.items.slice(0, 5).forEach(repo => {
-            html += `
-                <div class="trend-item">
-                    <div class="item-title">🚀 ${repo.full_name}</div>
-                    <div class="item-meta">💻 ${repo.language} • ⭐ ${repo.stargazers_count.toLocaleString()} stars</div>
-                    <div class="item-description">${repo.description}</div>
-                    <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Voir le projet</a>
-                </div>
-            `;
-        });
+        html += `<div class="loading">Tendances Tech non disponibles (API GitHub désactivée).</div>`;
 
         container.innerHTML = html;
-        document.getElementById('trendsCount').textContent = data.total_count;
+        document.getElementById('trendsCount').textContent = '-'; // Afficher '-' ou '0'
 
     } catch (error) {
         container.innerHTML = `<div class="error">Erreur lors du chargement des tendances: ${error.message}</div>`;
     }
 }
+*/
 
 // Chargement des cryptomonnaies
 async function loadCryptoData() {
@@ -170,7 +161,7 @@ async function loadCryptoData() {
 function refreshAllData() {
     loadCyberNews();
     loadCVEData();
-    loadTechTrends();
+    // loadTechTrends(); // Désactivé
     loadCryptoData();
 }
 

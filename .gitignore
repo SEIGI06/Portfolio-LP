@@ -6,7 +6,4 @@ node_modules/
 .env.local
 .env.*.local
 
-# Ignore the generated veille.js, but not the template
-/js/veille.js
-
 # ... other ignores ... :
