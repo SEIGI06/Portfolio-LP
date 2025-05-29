@@ -252,4 +252,116 @@ document.addEventListener('DOMContentLoaded', () => {
             section.appendChild(floatingTitle);
         }
     });
+
+    // Enhanced Navigation
+    document.addEventListener('DOMContentLoaded', () => {
+        // Créer la barre de progression
+        const progressBar = document.createElement('div');
+        progressBar.className = 'scroll-progress';
+        document.body.appendChild(progressBar);
+
+        // Créer le menu flottant
+        const floatingNav = document.createElement('nav');
+        floatingNav.className = 'floating-nav';
+        floatingNav.innerHTML = `
+            <div class="floating-nav__container">
+                <a href="/" class="floating-nav__logo">Portfolio</a>
+                <div class="floating-nav__links">
+                    <a href="#projets" class="floating-nav__link">Projets</a>
+                    <a href="#certifications" class="floating-nav__link">Certifications</a>
+                    <a href="#veille" class="floating-nav__link">Veille</a>
+                    <a href="#parcours" class="floating-nav__link">Parcours</a>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(floatingNav);
+
+        // Créer les actions rapides
+        const quickActions = document.createElement('div');
+        quickActions.className = 'quick-actions';
+        quickActions.innerHTML = `
+            <button class="quick-action-btn" id="theme-toggle" title="Changer le thème">🌓</button>
+            <button class="quick-action-btn" id="scroll-top" title="Retour en haut">↑</button>
+        `;
+        document.body.appendChild(quickActions);
+
+        // Gérer le défilement et la visibilité des éléments
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercent = (scrollTop / scrollHeight) * 100;
+
+            // Mettre à jour la barre de progression
+            progressBar.style.transform = `scaleX(${scrollPercent / 100})`;
+
+            // Gérer la visibilité du menu flottant
+            if (scrollTop > 300) {
+                floatingNav.classList.add('visible');
+            } else {
+                floatingNav.classList.remove('visible');
+            }
+
+            // Mettre à jour les liens actifs
+            document.querySelectorAll('.floating-nav__link').forEach(link => {
+                const section = document.querySelector(link.getAttribute('href'));
+                if (section) {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top <= 100 && rect.bottom >= 100) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                }
+            });
+
+            // Gérer le bouton de retour en haut
+            const scrollTopBtn = document.getElementById('scroll-top');
+            if (scrollTop > 500) {
+                scrollTopBtn.style.display = 'flex';
+            } else {
+                scrollTopBtn.style.display = 'none';
+            }
+
+            lastScrollTop = scrollTop;
+        });
+
+        // Gérer le clic sur le bouton de retour en haut
+        document.getElementById('scroll-top').addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Gérer le clic sur les liens du menu flottant
+        document.querySelectorAll('.floating-nav__link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Ajouter des tooltips aux boutons d'action rapide
+        const tooltips = document.querySelectorAll('.quick-action-btn');
+        tooltips.forEach(btn => {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltip';
+            tooltip.textContent = btn.getAttribute('title');
+            btn.appendChild(tooltip);
+
+            btn.addEventListener('mouseenter', () => {
+                tooltip.style.opacity = '1';
+                tooltip.style.visibility = 'visible';
+            });
+
+            btn.addEventListener('mouseleave', () => {
+                tooltip.style.opacity = '0';
+                tooltip.style.visibility = 'hidden';
+            });
+        });
+    });
 }); 
