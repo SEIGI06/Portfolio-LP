@@ -9,4 +9,4 @@ node_modules/
 # Ignore the generated veille.js, but not the template
 /js/veille.js
 
-# ... other ignores ... 
+# ... other ignores ... :
