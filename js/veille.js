@@ -1,20 +1,17 @@
 // Configuration des APIs
 const APIs = {
-    // NewsAPI : https://newsapi.org/
-    // 1. Créez un compte sur newsapi.org
-    // 2. Choisissez le plan gratuit (100 requêtes par jour)
-    // 3. Copiez votre clé API dans la variable ci-dessous
-    newsApi: '399feef4b882411390593ce649080a25',
+    // The Hacker News API
+    hackerNewsApi: 'https://hacker-news.firebaseio.com/v0',
 
     // CoinGecko API : https://www.coingecko.com/en/api
     // Pas besoin de clé API pour l'utilisation basique
     // Limite : 10-50 requêtes par minute selon le plan
     cryptoApi: 'https://api.coingecko.com/api/v3',
 
-    // CVE API : https://cve.circl.lu/
-    // Pas besoin de clé API
-    // Limite : 100 requêtes par heure
-    cveApi: 'https://cve.circl.lu/api',
+    // NVD API : https://nvd.nist.gov/developers/start-here
+    // Pas besoin de clé API pour l'utilisation basique
+    // Limite : 5 requêtes par 30 secondes
+    cveApi: 'https://services.nvd.nist.gov/rest/json/cves/2.0',
 
     // GitHub API n'est plus utilisé pour des raisons de sécurité.
     // githubApi: '...' // Clé supprimée
@@ -28,28 +25,32 @@ async function loadCyberNews() {
     const container = document.getElementById('newsContent');
     
     try {
-        const response = await fetch(`${proxyUrl}https://newsapi.org/v2/everything?q=cybersecurity&language=fr&sortBy=publishedAt&apiKey=${APIs.newsApi}`);
-        const data = await response.json();
+        // Récupérer les IDs des 30 derniers articles
+        const response = await fetch(`${APIs.hackerNewsApi}/topstories.json`);
+        const storyIds = await response.json();
 
-        if (data.status === 'error') {
-            throw new Error(data.message);
-        }
+        // Récupérer les détails des 5 premiers articles
+        const stories = await Promise.all(
+            storyIds.slice(0, 5).map(id => 
+                fetch(`${APIs.hackerNewsApi}/item/${id}.json`).then(res => res.json())
+            )
+        );
 
         let html = '';
-        data.articles.slice(0, 5).forEach(article => {
-            const date = new Date(article.publishedAt).toLocaleDateString('fr-FR');
+        stories.forEach(story => {
+            const date = new Date(story.time * 1000).toLocaleDateString('fr-FR');
             html += `
                 <div class="news-item">
-                    <div class="item-title">${article.title}</div>
-                    <div class="item-meta">📰 ${article.source.name} • ${date}</div>
-                    <div class="item-description">${article.description}</div>
-                    <a href="${article.url}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Lire l'article</a>
+                    <div class="item-title">${story.title}</div>
+                    <div class="item-meta">📰 ${story.by} • ${date} • ${story.score} points</div>
+                    <div class="item-description">${story.url ? `Source: ${new URL(story.url).hostname}` : 'Discussion sur Hacker News'}</div>
+                    <a href="${story.url || `https://news.ycombinator.com/item?id=${story.id}`}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Lire l'article</a>
                 </div>
             `;
         });
 
         container.innerHTML = html;
-        document.getElementById('newsCount').textContent = data.articles.length;
+        document.getElementById('newsCount').textContent = stories.length;
 
     } catch (error) {
         container.innerHTML = `<div class="error">Erreur lors du chargement des actualités: ${error.message}</div>`;
@@ -61,31 +62,40 @@ async function loadCVEData() {
     const container = document.getElementById('cveContent');
     
     try {
-        const response = await fetch(`${APIs.cveApi}/last`);
+        const response = await fetch(`${APIs.cveApi}?resultsPerPage=5&pubStartDate=${getDateOneWeekAgo()}`);
         const data = await response.json();
 
         let html = '';
-        data.slice(0, 5).forEach(cve => {
-            const severity = cve.cvss >= 9 ? 'high' : cve.cvss >= 7 ? 'medium' : 'low';
-            const severityText = cve.cvss >= 9 ? 'CRITIQUE' : cve.cvss >= 7 ? 'ÉLEVÉ' : 'MOYEN';
+        data.vulnerabilities.forEach(cve => {
+            const cvssScore = cve.metrics?.cvssMetricV31?.[0]?.cvssData?.baseScore || 
+                            cve.metrics?.cvssMetricV2?.[0]?.cvssData?.baseScore || 0;
+            const severity = cvssScore >= 9 ? 'high' : cvssScore >= 7 ? 'medium' : 'low';
+            const severityText = cvssScore >= 9 ? 'CRITIQUE' : cvssScore >= 7 ? 'ÉLEVÉ' : 'MOYEN';
             const date = new Date(cve.published).toLocaleDateString('fr-FR');
             
             html += `
                 <div class="cve-item severity-${severity}">
-                    <div class="item-title">${cve.id}</div>
-                    <div class="item-meta">🎯 CVSS: ${cve.cvss}/10 (${severityText}) • ${date}</div>
-                    <div class="item-description">${cve.summary}</div>
-                    <a href="https://nvd.nist.gov/vuln/detail/${cve.id}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Plus de détails</a>
+                    <div class="item-title">${cve.cve.id}</div>
+                    <div class="item-meta">🎯 CVSS: ${cvssScore.toFixed(1)}/10 (${severityText}) • ${date}</div>
+                    <div class="item-description">${cve.descriptions[0]?.value || 'Aucune description disponible'}</div>
+                    <a href="https://nvd.nist.gov/vuln/detail/${cve.cve.id}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Plus de détails</a>
                 </div>
             `;
         });
 
         container.innerHTML = html;
-        document.getElementById('cveCount').textContent = data.length;
+        document.getElementById('cveCount').textContent = data.totalResults;
 
     } catch (error) {
         container.innerHTML = `<div class="error">Erreur lors du chargement des CVE: ${error.message}</div>`;
     }
+}
+
+// Fonction utilitaire pour obtenir la date d'il y a une semaine
+function getDateOneWeekAgo() {
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
+    return date.toISOString().split('T')[0];
 }
 
 // Chargement des tendances tech (désactivé pour ne pas utiliser l'API GitHub avec clé)
