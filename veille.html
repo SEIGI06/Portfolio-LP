@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Veille informatique et suivi des actualités technologiques - Portfolio BTS SIO SISR">
+    <meta name="keywords" content="Veille Informatique, Technologie, BTS SIO, SISR, Actualités IT">
+    <meta name="author" content="Lilian Peyr">
+    <title>Veille Informatique - Portfolio BTS SIO SISR</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <script src="js/header.js" defer></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/veille.js" defer></script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+    <main id="main-content" role="main">
+        <section id="veille" class="section">
+            <div class="container">
+                <h1 class="section-title">Veille Informatique</h1>
+                <p class="section-description">Suivi des actualités et tendances technologiques dans le domaine de la cybersécurité et des systèmes d'information.</p>
+
+                <!-- Statistiques -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="newsCount">-</div>
+                        <div class="stat-label">Actualités</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="cveCount">-</div>
+                        <div class="stat-label">CVE Récentes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="trendsCount">-</div>
+                        <div class="stat-label">Tendances</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="cryptoCount">-</div>
+                        <div class="stat-label">Cryptos</div>
+                    </div>
+                </div>
+
+                <div class="veille-grid">
+                    <!-- Actualités Cybersécurité -->
+                    <article class="card veille-card">
+                        <div class="card__content">
+                            <div class="card__header">
+                                <span class="card__icon">🛡️</span>
+                                <h2 class="card__title">Actualités Cybersécurité</h2>
+                            </div>
+                            <div class="card__body" id="newsContent">
+                                <div class="loading">Chargement des actualités...</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Vulnérabilités CVE -->
+                    <article class="card veille-card">
+                        <div class="card__content">
+                            <div class="card__header">
+                                <span class="card__icon">⚠️</span>
+                                <h2 class="card__title">Vulnérabilités CVE</h2>
+                            </div>
+                            <div class="card__body" id="cveContent">
+                                <div class="loading">Chargement des CVE...</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Tendances Tech -->
+                    <article class="card veille-card">
+                        <div class="card__content">
+                            <div class="card__header">
+                                <span class="card__icon">📈</span>
+                                <h2 class="card__title">Tendances Tech</h2>
+                            </div>
+                            <div class="card__body" id="trendsContent">
+                                <div class="loading">Chargement des tendances...</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Cryptomonnaies -->
+                    <article class="card veille-card">
+                        <div class="card__content">
+                            <div class="card__header">
+                                <span class="card__icon">₿</span>
+                                <h2 class="card__title">Cryptomonnaies</h2>
+                            </div>
+                            <div class="card__body" id="cryptoContent">
+                                <div class="loading">Chargement des cours...</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Outils de Veille -->
+                    <article class="card veille-card">
+                        <div class="card__content">
+                            <h2 class="card__title">Outils de Veille</h2>
+                            <div class="veille-tools">
+                                <div class="tool-item">
+                                    <img src="assets/images/veille/feedly.png" alt="Logo Feedly" class="tool-icon">
+                                    <div class="tool-info">
+                                        <h3>Feedly</h3>
+                                        <p>Agrégateur de flux RSS pour suivre les actualités technologiques</p>
+                                    </div>
+                                </div>
+                                <div class="tool-item">
+                                    <img src="assets/images/veille/twitter.png" alt="Logo Twitter" class="tool-icon">
+                                    <div class="tool-info">
+                                        <h3>Twitter</h3>
+                                        <p>Réseau social pour suivre les experts et les actualités en temps réel</p>
+                                    </div>
+                                </div>
+                                <div class="tool-item">
+                                    <img src="assets/images/veille/github.png" alt="Logo GitHub" class="tool-icon">
+                                    <div class="tool-info">
+                                        <h3>GitHub</h3>
+                                        <p>Plateforme pour suivre les projets open source et les tendances</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <button class="btn btn-primary refresh-btn" onclick="refreshAllData()">🔄 Actualiser toutes les données</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer__content">
+                <nav class="footer__links" aria-label="Liens de réseaux sociaux">
+                    <a href="https://github.com/seigi06" target="_blank" rel="noopener noreferrer" aria-label="Profil GitHub">GitHub</a>
+                    <a href="https://www.linkedin.com/in/lilian-peyr/" target="_blank" rel="noopener noreferrer" aria-label="Profil LinkedIn">LinkedIn</a>
+                </nav>
+                <p>&copy; 2024 - Tous droits réservés</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html> 

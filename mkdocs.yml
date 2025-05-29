@@ -1,0 +1,57 @@
+site_name: Documentation BTS SIO
+site_description: Documentation technique pour le BTS SIO
+site_author: Lilian
+site_url: https://seigi06.github.io/Portfolio-LP/
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - search.highlight
+    - navigation.top
+    - navigation.footer
+    - navigation.tracking
+  palette:
+    - scheme: default
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+nav:
+  - Accueil: index.md
+  - Administration Système:
+    - Active Directory: active-directory/index.md
+    - pfSense: pfsense/index.md
+    - GLPI: glpi/index.md
+    - Serveurs Web:
+      - Apache: serveurs-web/apache.md
+      - Mise en place du HTTPS: serveurs-web/https.md
+  - Proxmox: Proxmox/index.md
+  - Outils et Commandes:
+    - Nmap: nmap/index.md
+    - Commandes Multi-OS: commandes-multi-os/index.md
+  - Linux:
+    - Commandes Linux: linux/index.md
+  - À propos: about.md
+
+extra_css:
+  - hide_nav.css
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - admonition
+  - footnotes
+  - toc:
+      permalink: true
