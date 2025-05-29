@@ -7,14 +7,6 @@ const APIs = {
     // Pas besoin de clé API pour l'utilisation basique
     // Limite : 10-50 requêtes par minute selon le plan
     cryptoApi: 'https://api.coingecko.com/api/v3',
-
-    // NVD API : https://nvd.nist.gov/developers/start-here
-    // Pas besoin de clé API pour l'utilisation basique
-    // Limite : 5 requêtes par 30 secondes
-    cveApi: 'https://services.nvd.nist.gov/rest/json/cves/2.0',
-
-    // GitHub API n'est plus utilisé pour des raisons de sécurité.
-    // githubApi: '...' // Clé supprimée
 };
 
 // Fonction pour gérer les erreurs CORS avec un proxy
@@ -58,6 +50,7 @@ async function loadCyberNews() {
 }
 
 // Chargement des CVE récentes
+/*
 async function loadCVEData() {
     const container = document.getElementById('cveContent');
     
@@ -90,6 +83,7 @@ async function loadCVEData() {
         container.innerHTML = `<div class="error">Erreur lors du chargement des CVE: ${error.message}</div>`;
     }
 }
+*/
 
 // Fonction utilitaire pour obtenir la date d'il y a une semaine
 function getDateOneWeekAgo() {
@@ -170,7 +164,7 @@ async function loadCryptoData() {
 // Fonction pour actualiser toutes les données
 function refreshAllData() {
     loadCyberNews();
-    loadCVEData();
+    // loadCVEData(); // Supprimé
     // loadTechTrends(); // Désactivé
     loadCryptoData();
 }

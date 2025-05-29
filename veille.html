@@ -29,14 +29,6 @@
                         <div class="stat-label">Actualités</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number" id="cveCount">-</div>
-                        <div class="stat-label">CVE Récentes</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="trendsCount">-</div>
-                        <div class="stat-label">Tendances</div>
-                    </div>
-                    <div class="stat-card">
                         <div class="stat-number" id="cryptoCount">-</div>
                         <div class="stat-label">Cryptos</div>
                     </div>
@@ -55,34 +47,6 @@
                             </div>
                         </div>
                     </article>
-
-                    <!-- Vulnérabilités CVE -->
-                    <article class="card veille-card">
-                        <div class="card__content">
-                            <div class="card__header">
-                                <span class="card__icon">⚠️</span>
-                                <h2 class="card__title">Vulnérabilités CVE</h2>
-                            </div>
-                            <div class="card__body" id="cveContent">
-                                <div class="loading">Chargement des CVE...</div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Tendances Tech -->
-                    <!-- Cette section est désactivée car l'API GitHub n'est plus utilisée.
-                    <article class="card veille-card">
-                        <div class="card__content">
-                            <div class="card__header">
-                                <span class="card__icon">📈</span>
-                                <h2 class="card__title">Tendances Tech</h2>
-                            </div>
-                            <div class="card__body" id="trendsContent">
-                                <div class="loading">Chargement des tendances...</div>
-                            </div>
-                        </div>
-                    </article>
-                     -->
 
                     <!-- Cryptomonnaies -->
                     <article class="card veille-card">
@@ -129,6 +93,22 @@
                 </div>
 
                 <button class="btn btn-primary refresh-btn" onclick="refreshAllData()">🔄 Actualiser toutes les données</button>
+            </div>
+        </section>
+
+        <!-- Section Actualités -->
+        <section id="news-section" class="card">
+            <h2>Actualités</h2>
+            <div id="news-list" class="container grid">
+                <!-- News articles will be loaded here by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Section Cryptomonnaies -->
+        <section id="crypto-section" class="card">
+            <h2>Cryptomonnaies</h2>
+            <div id="crypto-list" class="container grid">
+                <!-- Crypto data will be loaded here by JavaScript -->
             </div>
         </section>
     </main>
