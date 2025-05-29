@@ -18,24 +18,97 @@
     <main id="main-content" role="main">
         <section id="veille" class="section">
             <div class="container">
-                <h1>Veille Informatique</h1>
-                <div class="veille-content">
-                    <article class="card">
+                <h1 class="section-title">Veille Informatique</h1>
+                <p class="section-description">Suivi des actualités et tendances technologiques dans le domaine de la cybersécurité et des systèmes d'information.</p>
+
+                <div class="veille-grid">
+                    <!-- Outils de Veille -->
+                    <article class="card veille-card">
                         <div class="card__content">
                             <h2 class="card__title">Outils de Veille</h2>
-                            <ul class="card__list" role="list">
-                                <li role="listitem">Outil 1</li>
-                                <li role="listitem">Outil 2</li>
-                            </ul>
+                            <div class="veille-tools">
+                                <div class="tool-item">
+                                    <img src="assets/images/veille/feedly.png" alt="Logo Feedly" class="tool-icon">
+                                    <div class="tool-info">
+                                        <h3>Feedly</h3>
+                                        <p>Agrégateur de flux RSS pour suivre les actualités technologiques</p>
+                                    </div>
+                                </div>
+                                <div class="tool-item">
+                                    <img src="assets/images/veille/twitter.png" alt="Logo Twitter" class="tool-icon">
+                                    <div class="tool-info">
+                                        <h3>Twitter</h3>
+                                        <p>Réseau social pour suivre les experts et les actualités en temps réel</p>
+                                    </div>
+                                </div>
+                                <div class="tool-item">
+                                    <img src="assets/images/veille/github.png" alt="Logo GitHub" class="tool-icon">
+                                    <div class="tool-info">
+                                        <h3>GitHub</h3>
+                                        <p>Plateforme pour suivre les projets open source et les tendances</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </article>
-                    <article class="card">
+
+                    <!-- Sujets Suivis -->
+                    <article class="card veille-card">
                         <div class="card__content">
                             <h2 class="card__title">Sujets Suivis</h2>
-                            <ul class="card__list" role="list">
-                                <li role="listitem">Sujet 1</li>
-                                <li role="listitem">Sujet 2</li>
-                            </ul>
+                            <div class="topics-grid">
+                                <div class="topic-item">
+                                    <h3>Cybersécurité</h3>
+                                    <ul class="topic-list">
+                                        <li>Menaces émergentes</li>
+                                        <li>Bonnes pratiques</li>
+                                        <li>Outils de sécurité</li>
+                                    </ul>
+                                </div>
+                                <div class="topic-item">
+                                    <h3>Cloud Computing</h3>
+                                    <ul class="topic-list">
+                                        <li>Azure</li>
+                                        <li>AWS</li>
+                                        <li>GCP</li>
+                                    </ul>
+                                </div>
+                                <div class="topic-item">
+                                    <h3>DevOps</h3>
+                                    <ul class="topic-list">
+                                        <li>CI/CD</li>
+                                        <li>Conteneurisation</li>
+                                        <li>Automatisation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Articles Récents -->
+                    <article class="card veille-card">
+                        <div class="card__content">
+                            <h2 class="card__title">Articles Récents</h2>
+                            <div class="articles-list">
+                                <article class="article-item">
+                                    <div class="article-meta">
+                                        <span class="article-date">15 Mars 2024</span>
+                                        <span class="article-source">ANSSI</span>
+                                    </div>
+                                    <h3 class="article-title">Nouvelles recommandations de sécurité</h3>
+                                    <p class="article-excerpt">Les dernières recommandations de l'ANSSI pour la sécurisation des systèmes d'information...</p>
+                                    <a href="#" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Lire l'article</a>
+                                </article>
+                                <article class="article-item">
+                                    <div class="article-meta">
+                                        <span class="article-date">10 Mars 2024</span>
+                                        <span class="article-source">Microsoft</span>
+                                    </div>
+                                    <h3 class="article-title">Azure Security Center</h3>
+                                    <p class="article-excerpt">Nouvelles fonctionnalités de sécurité dans Azure Security Center...</p>
+                                    <a href="#" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Lire l'article</a>
+                                </article>
+                            </div>
                         </div>
                     </article>
                 </div>

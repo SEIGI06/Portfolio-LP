@@ -18,20 +18,71 @@
     <main id="main-content" role="main">
         <section id="projets" class="section">
             <div class="container">
-                <h1>Projets</h1>
+                <h1 class="section-title">Mes Projets</h1>
+                <p class="section-description">Découvrez les différents projets que j'ai réalisés dans le cadre de ma formation BTS SIO option SISR.</p>
+                
+                <div class="projects-filter">
+                    <button class="filter-btn active" data-filter="all">Tous</button>
+                    <button class="filter-btn" data-filter="sisr">SISR</button>
+                    <button class="filter-btn" data-filter="dev">Développement</button>
+                    <button class="filter-btn" data-filter="secu">Sécurité</button>
+                </div>
+
                 <div class="projects-grid">
-                    <article class="card">
+                    <article class="card" data-category="sisr">
                         <div class="card__image">
-                            <div class="card__placeholder" role="img" aria-label="Image du projet">Image Projet</div>
+                            <img src="assets/images/projets/sisr-projet1.jpg" alt="Projet Administration Système" loading="lazy">
                         </div>
                         <div class="card__content">
-                            <h3 class="card__title">Nom du Projet</h3>
-                            <p class="card__description">Description du projet</p>
+                            <h3 class="card__title">Administration Système Windows Server</h3>
+                            <p class="card__description">Mise en place d'un domaine Active Directory avec gestion des utilisateurs, des groupes et des politiques de sécurité.</p>
                             <div class="card__tech" role="list">
-                                <span role="listitem">Technologie 1</span>
-                                <span role="listitem">Technologie 2</span>
+                                <span class="tech-tag">Windows Server</span>
+                                <span class="tech-tag">Active Directory</span>
+                                <span class="tech-tag">GPO</span>
                             </div>
-                            <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Voir le projet sur GitHub">Voir sur GitHub</a>
+                            <div class="card__links">
+                                <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Voir la documentation du projet">Documentation</a>
+                                <a href="#" class="btn btn-secondary" target="_blank" rel="noopener noreferrer" aria-label="Voir le projet sur GitHub">GitHub</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card" data-category="secu">
+                        <div class="card__image">
+                            <img src="assets/images/projets/secu-projet1.jpg" alt="Projet Sécurité Réseau" loading="lazy">
+                        </div>
+                        <div class="card__content">
+                            <h3 class="card__title">Sécurisation d'un Réseau d'Entreprise</h3>
+                            <p class="card__description">Mise en place d'une infrastructure réseau sécurisée avec pare-feu, VLAN et surveillance.</p>
+                            <div class="card__tech" role="list">
+                                <span class="tech-tag">Cisco</span>
+                                <span class="tech-tag">Pare-feu</span>
+                                <span class="tech-tag">VLAN</span>
+                            </div>
+                            <div class="card__links">
+                                <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Voir la documentation du projet">Documentation</a>
+                                <a href="#" class="btn btn-secondary" target="_blank" rel="noopener noreferrer" aria-label="Voir le projet sur GitHub">GitHub</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card" data-category="dev">
+                        <div class="card__image">
+                            <img src="assets/images/projets/dev-projet1.jpg" alt="Projet Développement Web" loading="lazy">
+                        </div>
+                        <div class="card__content">
+                            <h3 class="card__title">Application Web de Gestion</h3>
+                            <p class="card__description">Développement d'une application web pour la gestion des stocks et des commandes.</p>
+                            <div class="card__tech" role="list">
+                                <span class="tech-tag">HTML/CSS</span>
+                                <span class="tech-tag">JavaScript</span>
+                                <span class="tech-tag">PHP</span>
+                            </div>
+                            <div class="card__links">
+                                <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Voir la documentation du projet">Documentation</a>
+                                <a href="#" class="btn btn-secondary" target="_blank" rel="noopener noreferrer" aria-label="Voir le projet sur GitHub">GitHub</a>
+                            </div>
                         </div>
                     </article>
                 </div>
