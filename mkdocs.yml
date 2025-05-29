@@ -34,8 +34,9 @@ nav:
     - pfSense: pfsense/index.md
     - GLPI: glpi/index.md
   - Proxmox: Proxmox/index.md
-  - Sécurité:
+  - Outils et Commandes:
     - Nmap: nmap/index.md
+    - Commandes Multi-OS: commandes-multi-os/index.md
   - Linux:
     - Commandes Linux: linux/index.md
   - À propos: about.md
