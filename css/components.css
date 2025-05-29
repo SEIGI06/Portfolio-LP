@@ -1018,4 +1018,133 @@ img {
     .skills-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-color);
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.scroll-indicator.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.scroll-indicator__text {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.scroll-indicator__icon {
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--text-color);
+    border-radius: 50%;
+    position: relative;
+    animation: bounce 2s infinite;
+}
+
+.scroll-indicator__icon::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--text-color);
+    border-radius: 50%;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Section Navigation */
+.section-nav {
+    position: fixed;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 1000;
+}
+
+.section-nav__dot {
+    width: 12px;
+    height: 12px;
+    background: var(--text-color);
+    border-radius: 50%;
+    opacity: 0.3;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.section-nav__dot.active {
+    opacity: 1;
+    transform: scale(1.2);
+    background: var(--primary-color);
+}
+
+.section-nav__dot:hover {
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .section-nav {
+        display: none;
+    }
+}
+
+/* Floating Section Titles */
+.floating-title {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--card-bg);
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    color: var(--text-color);
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+}
+
+.floating-title.visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+@media (max-width: 768px) {
+    .floating-title {
+        font-size: 1rem;
+        padding: 0.4rem 1.2rem;
+    }
 } 

@@ -184,4 +184,72 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
+
+    // Scroll Indicator and Section Navigation
+    const scrollIndicator = document.createElement('div');
+    scrollIndicator.className = 'scroll-indicator';
+    scrollIndicator.innerHTML = `
+        <span class="scroll-indicator__text">Défiler</span>
+        <div class="scroll-indicator__icon"></div>
+    `;
+    document.body.appendChild(scrollIndicator);
+
+    const sectionNav = document.createElement('div');
+    sectionNav.className = 'section-nav';
+    document.body.appendChild(sectionNav);
+
+    const sections = document.querySelectorAll('.section');
+    
+    sections.forEach((section, index) => {
+        const dot = document.createElement('div');
+        dot.className = 'section-nav__dot';
+        dot.setAttribute('data-section', section.id);
+        dot.setAttribute('title', section.querySelector('.section-title')?.textContent || `Section ${index + 1}`);
+        sectionNav.appendChild(dot);
+
+        dot.addEventListener('click', () => {
+            section.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop > 300) {
+            scrollIndicator.classList.add('hidden');
+        } else {
+            scrollIndicator.classList.remove('hidden');
+        }
+
+        sections.forEach((section, index) => {
+            const rect = section.getBoundingClientRect();
+            const dot = document.querySelector(`.section-nav__dot[data-section="${section.id}"]`);
+            
+            if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+                dot?.classList.add('active');
+            } else {
+                dot?.classList.remove('active');
+            }
+        });
+
+        lastScrollTop = scrollTop;
+    });
+
+    scrollIndicator.addEventListener('click', () => {
+        const firstSection = sections[0];
+        if (firstSection) {
+            firstSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+
+    sections.forEach(section => {
+        const title = section.querySelector('.section-title');
+        if (title) {
+            const floatingTitle = document.createElement('div');
+            floatingTitle.className = 'floating-title';
+            floatingTitle.textContent = title.textContent;
+            section.appendChild(floatingTitle);
+        }
+    });
 }); 
