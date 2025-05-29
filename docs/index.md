@@ -4,20 +4,26 @@ Cette documentation regroupe les différentes ressources et guides techniques po
 
 ## Sections principales
 
-### Administration Système
-- [Active Directory](active-directory/index.md) - Gestion des utilisateurs et des politiques de groupe
-- [pfSense](pfsense/index.md) - Configuration et administration du pare-feu
-- [GLPI](glpi/index.md) - Gestion de parc informatique et helpdesk
-- [Proxmox](Proxmox/index.md) - Virtualisation et gestion des machines virtuelles
+Explorez les différentes sections de cette documentation :
 
-### Sécurité
-- [Nmap](nmap/index.md) - Guide d'utilisation des commandes Nmap
+### Administration Système
+- [Active Directory](active-directory/index.md)
+- [pfSense](pfsense/index.md)
+- [GLPI](glpi/index.md)
+- [Serveurs Web](serveurs-web/index.md)
+
+### Proxmox
+- [Proxmox VE](Proxmox/index.md)
+
+### Outils et Commandes
+- [Nmap](nmap/index.md)
+- [Commandes Multi-OS](commandes-multi-os/index.md)
 
 ### Linux
-- [Commandes Linux](linux/index.md) - Guide des commandes Linux essentielles
+- [Commandes Linux](linux/index.md)
 
-## À propos
-Consultez la [page À propos](about.md) pour plus d'informations sur cette documentation.
+### À propos
+- [À propos de cette documentation](about.md)
 
 ## Comment utiliser cette documentation
 
