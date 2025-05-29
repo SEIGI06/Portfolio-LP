@@ -4,7 +4,7 @@ const APIs = {
     // 1. Créez un compte sur newsapi.org
     // 2. Choisissez le plan gratuit (100 requêtes par jour)
     // 3. Copiez votre clé API dans la variable ci-dessous
-    newsApi: '399feef4b882411390593ce649080a25',
+    newsApi: process.env.NEWS_API_KEY || '',
 
     // CoinGecko API : https://www.coingecko.com/en/api
     // Pas besoin de clé API pour l'utilisation basique
@@ -21,7 +21,7 @@ const APIs = {
     // 2. Allez dans Settings > Developer settings > Personal access tokens
     // 3. Générez un nouveau token avec les permissions 'repo' et 'read:user'
     // 4. Copiez le token dans la variable ci-dessous
-    githubApi: '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'
+    githubApi: process.env.GITHUB_TOKEN || ''
 };
 
 // Fonction pour gérer les erreurs CORS avec un proxy
