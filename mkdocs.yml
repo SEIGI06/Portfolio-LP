@@ -33,6 +33,9 @@ nav:
     - Active Directory: active-directory/index.md
     - pfSense: pfsense/index.md
     - GLPI: glpi/index.md
+    - Serveurs Web:
+      - Apache: serveurs-web/apache.md
+      - Mise en place du HTTPS: serveurs-web/https.md
   - Proxmox: Proxmox/index.md
   - Outils et Commandes:
     - Nmap: nmap/index.md
