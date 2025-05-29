@@ -1,9 +1,27 @@
 // Configuration des APIs
 const APIs = {
-    newsApi: 'YOUR_NEWS_API_KEY', // À remplacer par votre clé
+    // NewsAPI : https://newsapi.org/
+    // 1. Créez un compte sur newsapi.org
+    // 2. Choisissez le plan gratuit (100 requêtes par jour)
+    // 3. Copiez votre clé API dans la variable ci-dessous
+    newsApi: process.env.NEWS_API_KEY || '',
+
+    // CoinGecko API : https://www.coingecko.com/en/api
+    // Pas besoin de clé API pour l'utilisation basique
+    // Limite : 10-50 requêtes par minute selon le plan
     cryptoApi: 'https://api.coingecko.com/api/v3',
+
+    // CVE API : https://cve.circl.lu/
+    // Pas besoin de clé API
+    // Limite : 100 requêtes par heure
     cveApi: 'https://cve.circl.lu/api',
-    hackerNewsApi: 'https://hacker-news.firebaseio.com/v0'
+
+    // GitHub API : https://docs.github.com/en/rest
+    // 1. Créez un compte GitHub si ce n'est pas déjà fait
+    // 2. Allez dans Settings > Developer settings > Personal access tokens
+    // 3. Générez un nouveau token avec les permissions 'repo' et 'read:user'
+    // 4. Copiez le token dans la variable ci-dessous
+    githubApi: process.env.TOKEN_GITHUB || ''
 };
 
 // Fonction pour gérer les erreurs CORS avec un proxy
@@ -14,42 +32,28 @@ async function loadCyberNews() {
     const container = document.getElementById('newsContent');
     
     try {
-        // Simulation de données car NewsAPI nécessite une clé
-        const mockNews = [
-            {
-                title: "Nouvelle campagne de phishing visant les entreprises",
-                description: "Les cybercriminels utilisent des techniques d'ingénierie sociale avancées...",
-                publishedAt: new Date().toISOString(),
-                source: { name: "CyberScoop" }
-            },
-            {
-                title: "Mise à jour critique de sécurité pour Apache",
-                description: "Une vulnérabilité critique découverte dans Apache HTTP Server...",
-                publishedAt: new Date(Date.now() - 3600000).toISOString(),
-                source: { name: "Security Week" }
-            },
-            {
-                title: "Nouvelle réglementation NIS2 en Europe",
-                description: "La directive NIS2 renforce les exigences de cybersécurité...",
-                publishedAt: new Date(Date.now() - 7200000).toISOString(),
-                source: { name: "ENISA" }
-            }
-        ];
+        const response = await fetch(`${proxyUrl}https://newsapi.org/v2/everything?q=cybersecurity&language=fr&sortBy=publishedAt&apiKey=${APIs.newsApi}`);
+        const data = await response.json();
+
+        if (data.status === 'error') {
+            throw new Error(data.message);
+        }
 
         let html = '';
-        mockNews.forEach(article => {
+        data.articles.slice(0, 5).forEach(article => {
             const date = new Date(article.publishedAt).toLocaleDateString('fr-FR');
             html += `
                 <div class="news-item">
                     <div class="item-title">${article.title}</div>
                     <div class="item-meta">📰 ${article.source.name} • ${date}</div>
                     <div class="item-description">${article.description}</div>
+                    <a href="${article.url}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Lire l'article</a>
                 </div>
             `;
         });
 
         container.innerHTML = html;
-        document.getElementById('newsCount').textContent = mockNews.length;
+        document.getElementById('newsCount').textContent = data.articles.length;
 
     } catch (error) {
         container.innerHTML = `<div class="error">Erreur lors du chargement des actualités: ${error.message}</div>`;
@@ -61,30 +65,11 @@ async function loadCVEData() {
     const container = document.getElementById('cveContent');
     
     try {
-        // Simulation de données CVE
-        const mockCVEs = [
-            {
-                id: "CVE-2024-1234",
-                summary: "Remote code execution in Apache Struts",
-                cvss: 9.8,
-                published: new Date().toISOString()
-            },
-            {
-                id: "CVE-2024-5678",
-                summary: "SQL injection vulnerability in WordPress plugin",
-                cvss: 7.5,
-                published: new Date(Date.now() - 86400000).toISOString()
-            },
-            {
-                id: "CVE-2024-9012",
-                summary: "Privilege escalation in Linux kernel",
-                cvss: 6.2,
-                published: new Date(Date.now() - 172800000).toISOString()
-            }
-        ];
+        const response = await fetch(`${APIs.cveApi}/last`);
+        const data = await response.json();
 
         let html = '';
-        mockCVEs.forEach(cve => {
+        data.slice(0, 5).forEach(cve => {
             const severity = cve.cvss >= 9 ? 'high' : cve.cvss >= 7 ? 'medium' : 'low';
             const severityText = cve.cvss >= 9 ? 'CRITIQUE' : cve.cvss >= 7 ? 'ÉLEVÉ' : 'MOYEN';
             const date = new Date(cve.published).toLocaleDateString('fr-FR');
@@ -94,12 +79,13 @@ async function loadCVEData() {
                     <div class="item-title">${cve.id}</div>
                     <div class="item-meta">🎯 CVSS: ${cve.cvss}/10 (${severityText}) • ${date}</div>
                     <div class="item-description">${cve.summary}</div>
+                    <a href="https://nvd.nist.gov/vuln/detail/${cve.id}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Plus de détails</a>
                 </div>
             `;
         });
 
         container.innerHTML = html;
-        document.getElementById('cveCount').textContent = mockCVEs.length;
+        document.getElementById('cveCount').textContent = data.length;
 
     } catch (error) {
         container.innerHTML = `<div class="error">Erreur lors du chargement des CVE: ${error.message}</div>`;
@@ -111,41 +97,23 @@ async function loadTechTrends() {
     const container = document.getElementById('trendsContent');
     
     try {
-        // Simulation de tendances GitHub
-        const mockTrends = [
-            {
-                name: "kubernetes/kubernetes",
-                description: "Production-Grade Container Scheduling and Management",
-                language: "Go",
-                stars: 108000
-            },
-            {
-                name: "microsoft/vscode",
-                description: "Visual Studio Code",
-                language: "TypeScript",
-                stars: 159000
-            },
-            {
-                name: "ansible/ansible",
-                description: "Simple, agentless IT automation",
-                language: "Python",
-                stars: 61000
-            }
-        ];
+        const response = await fetch(`${APIs.githubApi}/search/repositories?q=stars:>1000&sort=stars&order=desc`);
+        const data = await response.json();
 
         let html = '';
-        mockTrends.forEach(repo => {
+        data.items.slice(0, 5).forEach(repo => {
             html += `
                 <div class="trend-item">
-                    <div class="item-title">🚀 ${repo.name}</div>
-                    <div class="item-meta">💻 ${repo.language} • ⭐ ${repo.stars.toLocaleString()} stars</div>
+                    <div class="item-title">🚀 ${repo.full_name}</div>
+                    <div class="item-meta">💻 ${repo.language} • ⭐ ${repo.stargazers_count.toLocaleString()} stars</div>
                     <div class="item-description">${repo.description}</div>
+                    <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Voir le projet</a>
                 </div>
             `;
         });
 
         container.innerHTML = html;
-        document.getElementById('trendsCount').textContent = mockTrends.length;
+        document.getElementById('trendsCount').textContent = data.total_count;
 
     } catch (error) {
         container.innerHTML = `<div class="error">Erreur lors du chargement des tendances: ${error.message}</div>`;
@@ -157,7 +125,6 @@ async function loadCryptoData() {
     const container = document.getElementById('cryptoContent');
     
     try {
-        // API CoinGecko gratuite
         const response = await fetch(`${APIs.cryptoApi}/simple/price?ids=bitcoin,ethereum,cardano,polkadot,chainlink&vs_currencies=eur&include_24hr_change=true`);
         const data = await response.json();
 
