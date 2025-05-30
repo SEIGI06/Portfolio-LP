@@ -439,10 +439,12 @@ const debianTerminal = {
     // Initialisation
     init() {
         document.addEventListener('keydown', (e) => {
-            this.state.sequence += e.key;
-            if (this.state.sequence.includes('debian')) {
-                this.activate();
-                this.state.sequence = '';
+            if (e.key.length === 1) {  // Ne prendre en compte que les caractères imprimables
+                this.state.sequence += e.key;
+                if (this.state.sequence.includes('debian')) {
+                    this.activate();
+                    this.state.sequence = '';
+                }
             }
         });
         this.createTerminal();
