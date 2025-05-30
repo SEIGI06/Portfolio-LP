@@ -1,8 +1,50 @@
-// Mode Agent Secret - Transforme le portfolio en une mission de cybersécurité
+// Mode Agent Secret - Terminal Debian Style
 const secretAgent = {
     isActive: false,
     sequence: '',
-    missionLevel: 1,
+    currentPath: '/home/agent',
+    fileSystem: {
+        '/home/agent': {
+            type: 'directory',
+            contents: {
+                'documents': {
+                    type: 'directory',
+                    contents: {
+                        'mission.txt': {
+                            type: 'file',
+                            content: 'MISSION: Sécuriser le portfolio contre les attaques\nNiveau: 1\nStatut: En cours'
+                        },
+                        'notes.txt': {
+                            type: 'file',
+                            content: 'Notes importantes:\n- Vérifier les vulnérabilités\n- Mettre à jour les systèmes\n- Renforcer la sécurité'
+                        }
+                    }
+                },
+                'tools': {
+                    type: 'directory',
+                    contents: {
+                        'scanner.sh': {
+                            type: 'file',
+                            content: '#!/bin/bash\necho "Scanner de vulnérabilités v1.0"'
+                        },
+                        'decrypt.py': {
+                            type: 'file',
+                            content: '#!/usr/bin/python3\nprint("Module de décryptage")'
+                        }
+                    }
+                },
+                'logs': {
+                    type: 'directory',
+                    contents: {
+                        'access.log': {
+                            type: 'file',
+                            content: '2024-03-15 10:30:15 - Tentative de connexion\n2024-03-15 10:31:20 - Accès autorisé'
+                        }
+                    }
+                }
+            }
+        }
+    },
     terminal: null,
     glitchEffect: null,
     soundEffects: {
@@ -13,7 +55,6 @@ const secretAgent = {
     },
 
     init() {
-        // Écouter la séquence de touches secrète
         document.addEventListener('keydown', (e) => {
             this.sequence += e.key;
             if (this.sequence.includes('mission')) {
@@ -21,8 +62,6 @@ const secretAgent = {
                 this.sequence = '';
             }
         });
-
-        // Créer le terminal caché
         this.createTerminal();
     },
 
@@ -31,20 +70,19 @@ const secretAgent = {
         this.terminal.className = 'secret-terminal';
         this.terminal.innerHTML = `
             <div class="terminal-header">
-                <span class="terminal-title">MISSION TERMINAL v1.0</span>
+                <span class="terminal-title">DEBIAN TERMINAL v1.0</span>
                 <span class="terminal-status">EN ATTENTE</span>
             </div>
             <div class="terminal-content">
                 <div class="terminal-output"></div>
                 <div class="terminal-input-line">
-                    <span class="prompt">></span>
+                    <span class="prompt">agent@debian:${this.currentPath}$</span>
                     <input type="text" class="terminal-input" autofocus>
                 </div>
             </div>
         `;
         document.body.appendChild(this.terminal);
 
-        // Gérer les commandes du terminal
         const input = this.terminal.querySelector('.terminal-input');
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
@@ -57,24 +95,16 @@ const secretAgent = {
     activate() {
         this.isActive = true;
         this.soundEffects.mission.play();
-        
-        // Ajouter la classe au body
         document.body.classList.add('mission-mode');
-        
-        // Activer les effets de glitch
         this.activateGlitchEffect();
-        
-        // Afficher le terminal
         this.terminal.classList.add('active');
-        
-        // Message de bienvenue
         this.printToTerminal(`
             ╔════════════════════════════════════════════════════════════╗
-            ║                    MISSION INITIÉE                          ║
+            ║                    DEBIAN TERMINAL v1.0                     ║
             ║                                                            ║
             ║  Agent: ${this.generateAgentName()}                        ║
-            ║  Niveau: ${this.missionLevel}                              ║
-            ║  Objectif: Sécuriser le portfolio                          ║
+            ║  Système: Debian GNU/Linux 12 (bookworm)                   ║
+            ║  Shell: /bin/bash                                          ║
             ║                                                            ║
             ║  Tapez 'help' pour voir les commandes disponibles          ║
             ╚════════════════════════════════════════════════════════════╝
@@ -83,42 +113,135 @@ const secretAgent = {
 
     handleCommand(command) {
         this.soundEffects.type.play();
-        
-        switch(command.toLowerCase()) {
+        const [cmd, ...args] = command.split(' ');
+
+        switch(cmd.toLowerCase()) {
             case 'help':
                 this.printToTerminal(`
                     Commandes disponibles:
-                    - scan: Analyser le système
+                    - ls [chemin]: Lister les fichiers
+                    - cd [chemin]: Changer de répertoire
+                    - cat [fichier]: Afficher le contenu d'un fichier
+                    - pwd: Afficher le répertoire courant
+                    - clear: Effacer le terminal
+                    - scan: Lancer le scanner de vulnérabilités
                     - hack: Tenter de pénétrer le système
                     - decrypt: Décrypter les messages
-                    - mission: Voir la mission en cours
-                    - clear: Effacer le terminal
                 `);
                 break;
-                
-            case 'scan':
-                this.startScan();
+
+            case 'ls':
+                this.listFiles(args[0] || this.currentPath);
                 break;
-                
-            case 'hack':
-                this.startHacking();
+
+            case 'cd':
+                this.changeDirectory(args[0]);
                 break;
-                
-            case 'decrypt':
-                this.startDecryption();
+
+            case 'cat':
+                this.showFileContent(args[0]);
                 break;
-                
-            case 'mission':
-                this.showMission();
+
+            case 'pwd':
+                this.printToTerminal(this.currentPath);
                 break;
-                
+
             case 'clear':
                 this.clearTerminal();
                 break;
-                
+
+            case 'scan':
+                this.startScan();
+                break;
+
+            case 'hack':
+                this.startHacking();
+                break;
+
+            case 'decrypt':
+                this.startDecryption();
+                break;
+
             default:
-                this.printToTerminal(`Commande non reconnue: ${command}`);
+                this.printToTerminal(`Commande non reconnue: ${cmd}`);
         }
+    },
+
+    listFiles(path) {
+        const targetPath = path.startsWith('/') ? path : `${this.currentPath}/${path}`;
+        const dir = this.getDirectory(targetPath);
+        
+        if (!dir) {
+            this.printToTerminal(`ls: impossible d'accéder à '${path}': Aucun fichier ou dossier de ce type`);
+            return;
+        }
+
+        let output = '';
+        for (const [name, item] of Object.entries(dir.contents)) {
+            const type = item.type === 'directory' ? 'd' : '-';
+            const color = item.type === 'directory' ? '\x1b[34m' : '\x1b[32m';
+            output += `${color}${type}rwxr-xr-x 1 agent agent ${name}\x1b[0m\n`;
+        }
+        this.printToTerminal(output);
+    },
+
+    changeDirectory(path) {
+        if (!path) {
+            this.currentPath = '/home/agent';
+            return;
+        }
+
+        const targetPath = path.startsWith('/') ? path : `${this.currentPath}/${path}`;
+        const dir = this.getDirectory(targetPath);
+
+        if (!dir || dir.type !== 'directory') {
+            this.printToTerminal(`cd: ${path}: Aucun fichier ou dossier de ce type`);
+            return;
+        }
+
+        this.currentPath = targetPath;
+        this.updatePrompt();
+    },
+
+    showFileContent(path) {
+        const targetPath = path.startsWith('/') ? path : `${this.currentPath}/${path}`;
+        const file = this.getFile(targetPath);
+
+        if (!file || file.type !== 'file') {
+            this.printToTerminal(`cat: ${path}: Aucun fichier de ce type`);
+            return;
+        }
+
+        this.printToTerminal(file.content);
+    },
+
+    getDirectory(path) {
+        const parts = path.split('/').filter(Boolean);
+        let current = this.fileSystem['/home/agent'];
+
+        for (const part of parts) {
+            if (!current.contents[part]) return null;
+            current = current.contents[part];
+        }
+
+        return current;
+    },
+
+    getFile(path) {
+        const parts = path.split('/').filter(Boolean);
+        let current = this.fileSystem['/home/agent'];
+
+        for (let i = 0; i < parts.length - 1; i++) {
+            if (!current.contents[parts[i]]) return null;
+            current = current.contents[parts[i]];
+        }
+
+        return current.contents[parts[parts.length - 1]];
+    },
+
+    updatePrompt() {
+        const prompt = this.terminal.querySelector('.prompt');
+        prompt.textContent = `agent@debian:${this.currentPath}$`;
     },
 
     printToTerminal(text) {
@@ -194,23 +317,6 @@ const secretAgent = {
                 this.soundEffects.success.play();
             }
         }, 100);
-    },
-
-    showMission() {
-        this.printToTerminal(`
-            MISSION EN COURS:
-            ----------------
-            Objectif: Sécuriser le portfolio
-            Niveau de difficulté: ${this.missionLevel}
-            Points de contrôle: 3/5
-            Temps restant: ${this.generateRandomTime()}
-        `);
-    },
-
-    generateRandomTime() {
-        const hours = Math.floor(Math.random() * 24);
-        const minutes = Math.floor(Math.random() * 60);
-        return `${hours}h ${minutes}m`;
     },
 
     clearTerminal() {
