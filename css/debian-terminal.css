@@ -1,0 +1,159 @@
+/* Terminal Debian - Styles de base */
+:root {
+    --terminal-bg: #2b2b2b;
+    --terminal-text: #ffffff;
+    --terminal-header-bg: #1a1a1a;
+    --terminal-border: #3a3a3a;
+    --terminal-prompt: #00ff00;
+    --terminal-error: #ff0000;
+    --terminal-success: #00ff00;
+    --terminal-warning: #ffff00;
+    --terminal-info: #00ffff;
+}
+
+/* Mode terminal */
+.terminal-mode {
+    background-color: var(--terminal-bg);
+    color: var(--terminal-text);
+    font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
+    line-height: 1.5;
+    overflow: hidden;
+}
+
+/* Terminal */
+.secret-terminal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    background-color: var(--terminal-bg);
+    border: 1px solid var(--terminal-border);
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.secret-terminal.active {
+    display: block;
+    animation: terminal-appear 0.3s ease-out;
+}
+
+/* En-tête du terminal */
+.terminal-header {
+    background-color: var(--terminal-header-bg);
+    padding: 10px;
+    border-bottom: 1px solid var(--terminal-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.terminal-title {
+    font-weight: bold;
+    color: var(--terminal-text);
+}
+
+.terminal-status {
+    color: var(--terminal-success);
+    font-size: 0.9em;
+}
+
+/* Contenu du terminal */
+.terminal-content {
+    height: calc(100% - 40px);
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.terminal-output {
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+    font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
+}
+
+/* Ligne de commande */
+.terminal-input-line {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.prompt {
+    color: var(--terminal-prompt);
+    margin-right: 5px;
+}
+
+.terminal-input {
+    background: transparent;
+    border: none;
+    color: var(--terminal-text);
+    font-family: 'DejaVu Sans Mono', 'Courier New', monospace;
+    font-size: 1em;
+    flex-grow: 1;
+    outline: none;
+}
+
+/* Animations */
+@keyframes terminal-appear {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Effets de terminal */
+.terminal-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 16px;
+    background-color: var(--terminal-prompt);
+    animation: blink 1s infinite;
+}
+
+/* Messages système */
+.terminal-message {
+    margin: 5px 0;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.terminal-message.error {
+    color: var(--terminal-error);
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+.terminal-message.success {
+    color: var(--terminal-success);
+    background-color: rgba(0, 255, 0, 0.1);
+}
+
+.terminal-message.warning {
+    color: var(--terminal-warning);
+    background-color: rgba(255, 255, 0, 0.1);
+}
+
+.terminal-message.info {
+    color: var(--terminal-info);
+    background-color: rgba(0, 255, 255, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .secret-terminal {
+        width: 95%;
+        height: 90%;
+    }
+} 
