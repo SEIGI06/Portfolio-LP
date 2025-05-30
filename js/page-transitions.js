@@ -21,21 +21,26 @@ document.addEventListener('DOMContentLoaded', () => {
             // Ajouter la classe fade-out au contenu
             mainContent.classList.add('fade-out');
 
-            // Activer l'animation de transition
-            transition.classList.add('active');
+            // Attendre un peu avant de lancer l'animation de transition
+            setTimeout(() => {
+                transition.classList.add('active');
+            }, 200);
 
             // Attendre que l'animation soit terminée
             setTimeout(() => {
                 window.location.href = targetUrl;
-            }, 500);
+            }, 800);
         }
     });
 
     // Animation d'entrée lors du chargement de la page
     window.addEventListener('load', () => {
-        transition.classList.add('exit');
+        // Attendre que la page soit complètement chargée
         setTimeout(() => {
-            transition.classList.remove('active', 'exit');
-        }, 500);
+            transition.classList.add('exit');
+            setTimeout(() => {
+                transition.classList.remove('active', 'exit');
+            }, 800);
+        }, 100);
     });
 }); 
