@@ -28,21 +28,8 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/debian-terminal.css">
     <script src="js/header.js" defer></script>
     <script src="js/main.js" defer></script>
-    <script src="js/debian-terminal.js"></script>
-    <script>
-        // Initialisation explicite du terminal
-        window.addEventListener('load', function() {
-            console.log('Page complètement chargée, initialisation du terminal...');
-            if (typeof debianTerminal !== 'undefined') {
-                debianTerminal.init();
-            } else {
-                console.error('Le terminal Debian n\'est pas défini !');
-            }
-        });
-    </script>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Aller au contenu principal</a>
