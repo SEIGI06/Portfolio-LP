@@ -441,11 +441,31 @@ const debianTerminal = {
         console.log('Initialisation du terminal Debian...');
         let lastKeys = [];
         
+        // Vérifier si le document est déjà chargé
+        if (document.readyState === 'loading') {
+            console.log('Document en cours de chargement, attente...');
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('Document chargé, initialisation du terminal...');
+                this.setupKeyListener(lastKeys);
+            });
+        } else {
+            console.log('Document déjà chargé, initialisation immédiate...');
+            this.setupKeyListener(lastKeys);
+        }
+        
+        this.createTerminal();
+        this.startSystemUpdates();
+        console.log('Terminal Debian initialisé avec succès');
+    },
+
+    setupKeyListener(lastKeys) {
+        console.log('Configuration de l\'écouteur de touches...');
         document.addEventListener('keydown', (e) => {
-            console.log('Touche pressée:', e.key);
+            console.log('Touche pressée:', e.key, 'Code:', e.keyCode);
             
             // Ajouter la touche à l'historique
             lastKeys.push(e.key.toLowerCase());
+            console.log('Historique des touches:', lastKeys);
             
             // Garder seulement les 6 dernières touches
             if (lastKeys.length > 6) {
@@ -462,10 +482,7 @@ const debianTerminal = {
                 lastKeys = []; // Réinitialiser l'historique
             }
         });
-        
-        this.createTerminal();
-        this.startSystemUpdates();
-        console.log('Terminal Debian initialisé avec succès');
+        console.log('Écouteur de touches configuré avec succès');
     },
 
     // Mises à jour système
