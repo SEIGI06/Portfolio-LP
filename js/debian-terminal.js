@@ -467,17 +467,17 @@ const debianTerminal = {
             lastKeys.push(e.key.toLowerCase());
             console.log('Historique des touches:', lastKeys);
             
-            // Garder seulement les 6 dernières touches
-            if (lastKeys.length > 6) {
+            // Garder seulement les 3 dernières touches (pour "trc")
+            if (lastKeys.length > 3) {
                 lastKeys.shift();
             }
             
-            // Vérifier si la séquence "debian" est présente
+            // Vérifier si la séquence "trc" est présente
             const sequence = lastKeys.join('');
             console.log('Séquence actuelle:', sequence);
             
-            if (sequence.includes('debian')) {
-                console.log('Séquence "debian" détectée !');
+            if (sequence.includes('trc')) {
+                console.log('Séquence "trc" détectée !');
                 this.activate();
                 lastKeys = []; // Réinitialiser l'historique
             }
