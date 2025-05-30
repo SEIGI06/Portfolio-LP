@@ -438,17 +438,34 @@ const debianTerminal = {
 
     // Initialisation
     init() {
+        console.log('Initialisation du terminal Debian...');
+        let lastKeys = [];
+        
         document.addEventListener('keydown', (e) => {
-            if (e.key.length === 1) {  // Ne prendre en compte que les caractères imprimables
-                this.state.sequence += e.key;
-                if (this.state.sequence.includes('debian')) {
-                    this.activate();
-                    this.state.sequence = '';
-                }
+            console.log('Touche pressée:', e.key);
+            
+            // Ajouter la touche à l'historique
+            lastKeys.push(e.key.toLowerCase());
+            
+            // Garder seulement les 6 dernières touches
+            if (lastKeys.length > 6) {
+                lastKeys.shift();
+            }
+            
+            // Vérifier si la séquence "debian" est présente
+            const sequence = lastKeys.join('');
+            console.log('Séquence actuelle:', sequence);
+            
+            if (sequence.includes('debian')) {
+                console.log('Séquence "debian" détectée !');
+                this.activate();
+                lastKeys = []; // Réinitialiser l'historique
             }
         });
+        
         this.createTerminal();
         this.startSystemUpdates();
+        console.log('Terminal Debian initialisé avec succès');
     },
 
     // Mises à jour système
