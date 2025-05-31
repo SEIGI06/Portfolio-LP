@@ -19,42 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(section);
     });
 
-    // Gestion des transitions de page
-    const handlePageTransition = () => {
-        const mainContent = document.querySelector('main');
-        if (mainContent) {
-            mainContent.classList.add('page-transition');
-            // Forcer un reflow pour que l'animation se déclenche
-            void mainContent.offsetWidth;
-            mainContent.classList.add('visible');
-        }
-    };
-
-    // Appliquer la transition lors du chargement initial
-    handlePageTransition();
-
-    // Gérer les transitions lors de la navigation
-    document.addEventListener('click', (e) => {
-        const link = e.target.closest('a');
-        if (link && !link.target && !e.ctrlKey && !e.shiftKey && !e.metaKey && !e.altKey) {
-            e.preventDefault();
-            const href = link.getAttribute('href');
-            
-            // Ajouter la classe de transition de sortie
-            const mainContent = document.querySelector('main');
-            if (mainContent) {
-                mainContent.classList.remove('visible');
-                
-                // Attendre la fin de l'animation de sortie avant de naviguer
-                setTimeout(() => {
-                    window.location.href = href;
-                }, 200); // Correspond à la durée de la transition
-            } else {
-                window.location.href = href;
-            }
-        }
-    });
-
     // Navigation fluide
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
