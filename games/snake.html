@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/games.css">
+    <style>
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        canvas {
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            background: #1a1a2e;
+        }
+
+        .controls {
+            margin-top: 1rem;
+            color: #fff;
+            text-align: center;
+        }
+
+        .controls h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .controls p {
+            color: #ccc;
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🐍 Snake Game</h1>
+        <p>Utilisez les flèches du clavier pour diriger le serpent</p>
+    </div>
+
+    <div class="game-container">
+        <canvas id="gameCanvas" width="600" height="400"></canvas>
+        <div class="controls">
+            <h3>Comment jouer</h3>
+            <p>⬆️ Flèche haut : Monter</p>
+            <p>⬇️ Flèche bas : Descendre</p>
+            <p>⬅️ Flèche gauche : Aller à gauche</p>
+            <p>➡️ Flèche droite : Aller à droite</p>
+            <p>Mangez les pommes rouges pour grandir et marquer des points !</p>
+        </div>
+    </div>
+
+    <script src="../js/games/snake.js"></script>
+    <script>
+        window.onload = function() {
+            const canvas = document.getElementById('gameCanvas');
+            new Snake(canvas);
+        };
+    </script>
+</body>
+</html> 
