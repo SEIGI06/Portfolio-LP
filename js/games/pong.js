@@ -16,10 +16,10 @@ let score2 = 0;
 let isSoloMode = true;
 
 // Contrôles
-let wPressed = false;
-let sPressed = false;
 let upPressed = false;
 let downPressed = false;
+let wPressed = false;
+let sPressed = false;
 
 // Sélecteurs de mode
 const soloModeBtn = document.getElementById('soloMode');
@@ -41,18 +41,24 @@ multiModeBtn.addEventListener('click', function() {
 });
 
 document.addEventListener('keydown', function(e) {
-    if(e.key === 'w') wPressed = true;
-    if(e.key === 's') sPressed = true;
-    if(!isSoloMode) {
+    if(isSoloMode) {
+        if(e.key === 'ArrowUp') upPressed = true;
+        if(e.key === 'ArrowDown') downPressed = true;
+    } else {
+        if(e.key === 'w') wPressed = true;
+        if(e.key === 's') sPressed = true;
         if(e.key === 'ArrowUp') upPressed = true;
         if(e.key === 'ArrowDown') downPressed = true;
     }
 });
 
 document.addEventListener('keyup', function(e) {
-    if(e.key === 'w') wPressed = false;
-    if(e.key === 's') sPressed = false;
-    if(!isSoloMode) {
+    if(isSoloMode) {
+        if(e.key === 'ArrowUp') upPressed = false;
+        if(e.key === 'ArrowDown') downPressed = false;
+    } else {
+        if(e.key === 'w') wPressed = false;
+        if(e.key === 's') sPressed = false;
         if(e.key === 'ArrowUp') upPressed = false;
         if(e.key === 'ArrowDown') downPressed = false;
     }
@@ -102,9 +108,12 @@ function draw() {
     ctx.closePath();
     
     // Déplacer les raquettes
-    if(wPressed && paddle1Y > 0) paddle1Y -= 7;
-    if(sPressed && paddle1Y < canvas.height - paddleHeight) paddle1Y += 7;
-    if(!isSoloMode) {
+    if(isSoloMode) {
+        if(upPressed && paddle1Y > 0) paddle1Y -= 7;
+        if(downPressed && paddle1Y < canvas.height - paddleHeight) paddle1Y += 7;
+    } else {
+        if(wPressed && paddle1Y > 0) paddle1Y -= 7;
+        if(sPressed && paddle1Y < canvas.height - paddleHeight) paddle1Y += 7;
         if(upPressed && paddle2Y > 0) paddle2Y -= 7;
         if(downPressed && paddle2Y < canvas.height - paddleHeight) paddle2Y += 7;
     }
