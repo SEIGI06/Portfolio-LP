@@ -62,11 +62,10 @@ body {
     background: rgba(255, 255, 255, 0.15);
 }
 
-.games-container .game-card .game-icon::before {
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    content: var(--fa-content, ''); /* Use Font Awesome's CSS variable for content */
-    display: inline-block;
+.game-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #4CAF50;
 }
 
 .game-card h3 {
@@ -99,6 +98,13 @@ body {
     background: linear-gradient(45deg, #45a049, #4CAF50);
     transform: scale(1.05);
     box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.games-container .game-card .game-icon::before {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    content: var(--fa-content, ''); /* Use Font Awesome's CSS variable for content */
+    display: inline-block;
 }
 
 .games-container .game-card i {
