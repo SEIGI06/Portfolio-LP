@@ -11,18 +11,9 @@ Pour accéder à la zone de jeux sur ordinateur, il faut entrer le code Konami :
 
 ## Accès sur Mobile
 Pour accéder à la zone de jeux sur mobile :
-1. Tapez rapidement 5 fois sur l'écran
-2. Effectuez la séquence de swipes suivante :
-   - Haut
-   - Haut
-   - Bas
-   - Bas
-   - Gauche
-   - Droite
-   - Gauche
-   - Droite
-3. Une animation de transition apparaîtra
-4. Vous serez redirigé vers la page des jeux
+1. Double-tapez rapidement sur l'écran (deux taps en moins de 300ms)
+2. Une animation de transition apparaîtra
+3. Vous serez redirigé vers la page des jeux
 
 ## Indicateur Visuel
 Sur mobile, un petit indicateur visuel subtil apparaît en bas à droite de l'écran pour suggérer l'existence de l'easter egg.

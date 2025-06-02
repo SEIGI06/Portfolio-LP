@@ -17,61 +17,26 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Gestionnaire pour mobile
-document.addEventListener('touchstart', (e) => {
+// Détection sur mobile
+let lastTap = 0;
+const DOUBLE_TAP_DELAY = 300; // Délai maximum entre les taps en millisecondes
+
+document.addEventListener('touchstart', function(e) {
     const currentTime = new Date().getTime();
-    const tapLength = currentTime - lastTapTime;
+    const tapLength = currentTime - lastTap;
     
-    if (tapLength < 500 && tapLength > 0) {
+    if (tapLength < DOUBLE_TAP_DELAY && tapLength > 0) {
         tapCount++;
-        if (tapCount === 5) {
-            // Après 5 tap rapides, vérifier le swipe
-            checkSwipeSequence();
+        if (tapCount === 2) { // Double tap détecté
+            activateEasterEgg();
+            tapCount = 0;
         }
     } else {
         tapCount = 1;
     }
-    lastTapTime = currentTime;
-});
-
-let touchStartX = 0;
-let touchStartY = 0;
-
-document.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-});
-
-document.addEventListener('touchend', (e) => {
-    const touchEndX = e.changedTouches[0].clientX;
-    const touchEndY = e.changedTouches[0].clientY;
     
-    const deltaX = touchEndX - touchStartX;
-    const deltaY = touchEndY - touchStartY;
-    
-    if (Math.abs(deltaX) > 50 || Math.abs(deltaY) > 50) {
-        const direction = Math.abs(deltaX) > Math.abs(deltaY) 
-            ? (deltaX > 0 ? 'right' : 'left')
-            : (deltaY > 0 ? 'down' : 'up');
-            
-        touchSequence.push(direction);
-        if (touchSequence.length > 4) {
-            touchSequence.shift();
-        }
-        
-        checkSwipeSequence();
-    }
+    lastTap = currentTime;
 });
-
-function checkSwipeSequence() {
-    const correctSequence = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right'];
-    const sequenceString = touchSequence.join(',');
-    const correctString = correctSequence.join(',');
-    
-    if (sequenceString === correctString) {
-        activateEasterEgg();
-    }
-}
 
 function activateEasterEgg() {
     // Animation de transition
