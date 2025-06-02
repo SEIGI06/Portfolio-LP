@@ -157,6 +157,7 @@ class Snake {
 
         // Dessiner les obstacles
         this.ctx.fillStyle = '#666';
+        console.log('Drawing obstacles:', this.obstacles);
         this.obstacles.forEach(obstacle => {
             this.ctx.fillRect(
                 obstacle.x * this.gridSize,
@@ -164,10 +165,12 @@ class Snake {
                 this.gridSize - 2,
                 this.gridSize - 2
             );
+             console.log(`Obstacle at x: ${obstacle.x * this.gridSize}, y: ${obstacle.y * this.gridSize}, size: ${this.gridSize - 2}`);
         });
 
         // Dessiner le serpent
         this.ctx.fillStyle = '#4CAF50';
+        console.log('Drawing snake:', this.snake);
         this.snake.forEach((segment, index) => {
             this.ctx.fillRect(
                 segment.x * this.gridSize,
@@ -175,16 +178,19 @@ class Snake {
                 this.gridSize - 2,
                 this.gridSize - 2
             );
+            console.log(`Snake segment ${index} at x: ${segment.x * this.gridSize}, y: ${segment.y * this.gridSize}, size: ${this.gridSize - 2}`);
         });
 
         // Dessiner la nourriture
         this.ctx.fillStyle = '#ff0000';
+        console.log('Drawing food:', this.food);
         this.ctx.fillRect(
             this.food.x * this.gridSize,
             this.food.y * this.gridSize,
             this.gridSize - 2,
             this.gridSize - 2
         );
+         console.log(`Food at x: ${this.food.x * this.gridSize}, y: ${this.food.y * this.gridSize}, size: ${this.gridSize - 2}`);
 
         // Afficher le score
         this.ctx.fillStyle = '#ffffff';
