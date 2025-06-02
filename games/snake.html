@@ -56,10 +56,14 @@
 
     <script src="../js/games/snake.js"></script>
     <script>
-        window.onload = function() {
+        document.addEventListener('DOMContentLoaded', function() {
             const canvas = document.getElementById('gameCanvas');
-            new Snake(canvas);
-        };
+            if (canvas) {
+                new Snake(canvas);
+            } else {
+                console.error('Canvas element not found!');
+            }
+        });
     </script>
 </body>
 </html> 
