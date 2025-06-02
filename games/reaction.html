@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Réactivité</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/games.css">
+    <style>
+        .game-container {
+            text-align: center;
+            padding: 20px;
+        }
+        #reactionArea {
+            width: 800px;
+            height: 400px;
+            margin: 20px auto;
+            border: 2px solid white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            user-select: none;
+        }
+        .results {
+            color: white;
+            margin: 20px 0;
+            font-size: 18px;
+        }
+        .best-time {
+            color: #4CAF50;
+            font-size: 24px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Test de Réactivité</h1>
+        <div id="reactionArea">Cliquez quand l'écran devient vert</div>
+        <div class="results">
+            <p>Dernier temps : <span id="lastTime">-</span> ms</p>
+            <p>Moyenne : <span id="averageTime">-</span> ms</p>
+        </div>
+        <div class="best-time">
+            Meilleur temps : <span id="bestTime">-</span> ms
+        </div>
+        <button class="play-button" onclick="window.location.href='../jeux.html'">Retour aux jeux</button>
+    </div>
+
+    <script src="../js/games/reaction.js"></script>
+</body>
+</html> 
