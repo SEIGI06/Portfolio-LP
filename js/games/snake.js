@@ -1,22 +1,28 @@
 class Snake {
     constructor(canvas) {
+        console.log('Snake constructor started');
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.gridSize = 15;
         this.snake = [{x: 5, y: 5}];
         this.direction = 'right';
-        this.food = this.generateFood();
         this.score = 0;
         this.gameOver = false;
         this.speed = 100;
         this.obstacles = [];
         this.obstacleFrequency = 5;
 
+        console.log('Snake and obstacles initialized:', this.snake, this.obstacles);
+
+        this.food = this.generateFood();
+        console.log('Food generated:', this.food);
+
         // Gestion des touches
         document.addEventListener('keydown', this.handleKeyPress.bind(this));
         
         // Démarrer le jeu
         this.gameLoop();
+        console.log('Snake constructor finished');
     }
 
     handleKeyPress(event) {
@@ -44,6 +50,7 @@ class Snake {
     }
 
     generateFood() {
+        console.log('generateFood called. Snake:', this.snake, 'Obstacles:', this.obstacles);
         const maxX = Math.floor(this.canvas.width / this.gridSize);
         const maxY = Math.floor(this.canvas.height / this.gridSize);
         let food;
