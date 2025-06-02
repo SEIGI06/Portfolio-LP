@@ -29,20 +29,18 @@ theme:
 
 nav:
   - Accueil: index.md
+  - À propos: about/index.md
+  - Easter Egg: easter-egg/index.md
   - Administration Système:
-    - Active Directory: active-directory/index.md
-    - pfSense: pfsense/index.md
-    - GLPI: glpi/index.md
-    - Serveurs Web:
-      - Apache: serveurs-web/apache.md
-      - Mise en place du HTTPS: serveurs-web/https.md
-  - Proxmox: Proxmox/index.md
-  - Outils et Commandes:
-    - Nmap: nmap/index.md
     - Commandes Multi-OS: commandes-multi-os/index.md
-  - Linux:
-    - Commandes Linux: linux/index.md
-  - À propos: about.md
+    - Linux: linux/index.md
+    - Active Directory: active-directory/index.md
+    - Proxmox: Proxmox/index.md
+    - GLPI: glpi/index.md
+  - Réseaux:
+    - pfSense: pfsense/index.md
+    - Nmap: nmap/index.md
+  - Serveurs Web: serveurs-web/index.md
 
 extra_css:
   - hide_nav.css
