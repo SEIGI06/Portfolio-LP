@@ -2,13 +2,15 @@ class Snake {
     constructor(canvas) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
-        this.gridSize = 20;
+        this.gridSize = 15;
         this.snake = [{x: 5, y: 5}];
         this.direction = 'right';
         this.food = this.generateFood();
         this.score = 0;
         this.gameOver = false;
-        this.speed = 150;
+        this.speed = 100;
+        this.obstacles = [];
+        this.obstacleFrequency = 5;
 
         // Gestion des touches
         document.addEventListener('keydown', this.handleKeyPress.bind(this));
@@ -50,8 +52,28 @@ class Snake {
                 x: Math.floor(Math.random() * maxX),
                 y: Math.floor(Math.random() * maxY)
             };
-        } while (this.snake.some(segment => segment.x === food.x && segment.y === food.y));
+        } while (
+            this.snake.some(segment => segment.x === food.x && segment.y === food.y) ||
+            this.obstacles.some(obs => obs.x === food.x && obs.y === food.y)
+        );
         return food;
+    }
+
+    generateObstacle() {
+        const maxX = Math.floor(this.canvas.width / this.gridSize);
+        const maxY = Math.floor(this.canvas.height / this.gridSize);
+        let obstacle;
+        do {
+            obstacle = {
+                x: Math.floor(Math.random() * maxX),
+                y: Math.floor(Math.random() * maxY)
+            };
+        } while (
+            this.snake.some(segment => segment.x === obstacle.x && segment.y === obstacle.y) ||
+            this.obstacles.some(obs => obs.x === obstacle.x && obs.y === obstacle.y) ||
+            (this.food.x === obstacle.x && this.food.y === obstacle.y)
+        );
+        return obstacle;
     }
 
     update() {
@@ -79,14 +101,26 @@ class Snake {
             return;
         }
 
+        // Vérifier les collisions avec les obstacles
+        if (this.obstacles.some(obs => obs.x === head.x && obs.y === head.y)) {
+            this.gameOver = true;
+            return;
+        }
+
         this.snake.unshift(head);
 
         // Vérifier si le serpent mange la nourriture
         if (head.x === this.food.x && head.y === this.food.y) {
             this.score += 10;
             this.food = this.generateFood();
-            // Augmenter la vitesse
-            this.speed = Math.max(50, this.speed - 5);
+            
+            // Augmenter la vitesse plus rapidement
+            this.speed = Math.max(30, this.speed - 8);
+
+            // Ajouter un obstacle tous les X points
+            if (this.score % this.obstacleFrequency === 0) {
+                this.obstacles.push(this.generateObstacle());
+            }
         } else {
             this.snake.pop();
         }
@@ -96,6 +130,17 @@ class Snake {
         // Effacer le canvas
         this.ctx.fillStyle = '#1a1a2e';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Dessiner les obstacles
+        this.ctx.fillStyle = '#666';
+        this.obstacles.forEach(obstacle => {
+            this.ctx.fillRect(
+                obstacle.x * this.gridSize,
+                obstacle.y * this.gridSize,
+                this.gridSize - 2,
+                this.gridSize - 2
+            );
+        });
 
         // Dessiner le serpent
         this.ctx.fillStyle = '#4CAF50';
