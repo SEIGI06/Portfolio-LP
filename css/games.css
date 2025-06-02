@@ -66,6 +66,7 @@ body {
     font-size: 3rem;
     margin-bottom: 1rem;
     transition: transform 0.3s ease;
+    display: inline-block;
 }
 
 .game-card:hover .game-icon {
@@ -105,15 +106,9 @@ body {
 }
 
 .games-container .game-card .game-icon::before {
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    content: var(--fa-content, ''); /* Use Font Awesome's CSS variable for content */
-    display: inline-block;
+    display: none;
 }
 
 .games-container .game-card i {
-    /* Ensure default i styles don't hide icons */
     display: inline-block;
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
 } 
