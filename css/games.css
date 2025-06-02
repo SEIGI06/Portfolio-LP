@@ -65,7 +65,11 @@ body {
 .game-icon {
     font-size: 3rem;
     margin-bottom: 1rem;
-    color: #4CAF50;
+    transition: transform 0.3s ease;
+}
+
+.game-card:hover .game-icon {
+    transform: scale(1.1);
 }
 
 .game-card h3 {
