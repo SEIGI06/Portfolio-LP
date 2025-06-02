@@ -6,6 +6,7 @@
     <title>Snake Game</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/games.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .game-container {
             display: flex;
@@ -34,11 +35,15 @@
             color: #ccc;
             margin: 0.5rem 0;
         }
+
+        .back-button {
+            margin-top: 2rem;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🐍 Snake Game</h1>
+        <h1><i class="fas fa-snake"></i> Snake Game</h1>
         <p>Utilisez les flèches du clavier pour diriger le serpent</p>
     </div>
 
@@ -52,6 +57,7 @@
             <p>➡️ Flèche droite : Aller à droite</p>
             <p>Mangez les pommes rouges pour grandir et marquer des points !</p>
         </div>
+        <button class="play-button back-button" onclick="window.location.href='../jeux.html'">Retour aux jeux</button>
     </div>
 
     <script src="../js/games/snake.js"></script>

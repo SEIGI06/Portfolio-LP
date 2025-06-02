@@ -6,6 +6,7 @@
     <title>Test de Réactivité</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/games.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         .game-container {
@@ -46,20 +47,23 @@
     </style>
 </head>
 <body>
+    <div class="header">
+        <h1><i class="fas fa-bolt"></i> Test de Réactivité</h1>
+        <p>Testez votre temps de réaction !</p>
+    </div>
     <div class="game-container">
-        <h1>Test de Réactivité</h1>
         <div id="reactionArea">Cliquez quand l'écran devient vert</div>
         <div class="results">
-            <p>Dernier temps : <span id="lastTime">-</span> ms</p>
-            <p>Moyenne : <span id="averageTime">-</span> ms</p>
+            <p><i class="fas fa-clock"></i> Dernier temps : <span id="lastTime">-</span> ms</p>
+            <p><i class="fas fa-chart-line"></i> Moyenne : <span id="averageTime">-</span> ms</p>
         </div>
         <div class="best-time">
-            Meilleur temps : <span id="bestTime">-</span> ms
+            <i class="fas fa-trophy"></i> Meilleur temps : <span id="bestTime">-</span> ms
         </div>
         <div class="chart-container">
             <canvas id="reactionChart"></canvas>
         </div>
-        <button class="play-button" onclick="window.location.href='../jeux.html'">Retour aux jeux</button>
+        <button class="play-button" onclick="window.location.href='../jeux.html'"><i class="fas fa-arrow-left"></i> Retour aux jeux</button>
     </div>
 
     <script src="../js/games/reaction.js"></script>

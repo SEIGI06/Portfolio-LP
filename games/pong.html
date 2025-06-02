@@ -6,6 +6,7 @@
     <title>Pong</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/games.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         canvas {
             border: 2px solid white;
@@ -41,8 +42,11 @@
     </style>
 </head>
 <body>
+    <div class="header">
+        <h1><i class="fas fa-table-tennis-paddle-ball"></i> Pong</h1>
+        <p>Le célèbre jeu de tennis de table</p>
+    </div>
     <div class="game-container">
-        <h1>Pong</h1>
         <div class="mode-selector">
             <button id="soloMode" class="active">Mode Solo</button>
             <button id="multiMode">Mode 2 Joueurs</button>
@@ -52,10 +56,10 @@
         </div>
         <canvas id="pongCanvas" width="800" height="400"></canvas>
         <div class="controls">
-            <p id="player1Controls">Joueur 1: ↑ (haut) et ↓ (bas)</p>
-            <p id="player2Controls">Joueur 2: W (haut) et S (bas)</p>
+            <p id="player1Controls"><i class="fas fa-user"></i> Joueur 1: ↑ (haut) et ↓ (bas)</p>
+            <p id="player2Controls"><i class="fas fa-user"></i> Joueur 2: W (haut) et S (bas)</p>
         </div>
-        <button class="play-button" onclick="window.location.href='../jeux.html'">Retour aux jeux</button>
+        <button class="play-button" onclick="window.location.href='../jeux.html'"><i class="fas fa-arrow-left"></i> Retour aux jeux</button>
     </div>
 
     <script src="../js/games/pong.js"></script>
