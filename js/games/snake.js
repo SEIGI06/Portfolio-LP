@@ -126,10 +126,34 @@ class Snake {
         }
     }
 
+    drawGrid() {
+        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+        this.ctx.lineWidth = 0.5;
+
+        // Lignes verticales
+        for (let x = 0; x <= this.canvas.width; x += this.gridSize) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, 0);
+            this.ctx.lineTo(x, this.canvas.height);
+            this.ctx.stroke();
+        }
+
+        // Lignes horizontales
+        for (let y = 0; y <= this.canvas.height; y += this.gridSize) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, y);
+            this.ctx.lineTo(this.canvas.width, y);
+            this.ctx.stroke();
+        }
+    }
+
     draw() {
         // Effacer le canvas
         this.ctx.fillStyle = '#1a1a2e';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Dessiner la grille
+        this.drawGrid();
 
         // Dessiner les obstacles
         this.ctx.fillStyle = '#666';
