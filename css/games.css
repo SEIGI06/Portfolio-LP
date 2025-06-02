@@ -63,7 +63,8 @@ body {
 }
 
 .game-icon {
-    font-size: 3rem;
+    width: 48px;
+    height: 48px;
     margin-bottom: 1rem;
     transition: transform 0.3s ease;
     display: inline-block;
