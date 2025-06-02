@@ -5,69 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zone de Jeux</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .games-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .game-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-
-        .game-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .game-card h3 {
-            color: #fff;
-            margin-bottom: 1rem;
-        }
-
-        .game-card p {
-            color: #ccc;
-            margin-bottom: 1rem;
-        }
-
-        .play-button {
-            background: #4CAF50;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .play-button:hover {
-            background: #45a049;
-        }
-    </style>
+    <link rel="stylesheet" href="css/games.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <div class="header">
+        <h1>🎮 Zone de Jeux</h1>
+        <p>Découvrez notre sélection de jeux amusants</p>
+    </div>
+
     <div class="games-container">
         <div class="game-card">
+            <i class="fas fa-snake game-icon"></i>
             <h3>Snake</h3>
-            <p>Le classique jeu du serpent</p>
+            <p>Le classique jeu du serpent. Guidez le serpent pour manger les pommes et grandir sans vous cogner !</p>
             <button class="play-button" onclick="startGame('snake')">Jouer</button>
         </div>
         <div class="game-card">
+            <i class="fas fa-puzzle-piece game-icon"></i>
             <h3>Puzzle</h3>
-            <p>Un puzzle à résoudre</p>
+            <p>Un puzzle captivant à résoudre. Testez votre logique et votre patience !</p>
             <button class="play-button" onclick="startGame('puzzle')">Jouer</button>
         </div>
         <div class="game-card">
+            <i class="fas fa-brain game-icon"></i>
             <h3>Memory</h3>
-            <p>Testez votre mémoire</p>
+            <p>Testez votre mémoire en retrouvant les paires de cartes. Combien de temps vous faudra-t-il ?</p>
             <button class="play-button" onclick="startGame('memory')">Jouer</button>
         </div>
     </div>
