@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/games.css">
+    <style>
+        canvas {
+            border: 2px solid white;
+            background-color: black;
+            display: block;
+            margin: 0 auto;
+        }
+        .game-container {
+            text-align: center;
+            padding: 20px;
+        }
+        .score {
+            color: white;
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .controls {
+            color: white;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Pong</h1>
+        <div class="score">
+            <span id="score1">0</span> - <span id="score2">0</span>
+        </div>
+        <canvas id="pongCanvas" width="800" height="400"></canvas>
+        <div class="controls">
+            <p>Joueur 1: W (haut) et S (bas)</p>
+            <p>Joueur 2: ↑ (haut) et ↓ (bas)</p>
+        </div>
+        <button class="play-button" onclick="window.location.href='../jeux.html'">Retour aux jeux</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('pongCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Variables du jeu
+        const paddleHeight = 100;
+        const paddleWidth = 10;
+        let paddle1Y = canvas.height/2 - paddleHeight/2;
+        let paddle2Y = canvas.height/2 - paddleHeight/2;
+        let ballX = canvas.width/2;
+        let ballY = canvas.height/2;
+        let ballSpeedX = 5;
+        let ballSpeedY = 5;
+        let ballRadius = 10;
+        let score1 = 0;
+        let score2 = 0;
+        
+        // Contrôles
+        let wPressed = false;
+        let sPressed = false;
+        let upPressed = false;
+        let downPressed = false;
+        
+        document.addEventListener('keydown', function(e) {
+            if(e.key === 'w') wPressed = true;
+            if(e.key === 's') sPressed = true;
+            if(e.key === 'ArrowUp') upPressed = true;
+            if(e.key === 'ArrowDown') downPressed = true;
+        });
+        
+        document.addEventListener('keyup', function(e) {
+            if(e.key === 'w') wPressed = false;
+            if(e.key === 's') sPressed = false;
+            if(e.key === 'ArrowUp') upPressed = false;
+            if(e.key === 'ArrowDown') downPressed = false;
+        });
+        
+        function draw() {
+            // Effacer le canvas
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Dessiner la ligne centrale
+            ctx.beginPath();
+            ctx.setLineDash([5, 15]);
+            ctx.moveTo(canvas.width/2, 0);
+            ctx.lineTo(canvas.width/2, canvas.height);
+            ctx.strokeStyle = 'white';
+            ctx.stroke();
+            
+            // Dessiner les raquettes
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, paddle1Y, paddleWidth, paddleHeight);
+            ctx.fillRect(canvas.width - paddleWidth, paddle2Y, paddleWidth, paddleHeight);
+            
+            // Dessiner la balle
+            ctx.beginPath();
+            ctx.arc(ballX, ballY, ballRadius, 0, Math.PI*2);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+            ctx.closePath();
+            
+            // Déplacer les raquettes
+            if(wPressed && paddle1Y > 0) paddle1Y -= 7;
+            if(sPressed && paddle1Y < canvas.height - paddleHeight) paddle1Y += 7;
+            if(upPressed && paddle2Y > 0) paddle2Y -= 7;
+            if(downPressed && paddle2Y < canvas.height - paddleHeight) paddle2Y += 7;
+            
+            // Déplacer la balle
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+            
+            // Collision avec les murs haut et bas
+            if(ballY - ballRadius < 0 || ballY + ballRadius > canvas.height) {
+                ballSpeedY = -ballSpeedY;
+            }
+            
+            // Collision avec les raquettes
+            if(ballX - ballRadius < paddleWidth && 
+               ballY > paddle1Y && 
+               ballY < paddle1Y + paddleHeight) {
+                ballSpeedX = -ballSpeedX;
+            }
+            
+            if(ballX + ballRadius > canvas.width - paddleWidth && 
+               ballY > paddle2Y && 
+               ballY < paddle2Y + paddleHeight) {
+                ballSpeedX = -ballSpeedX;
+            }
+            
+            // Score et reset
+            if(ballX < 0) {
+                score2++;
+                document.getElementById('score2').textContent = score2;
+                resetBall();
+            }
+            if(ballX > canvas.width) {
+                score1++;
+                document.getElementById('score1').textContent = score1;
+                resetBall();
+            }
+            
+            requestAnimationFrame(draw);
+        }
+        
+        function resetBall() {
+            ballX = canvas.width/2;
+            ballY = canvas.height/2;
+            ballSpeedX = -ballSpeedX;
+        }
+        
+        // Démarrer le jeu
+        draw();
+    </script>
+</body>
+</html> 
