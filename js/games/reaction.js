@@ -8,9 +8,62 @@ let waitingForGreen = false;
 let times = [];
 let bestTime = Infinity;
 
+// Configuration du graphique
+const ctx = document.getElementById('reactionChart').getContext('2d');
+const reactionChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Temps de réaction (ms)',
+            data: [],
+            borderColor: '#4CAF50',
+            backgroundColor: 'rgba(76, 175, 80, 0.1)',
+            tension: 0.4,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                },
+                ticks: {
+                    color: 'white'
+                }
+            },
+            x: {
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.1)'
+                },
+                ticks: {
+                    color: 'white'
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: 'white'
+                }
+            }
+        }
+    }
+});
+
 function getRandomDelay() {
     // Délai aléatoire entre 1 et 5 secondes
     return Math.floor(Math.random() * 4000) + 1000;
+}
+
+function updateChart() {
+    reactionChart.data.labels = times.map((_, index) => index + 1);
+    reactionChart.data.datasets[0].data = times;
+    reactionChart.update();
 }
 
 function startTest() {
@@ -54,6 +107,8 @@ function handleClick() {
         // Calculer et mettre à jour la moyenne
         const average = Math.round(times.reduce((a, b) => a + b, 0) / times.length);
         averageTimeElement.textContent = average;
+        
+        updateChart();
         
         // Réinitialiser pour le prochain test
         reactionArea.style.backgroundColor = '';
