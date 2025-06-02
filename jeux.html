@@ -40,6 +40,26 @@
         </div>
     </div>
 
+    <div class="support-section">
+        <h2>Supportez le Développement</h2>
+        <p>Si vous appréciez mes jeux et souhaitez soutenir le développement de nouveaux projets</p>
+        <div id="donate-button-container">
+            <div id="donate-button"></div>
+            <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
+            <script>
+            PayPal.Donation.Button({
+                env:'production',
+                hosted_button_id:'P3TB4GNXEA9YY',
+                image: {
+                    src:'https://www.paypalobjects.com/fr_FR/FR/i/btn/btn_donate_LG.gif',
+                    alt:'Bouton Faites un don avec PayPal',
+                    title:'PayPal - The safer, easier way to pay online!',
+                }
+            }).render('#donate-button');
+            </script>
+        </div>
+    </div>
+
     <script>
         function startGame(gameType) {
             // Cette fonction sera implémentée plus tard pour chaque jeu
