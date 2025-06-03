@@ -6,6 +6,46 @@
     <meta name="description" content="Découvrez les projets pratiques réalisés par Lilian Peyr en BTS SIO SISR, couvrant l'administration système (Windows Server, AD), la sécurité réseau (pare-feu, VLAN) et le développement web.">
     <meta name="keywords" content="Projets, BTS SIO, SISR, Développement, Administration Système">
     <meta name="author" content="Lilian Peyr">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="French">
+    <meta name="revisit-after" content="7 days">
+    <meta name="generator" content="Visual Studio Code">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://seigi06.github.io/Portfolio-LP/projets.html">
+    <meta property="og:title" content="Mes Projets en Administration Système, Réseaux et Cybersécurité - Lilian Peyr">
+    <meta property="og:description" content="Découvrez les projets pratiques réalisés par Lilian Peyr en BTS SIO SISR, couvrant l'administration système, la sécurité réseau et le développement web.">
+    <meta property="og:image" content="https://seigi06.github.io/Portfolio-LP/assets/images/projets/gelram.jpg">
+    <meta property="og:site_name" content="Portfolio Lilian Peyr">
+    <meta property="og:locale" content="fr_FR">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://seigi06.github.io/Portfolio-LP/projets.html">
+    <meta name="twitter:title" content="Mes Projets en Administration Système, Réseaux et Cybersécurité - Lilian Peyr">
+    <meta name="twitter:description" content="Découvrez les projets pratiques réalisés par Lilian Peyr en BTS SIO SISR, couvrant l'administration système, la sécurité réseau et le développement web.">
+    <meta name="twitter:image" content="https://seigi06.github.io/Portfolio-LP/assets/images/projets/gelram.jpg">
+    <meta name="twitter:creator" content="@lilianpeyr">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://seigi06.github.io/Portfolio-LP/projets.html">
+
+    <!-- Schema.org markup -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Mes Projets en Administration Système, Réseaux et Cybersécurité",
+        "description": "Découvrez les projets pratiques réalisés par Lilian Peyr en BTS SIO SISR",
+        "url": "https://seigi06.github.io/Portfolio-LP/projets.html",
+        "author": {
+            "@type": "Person",
+            "name": "Lilian Peyr"
+        }
+    }
+    </script>
+
     <title>Mes Projets en Administration Système, Réseaux et Cybersécurité - Lilian Peyr</title>
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
@@ -16,22 +56,31 @@
 <body>
     <a href="#main-content" class="skip-link">Aller au contenu principal</a>
     <main id="main-content" role="main">
-        <section id="projets" class="section">
+        <section id="projets" class="section" aria-labelledby="projets-title">
             <div class="container">
-                <h1 class="section-title">Mes Projets</h1>
+                <h1 id="projets-title" class="section-title">Mes Projets</h1>
                 <p class="section-description">Découvrez les différents projets que j'ai réalisés dans le cadre de ma formation BTS SIO option SISR.</p>
                 
-                <div class="projects-filter">
-                    <button class="filter-btn active" data-filter="all">Tous</button>
-                    <button class="filter-btn" data-filter="sisr">SISR</button>
-                    <button class="filter-btn" data-filter="dev">Développement</button>
-                    <button class="filter-btn" data-filter="secu">Sécurité</button>
+                <div class="projects-filter" role="group" aria-label="Filtres de projets">
+                    <button class="filter-btn active" data-filter="all" aria-pressed="true">Tous</button>
+                    <button class="filter-btn" data-filter="sisr" aria-pressed="false">SISR</button>
+                    <button class="filter-btn" data-filter="dev" aria-pressed="false">Développement</button>
+                    <button class="filter-btn" data-filter="secu" aria-pressed="false">Sécurité</button>
                 </div>
 
-                <div class="projects-grid">
-                    <article class="card" data-category="sisr">
+                <div class="projects-grid" role="list">
+                    <article class="card" data-category="sisr" role="listitem">
                         <div class="card__image">
-                            <img src="assets/images/projets/gelram.jpg" alt="Projet GELTRAM" loading="lazy">
+                            <picture>
+                                <source srcset="assets/images/projets/gelram.webp" type="image/webp">
+                                <source srcset="assets/images/projets/gelram.jpg" type="image/jpeg">
+                                <img src="assets/images/projets/gelram.jpg" 
+                                     alt="Interface d'administration du projet GELTRAM montrant le tableau de bord GLPI" 
+                                     loading="lazy"
+                                     width="400"
+                                     height="225"
+                                     decoding="async">
+                            </picture>
                         </div>
                         <div class="card__content">
                             <h3 class="card__title">Projet GELTRAM</h3>
@@ -51,9 +100,18 @@
                         </div>
                     </article>
 
-                    <article class="card" data-category="sisr">
+                    <article class="card" data-category="sisr" role="listitem">
                         <div class="card__image">
-                            <img src="assets/images/projets/sisr-projet1.jpg" alt="Projet Administration Système" loading="lazy">
+                            <picture>
+                                <source srcset="assets/images/projets/sisr-projet1.webp" type="image/webp">
+                                <source srcset="assets/images/projets/sisr-projet1.jpg" type="image/jpeg">
+                                <img src="assets/images/projets/sisr-projet1.jpg" 
+                                     alt="Interface d'administration Windows Server montrant la console Active Directory" 
+                                     loading="lazy"
+                                     width="400"
+                                     height="225"
+                                     decoding="async">
+                            </picture>
                         </div>
                         <div class="card__content">
                             <h3 class="card__title">Administration Système Windows Server</h3>
@@ -70,9 +128,18 @@
                         </div>
                     </article>
 
-                    <article class="card" data-category="secu">
+                    <article class="card" data-category="secu" role="listitem">
                         <div class="card__image">
-                            <img src="assets/images/projets/secu-projet1.jpg" alt="Projet Sécurité Réseau" loading="lazy">
+                            <picture>
+                                <source srcset="assets/images/projets/secu-projet1.webp" type="image/webp">
+                                <source srcset="assets/images/projets/secu-projet1.jpg" type="image/jpeg">
+                                <img src="assets/images/projets/secu-projet1.jpg" 
+                                     alt="Configuration du pare-feu Cisco montrant les règles de sécurité" 
+                                     loading="lazy"
+                                     width="400"
+                                     height="225"
+                                     decoding="async">
+                            </picture>
                         </div>
                         <div class="card__content">
                             <h3 class="card__title">Sécurisation d'un Réseau d'Entreprise</h3>
@@ -89,9 +156,18 @@
                         </div>
                     </article>
 
-                    <article class="card" data-category="dev">
+                    <article class="card" data-category="dev" role="listitem">
                         <div class="card__image">
-                            <img src="assets/images/projets/dev-projet1.jpg" alt="Projet Développement Web" loading="lazy">
+                            <picture>
+                                <source srcset="assets/images/projets/dev-projet1.webp" type="image/webp">
+                                <source srcset="assets/images/projets/dev-projet1.jpg" type="image/jpeg">
+                                <img src="assets/images/projets/dev-projet1.jpg" 
+                                     alt="Interface de l'application web de gestion des stocks" 
+                                     loading="lazy"
+                                     width="400"
+                                     height="225"
+                                     decoding="async">
+                            </picture>
                         </div>
                         <div class="card__content">
                             <h3 class="card__title">Application Web de Gestion</h3>

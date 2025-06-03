@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Animation au défilement
+    // Animation au défilement avec respect des préférences de réduction de mouvement
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const observerOptions = {
         root: null,
         rootMargin: '0px',
@@ -19,58 +20,92 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(section);
     });
 
-    // Navigation fluide
+    // Navigation fluide avec respect des préférences de réduction de mouvement
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
                 target.scrollIntoView({
-                    behavior: 'smooth'
+                    behavior: prefersReducedMotion ? 'auto' : 'smooth'
                 });
+                // Mettre à jour l'URL sans déclencher de défilement
+                history.pushState(null, '', this.getAttribute('href'));
             }
         });
     });
 
-    // Filtrage des projets
+    // Filtrage des projets avec support du clavier
     const filterButtons = document.querySelectorAll('.filter-btn');
     const projectCards = document.querySelectorAll('.card');
 
     filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            // Mettre à jour les boutons actifs
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
+        button.addEventListener('click', () => updateFilter(button));
+        button.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                updateFilter(button);
+            }
+        });
+    });
 
-            const filter = button.getAttribute('data-filter');
+    function updateFilter(selectedButton) {
+        // Mettre à jour les boutons actifs et leur état ARIA
+        filterButtons.forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-pressed', 'false');
+        });
+        selectedButton.classList.add('active');
+        selectedButton.setAttribute('aria-pressed', 'true');
 
-            // Filtrer les projets
-            projectCards.forEach(card => {
-                if (filter === 'all' || card.getAttribute('data-category') === filter) {
-                    card.style.display = 'flex';
+        const filter = selectedButton.getAttribute('data-filter');
+
+        // Filtrer les projets avec animation respectant les préférences de mouvement
+        projectCards.forEach(card => {
+            if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                card.style.display = 'flex';
+                if (!prefersReducedMotion) {
                     setTimeout(() => {
                         card.style.opacity = '1';
                         card.style.transform = 'translateY(0)';
                     }, 100);
                 } else {
+                    card.style.opacity = '1';
+                    card.style.transform = 'none';
+                }
+            } else {
+                if (!prefersReducedMotion) {
                     card.style.opacity = '0';
                     card.style.transform = 'translateY(20px)';
                     setTimeout(() => {
                         card.style.display = 'none';
                     }, 300);
+                } else {
+                    card.style.display = 'none';
                 }
-            });
+            }
         });
-    });
 
-    // Animation des cartes au chargement
+        // Annoncer le changement aux lecteurs d'écran
+        const filterStatus = document.getElementById('filter-status') || document.createElement('div');
+        filterStatus.id = 'filter-status';
+        filterStatus.setAttribute('role', 'status');
+        filterStatus.setAttribute('aria-live', 'polite');
+        filterStatus.className = 'sr-only';
+        filterStatus.textContent = `Projets filtrés par : ${selectedButton.textContent}`;
+        document.body.appendChild(filterStatus);
+    }
+
+    // Animation des cartes au chargement avec respect des préférences de mouvement
     projectCards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        setTimeout(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, 100 * index);
+        if (!prefersReducedMotion) {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100 * index);
+        }
     });
 
     // Veille Technologique
@@ -185,35 +220,51 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Scroll Indicator and Section Navigation
+    // Scroll Indicator and Section Navigation avec support du clavier
     const scrollIndicator = document.createElement('div');
     scrollIndicator.className = 'scroll-indicator';
+    scrollIndicator.setAttribute('role', 'button');
+    scrollIndicator.setAttribute('tabindex', '0');
+    scrollIndicator.setAttribute('aria-label', 'Défiler vers le contenu principal');
     scrollIndicator.innerHTML = `
         <span class="scroll-indicator__text">Défiler</span>
-        <div class="scroll-indicator__icon"></div>
+        <div class="scroll-indicator__icon" aria-hidden="true"></div>
     `;
     document.body.appendChild(scrollIndicator);
 
-    const sectionNav = document.createElement('div');
+    const sectionNav = document.createElement('nav');
     sectionNav.className = 'section-nav';
+    sectionNav.setAttribute('aria-label', 'Navigation entre les sections');
     document.body.appendChild(sectionNav);
 
     const sections = document.querySelectorAll('.section');
     
     sections.forEach((section, index) => {
-        const dot = document.createElement('div');
+        const dot = document.createElement('button');
         dot.className = 'section-nav__dot';
         dot.setAttribute('data-section', section.id);
-        dot.setAttribute('title', section.querySelector('.section-title')?.textContent || `Section ${index + 1}`);
+        dot.setAttribute('aria-label', section.querySelector('.section-title')?.textContent || `Section ${index + 1}`);
+        dot.setAttribute('aria-current', 'false');
         sectionNav.appendChild(dot);
 
         dot.addEventListener('click', () => {
-            section.scrollIntoView({ behavior: 'smooth' });
+            section.scrollIntoView({ 
+                behavior: prefersReducedMotion ? 'auto' : 'smooth' 
+            });
+        });
+
+        dot.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                section.scrollIntoView({ 
+                    behavior: prefersReducedMotion ? 'auto' : 'smooth' 
+                });
+            }
         });
     });
 
     let lastScrollTop = 0;
-    window.addEventListener('scroll', () => {
+    const scrollHandler = () => {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         
         if (scrollTop > 300) {
@@ -228,18 +279,46 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
                 dot?.classList.add('active');
+                dot?.setAttribute('aria-current', 'true');
             } else {
                 dot?.classList.remove('active');
+                dot?.setAttribute('aria-current', 'false');
             }
         });
 
         lastScrollTop = scrollTop;
+    };
+
+    // Utiliser requestAnimationFrame pour optimiser les performances
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                scrollHandler();
+                ticking = false;
+            });
+            ticking = true;
+        }
     });
 
     scrollIndicator.addEventListener('click', () => {
         const firstSection = sections[0];
         if (firstSection) {
-            firstSection.scrollIntoView({ behavior: 'smooth' });
+            firstSection.scrollIntoView({ 
+                behavior: prefersReducedMotion ? 'auto' : 'smooth' 
+            });
+        }
+    });
+
+    scrollIndicator.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const firstSection = sections[0];
+            if (firstSection) {
+                firstSection.scrollIntoView({ 
+                    behavior: prefersReducedMotion ? 'auto' : 'smooth' 
+                });
+            }
         }
     });
 

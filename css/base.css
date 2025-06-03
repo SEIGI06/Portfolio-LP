@@ -9,6 +9,12 @@
     --focus-outline: 3px solid #1976d2;
     --card-bg: rgba(255, 255, 255, 0.1);
     --card-text: #ffffff;
+    --link-color: #64b5f6;
+    --link-hover-color: #90caf9;
+    --link-visited-color: #bbdefb;
+    --error-color: #ef5350;
+    --success-color: #66bb6a;
+    --warning-color: #ffa726;
 }
 
 /* Reset & Base Styles */
@@ -28,6 +34,7 @@ body {
     line-height: 1.6;
     color: var(--text-color);
     position: relative;
+    font-size: 16px;
 }
 
 body::before {
@@ -59,22 +66,37 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 1rem;
     line-height: 1.2;
     color: var(--text-color);
+    font-weight: 600;
 }
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
 
 p {
     margin-bottom: 1rem;
     color: var(--text-color);
+    max-width: 70ch;
 }
 
 /* Links */
 a {
-    color: #2196f3;
+    color: var(--link-color);
     text-decoration: underline;
+    text-underline-offset: 0.2em;
+    transition: color 0.2s ease-in-out;
 }
 
 a:hover, a:focus {
-    color: #42a5f5;
+    color: var(--link-hover-color);
     text-decoration: none;
+}
+
+a:visited {
+    color: var(--link-visited-color);
 }
 
 /* Focus Styles */
@@ -101,9 +123,31 @@ a:hover, a:focus {
     color: white;
     padding: 8px;
     z-index: 1001;
+    transition: top 0.2s ease-in-out;
 }
 
 .skip-link:focus {
     top: 0;
     outline: var(--focus-outline);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* High Contrast Mode */
+@media (forced-colors: active) {
+    :root {
+        --focus-outline: 2px solid CanvasText;
+    }
+    
+    a {
+        forced-color-adjust: none;
+    }
 } 
