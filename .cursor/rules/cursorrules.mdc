@@ -28,6 +28,7 @@ Développe du code HTML, CSS et JavaScript pour un portfolio professionnel hébe
 - Images compressées et au format web (WebP, AVIF si supporté)
 - CSS et JS minifiés en production
 - Fichiers séparés pour faciliter la maintenance
+- Utiliser des URLs absolues avec HTTPS pour les ressources externes et les balises meta.
 
 **Performance et Accessibilité**
 - Lazy loading pour les images
@@ -40,3 +41,15 @@ Développe du code HTML, CSS et JavaScript pour un portfolio professionnel hébe
 - Section projets avec détails techniques
 - Certifications clairement mises en valeur
 - Compétences cybersécurité et réseaux prominentes
+
+### Qualité du Code
+
+- Approche Mobile-First : Concevoir et développer pour les appareils mobiles en priorité.
+- Compatibilité Navigateur : S'assurer du bon fonctionnement sur les principaux navigateurs.
+- Favoriser la collaboration et le partage des connaissances.
+
+### Commandes Utiles
+
+- Pour déployer la documentation MkDocs sur GitHub Pages :
+  `python -m mkdocs gh-deploy`
+
