@@ -1,0 +1,13 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+@context BTS SIO SISR - Cybersécurité
+@target GitHub Pages
+- Prioriser l'accessibilité WCAG 2.2
+- Utiliser Flexbox/Grid pour le responsive
+- Éviter les frameworks CSS externes
+- Optimiser les images (max 500KB)
+- Valider le HTML/CSS via W3C
+
