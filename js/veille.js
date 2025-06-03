@@ -9,7 +9,7 @@ const APIs = {
     cryptoApi: 'https://api.coingecko.com/api/v3',
 };
 
-// Fonction pour gérer les erreurs CORS avec un proxy
+// Fonction pour gérer les erreurs CORS avec un proxy (actuellement non utilisée car les APIs sont directes)
 const proxyUrl = 'https://api.allorigins.win/raw?url=';
 
 // Chargement des actualités cybersécurité
@@ -45,7 +45,8 @@ async function loadCyberNews() {
         document.getElementById('newsCount').textContent = stories.length;
 
     } catch (error) {
-        container.innerHTML = `<div class="error">Erreur lors du chargement des actualités: ${error.message}</div>`;
+        console.error("Erreur lors du chargement des actualités:", error);
+        container.innerHTML = '<div class="error">Impossible de charger les actualités pour le moment. Veuillez réessayer plus tard.</div>';
     }
 }
 
@@ -157,7 +158,8 @@ async function loadCryptoData() {
         document.getElementById('cryptoCount').textContent = Object.keys(data).length;
 
     } catch (error) {
-        container.innerHTML = `<div class="error">Erreur lors du chargement des cryptomonnaies: ${error.message}</div>`;
+        console.error("Erreur lors du chargement des cryptomonnaies:", error);
+        container.innerHTML = '<div class="error">Impossible de charger les données des cryptomonnaies pour le moment.</div>';
     }
 }
 
@@ -169,7 +171,7 @@ function refreshAllData() {
     loadCryptoData();
 }
 
-// Chargement initial
+// Chargement initial et actualisation automatique
 document.addEventListener('DOMContentLoaded', function() {
     refreshAllData();
     

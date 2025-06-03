@@ -35,7 +35,7 @@ nav:
     - Commandes Multi-OS: commandes-multi-os/index.md
     - Linux: linux/index.md
     - Active Directory: active-directory/index.md
-    - Proxmox: Proxmox/index.md
+    - Proxmox: proxmox/index.md
     - GLPI: glpi/index.md
   - Réseaux:
     - pfSense: pfsense/index.md
