@@ -63,5 +63,12 @@
     </div>
 
     <script src="../js/games/pong.js"></script>
+    <script>
+        document.addEventListener('keydown', function(event) {
+            if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
+                event.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html> 

@@ -71,5 +71,12 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener('keydown', function(event) {
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+                event.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html> 
