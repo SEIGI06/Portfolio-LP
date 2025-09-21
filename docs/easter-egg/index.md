@@ -20,8 +20,6 @@ Sur mobile, un petit indicateur visuel subtil apparaît en bas à droite de l'é
 
 ## Jeux Disponibles
 La zone de jeux contient actuellement :
-- Snake
-- Pong
 - Test de Réactivité
 
 ## Support
