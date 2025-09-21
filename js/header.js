@@ -1,10 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Détecter si nous sommes sur la page de jeux
+    const isGamesPage = window.location.pathname.includes('jeux.html');
+    
+    const logoElement = isGamesPage 
+        ? `<a href="index.html" class="nav__logo nav__logo--text" aria-label="Retour à l'accueil">Portfolio LP</a>`
+        : `<a href="index.html" class="nav__logo" aria-label="Retour à l'accueil">
+            <img src="assets/images/Portfolio LP.png" alt="Logo Portfolio LP" class="nav__logo-img" loading="lazy">
+        </a>`;
+    
     const header = `
         <header class="header" role="banner">
             <nav class="nav" role="navigation" aria-label="Navigation principale">
-                <a href="index.html" class="nav__logo" aria-label="Retour à l'accueil">
-                    <img src="assets/images/Portfolio LP.png" alt="Logo Portfolio LP" class="nav__logo-img" loading="lazy">
-                </a>
+                ${logoElement}
                 <button class="menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
                     <span class="hamburger"></span>
                 </button>
