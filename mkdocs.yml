@@ -41,6 +41,7 @@ nav:
     - pfSense: pfsense/index.md
     - Nmap: nmap/index.md
   - Serveurs Web: serveurs-web/index.md
+  - Cluster de Serveur Web: cluster-serveur-web.md
 
 extra_css:
   - hide_nav.css
