@@ -1,10 +1,4 @@
 User-agent: *
 Allow: /
-Allow: /assets/
-Allow: /css/
-Allow: /js/
 
-Disallow: /docs_épreuveE5/
-Disallow: /site/
-
-Sitemap: https://seigi06.github.io/Portfolio-LP/sitemap.xml 
+Sitemap: https://seigi06.github.io/Portfolio-LP/sitemap.xml

@@ -1,52 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Découvrez les projets pratiques réalisés par Lilian Peyr en BTS SIO SISR, couvrant l'administration système (Windows Server, AD), la sécurité réseau (pare-feu, VLAN) et le développement web.">
-    <meta name="keywords" content="Projets, BTS SIO, SISR, Développement, Administration Système">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Projets réalisés par Lilian Peyr : administration systèmes, sécurisation réseau, documentation et développement web.">
     <meta name="author" content="Lilian Peyr">
-    <meta name="robots" content="index, follow">
-    <meta name="language" content="French">
-    <meta name="revisit-after" content="7 days">
-    <meta name="generator" content="Visual Studio Code">
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://seigi06.github.io/Portfolio-LP/projets.html">
-    <meta property="og:title" content="Mes Projets en Administration Système, Réseaux et Cybersécurité - Lilian Peyr">
-    <meta property="og:description" content="Découvrez les projets pratiques réalisés par Lilian Peyr en BTS SIO SISR, couvrant l'administration système, la sécurité réseau et le développement web.">
-    <meta property="og:image" content="https://seigi06.github.io/Portfolio-LP/assets/images/projets/gelram.jpg">
-    <meta property="og:site_name" content="Portfolio Lilian Peyr">
-    <meta property="og:locale" content="fr_FR">
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://seigi06.github.io/Portfolio-LP/projets.html">
-    <meta name="twitter:title" content="Mes Projets en Administration Système, Réseaux et Cybersécurité - Lilian Peyr">
-    <meta name="twitter:description" content="Découvrez les projets pratiques réalisés par Lilian Peyr en BTS SIO SISR, couvrant l'administration système, la sécurité réseau et le développement web.">
-    <meta name="twitter:image" content="https://seigi06.github.io/Portfolio-LP/assets/images/projets/gelram.jpg">
-    <meta name="twitter:creator" content="@lilianpeyr">
-
-    <!-- Canonical URL -->
     <link rel="canonical" href="https://seigi06.github.io/Portfolio-LP/projets.html">
-
-    <!-- Schema.org markup -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "CollectionPage",
-        "name": "Mes Projets en Administration Système, Réseaux et Cybersécurité",
-        "description": "Découvrez les projets pratiques réalisés par Lilian Peyr en BTS SIO SISR",
-        "url": "https://seigi06.github.io/Portfolio-LP/projets.html",
-        "author": {
-            "@type": "Person",
-            "name": "Lilian Peyr"
-        }
-    }
-    </script>
-
-    <title>Mes Projets en Administration Système, Réseaux et Cybersécurité - Lilian Peyr</title>
+    <title>Projets SISR — Lilian Peyr</title>
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
@@ -55,152 +15,86 @@
 </head>
 <body>
     <a href="#main-content" class="skip-link">Aller au contenu principal</a>
-    <main id="main-content" role="main">
-        <section id="projets" class="section" aria-labelledby="projets-title">
-            <div class="container">
-                <h1 id="projets-title" class="section-title">Mes Projets</h1>
-                <p class="section-description">Découvrez les différents projets que j'ai réalisés dans le cadre de ma formation BTS SIO option SISR.</p>
-                
-                <div class="projects-filter" role="group" aria-label="Filtres de projets">
-                    <button class="filter-btn active" data-filter="all" aria-pressed="true">Tous</button>
-                    <button class="filter-btn" data-filter="sisr" aria-pressed="false">SISR</button>
-                    <button class="filter-btn" data-filter="dev" aria-pressed="false">Développement</button>
-                    <button class="filter-btn" data-filter="secu" aria-pressed="false">Sécurité</button>
-                </div>
+    <main id="main-content">
+        <section class="section fade-in-up">
+            <div class="container stack stack--spacious">
+                <header class="section__heading">
+                    <span class="section__eyebrow">réalisations</span>
+                    <h1 class="section__title">Des projets ancrés dans la production et la sécurité</h1>
+                    <p class="section__intro">
+                        Chaque projet est pensé pour répondre à des besoins opérationnels concrets — industrialisation, sécurisation des accès, supervision et diffusion d’une documentation exploitable par les équipes.
+                    </p>
+                </header>
 
-                <div class="projects-grid" role="list">
-                    <article class="card" data-category="sisr" role="listitem">
-                        <div class="card__image">
-                            <picture>
-                                <source srcset="assets/images/projets/gelram.webp" type="image/webp">
-                                <source srcset="assets/images/projets/gelram.jpg" type="image/jpeg">
-                                <img src="assets/images/projets/gelram.jpg" 
-                                     alt="Interface d'administration du projet GELTRAM montrant le tableau de bord GLPI" 
-                                     loading="lazy"
-                                     width="400"
-                                     height="225"
-                                     decoding="async">
-                            </picture>
+                <div class="cards-grid">
+                    <article class="card">
+                        <figure class="card__media">
+                            <img src="assets/images/projets/gelram.jpg" alt="Tableau de bord GLPI pour l'entreprise GELTRAM" loading="lazy" decoding="async">
+                        </figure>
+                        <span class="badge">Infrastructure SISR</span>
+                        <h2 class="card__title">GELTRAM — Architecture multi-sites</h2>
+                        <p class="card__description">
+                            Déploiement d’une infrastructure complète : Active Directory hiérarchisé, segmentation VLAN par service, pare-feu pfSense, supervision GLPI, sauvegardes automatisées et plan de reprise.
+                        </p>
+                        <div class="card__meta">
+                            <span class="pill">Active Directory</span>
+                            <span class="pill">pfSense</span>
+                            <span class="pill">Supervision</span>
+                            <span class="pill">WSUS</span>
                         </div>
-                        <div class="card__content">
-                            <h3 class="card__title">Projet GELTRAM</h3>
-                            <p class="card__description">Mise en place d'une infrastructure réseau complète avec Active Directory, segmentation VLAN (DSI, Vente, Production), gestion des utilisateurs et des groupes, politiques de sécurité (GPO), et services réseau (DNS, DHCP, WSUS). Implémentation de la sécurité avec pfSense, sauvegardes automatisées et monitoring via GLPI.</p>
-                            <div class="card__tech" role="list">
-                                <span class="tech-tag">Active Directory</span>
-                                <span class="tech-tag">VLAN</span>
-                                <span class="tech-tag">pfSense</span>
-                                <span class="tech-tag">GLPI</span>
-                                <span class="tech-tag">WSUS</span>
-                                <span class="tech-tag">GPO</span>
-                            </div>
-                            <div class="card__links">
-                                <a href="https://www.geltram.fr" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Voir le site de GELTRAM">Site Web</a>
-                                <a href="#" class="btn btn-secondary" target="_blank" rel="noopener noreferrer" aria-label="Voir la documentation du projet">Documentation</a>
-                            </div>
+                        <div class="card__actions">
+                            <a class="button button--ghost" href="https://www.geltram.fr" target="_blank">Site public</a>
+                            <a class="button" href="documentation.html#architecture">Documentation</a>
                         </div>
                     </article>
 
-                    <article class="card" data-category="sisr" role="listitem">
-                        <div class="card__image">
-                            <picture>
-                                <source srcset="assets/images/projets/sisr-projet1.webp" type="image/webp">
-                                <source srcset="assets/images/projets/sisr-projet1.jpg" type="image/jpeg">
-                                <img src="assets/images/projets/sisr-projet1.jpg" 
-                                     alt="Interface d'administration Windows Server montrant la console Active Directory" 
-                                     loading="lazy"
-                                     width="400"
-                                     height="225"
-                                     decoding="async">
-                            </picture>
+                    <article class="card">
+                        <figure class="card__media">
+                            <img src="assets/images/projets/portfolio.webp" alt="Capture du portfolio professionnel" loading="lazy" decoding="async">
+                        </figure>
+                        <span class="badge">Développement</span>
+                        <h2 class="card__title">Portfolio professionnel SISR</h2>
+                        <p class="card__description">
+                            Conception d’un site statique modulaire et accessible : architecture CSS en couches, composants réutilisables et documentation pour faciliter les contributions futures.
+                        </p>
+                        <div class="card__meta">
+                            <span class="pill">HTML5 sémantique</span>
+                            <span class="pill">Accessibilité</span>
+                            <span class="pill">Performance</span>
                         </div>
-                        <div class="card__content">
-                            <h3 class="card__title">Administration Système Windows Server</h3>
-                            <p class="card__description">Mise en place d'un domaine Active Directory avec gestion des utilisateurs, des groupes et des politiques de sécurité.</p>
-                            <div class="card__tech" role="list">
-                                <span class="tech-tag">Windows Server</span>
-                                <span class="tech-tag">Active Directory</span>
-                                <span class="tech-tag">GPO</span>
-                            </div>
-                            <div class="card__links">
-                                <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Voir la documentation du projet">Documentation</a>
-                                <a href="#" class="btn btn-secondary" target="_blank" rel="noopener noreferrer" aria-label="Voir le projet sur GitHub">GitHub</a>
-                            </div>
+                        <div class="card__actions">
+                            <a class="button" href="https://github.com/SEIGI06/Portfolio-LP" target="_blank">Code source</a>
+                            <a class="button button--ghost" href="https://seigi06.github.io/Portfolio-LP/" target="_blank">Démo en ligne</a>
                         </div>
                     </article>
 
-                    <article class="card" data-category="secu" role="listitem">
-                        <div class="card__image">
-                            <picture>
-                                <source srcset="assets/images/projets/secu-projet1.webp" type="image/webp">
-                                <source srcset="assets/images/projets/secu-projet1.jpg" type="image/jpeg">
-                                <img src="assets/images/projets/secu-projet1.jpg" 
-                                     alt="Configuration du pare-feu Cisco montrant les règles de sécurité" 
-                                     loading="lazy"
-                                     width="400"
-                                     height="225"
-                                     decoding="async">
-                            </picture>
+                    <article class="card">
+                        <span class="badge">Cybersécurité</span>
+                        <h2 class="card__title">Renforcement réseau & conformité</h2>
+                        <p class="card__description">
+                            Mise en place d’une politique de sécurité réseau : cartographie des flux, durcissement des ACL, déploiement VPN IPSec et rédaction des procédures « run » pour l’équipe support.
+                        </p>
+                        <div class="card__meta">
+                            <span class="pill">Cisco ASA</span>
+                            <span class="pill">VPN IPSec</span>
+                            <span class="pill">Journalisation</span>
                         </div>
-                        <div class="card__content">
-                            <h3 class="card__title">Sécurisation d'un Réseau d'Entreprise</h3>
-                            <p class="card__description">Mise en place d'une infrastructure réseau sécurisée avec pare-feu, VLAN et surveillance.</p>
-                            <div class="card__tech" role="list">
-                                <span class="tech-tag">Cisco</span>
-                                <span class="tech-tag">Pare-feu</span>
-                                <span class="tech-tag">VLAN</span>
-                            </div>
-                            <div class="card__links">
-                                <a href="#" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Voir la documentation du projet">Documentation</a>
-                                <a href="#" class="btn btn-secondary" target="_blank" rel="noopener noreferrer" aria-label="Voir le projet sur GitHub">GitHub</a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="card" data-category="dev" role="listitem">
-                        <div class="card__image">
-                            <picture>
-                                <source srcset="assets/images/projets/portfolio.webp" type="image/webp">
-                                <source srcset="assets/images/projets/portfolio.jpg" type="image/jpeg">
-                                <img src="assets/images/projets/portfolio.jpg" 
-                                     alt="Interface du portfolio montrant la page d'accueil" 
-                                     loading="lazy"
-                                     width="400"
-                                     height="225"
-                                     decoding="async">
-                            </picture>
-                        </div>
-                        <div class="card__content">
-                            <h3 class="card__title">Portfolio BTS SIO</h3>
-                            <p class="card__description">Développement d'un portfolio professionnel responsive et accessible, mettant en valeur mes compétences en BTS SIO option SISR. Le site inclut une interface moderne, des animations fluides, et respecte les standards WCAG 2.2 pour l'accessibilité.</p>
-                            <div class="card__tech" role="list">
-                                <span class="tech-tag">HTML5</span>
-                                <span class="tech-tag">CSS3</span>
-                                <span class="tech-tag">JavaScript</span>
-                                <span class="tech-tag">Accessibilité</span>
-                                <span class="tech-tag">Responsive Design</span>
-                                <span class="tech-tag">SEO</span>
-                            </div>
-                            <div class="card__links">
-                                <a href="https://github.com/seigi06/Portfolio-LP" class="btn" target="_blank" rel="noopener noreferrer" aria-label="Voir le code source sur GitHub">GitHub</a>
-                                <a href="https://seigi06.github.io/Portfolio-LP/" class="btn btn-secondary" target="_blank" rel="noopener noreferrer" aria-label="Voir le site en ligne">Site Web</a>
-                            </div>
+                        <div class="card__actions">
+                            <a class="button button--ghost" href="documentation.html#securite">Dossier technique</a>
                         </div>
                     </article>
                 </div>
             </div>
         </section>
     </main>
-
-    <footer class="footer" role="contentinfo">
-        <div class="container">
-            <div class="footer__content">
-                <nav class="footer__links" aria-label="Liens de réseaux sociaux">
-                    <a href="https://www.linkedin.com/in/lilian-peyr/" target="_blank" rel="noopener noreferrer" aria-label="Profil LinkedIn">LinkedIn</a>
-                </nav>
-                <p>&copy; 2024 Lilian Peyr - Tous droits réservés</p>
-            </div>
+    <footer class="site-footer" role="contentinfo">
+        <div class="container site-footer__inner">
+            <p>© 2025 Lilian Peyr — Portfolio BTS SIO SISR</p>
+            <nav aria-label="Liens externes" class="site-footer__links">
+                <a href="mailto:lpeyr.ledantec@gmail.com">Contact</a>
+                <a href="https://www.linkedin.com/in/lilian-peyr/" target="_blank">LinkedIn</a>
+            </nav>
         </div>
     </footer>
-    <script src="js/easter-egg.js" defer></script>
 </body>
-</html> 
+</html>

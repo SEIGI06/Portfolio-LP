@@ -1,45 +1,168 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Accédez à la documentation technique de Lilian Peyr sur l'administration système, les réseaux et la cybersécurité, réalisée dans le cadre du BTS SIO SISR.">
-    <meta name="keywords" content="Documentation, Administration Système, Sécurité, BTS SIO, SISR">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Documentation technique du portfolio de Lilian Peyr : architecture, conventions de code et bonnes pratiques de contribution.">
     <meta name="author" content="Lilian Peyr">
-    <title>Documentation Technique - Administration Système et Sécurité - Lilian Peyr</title>
+    <link rel="canonical" href="https://seigi06.github.io/Portfolio-LP/documentation.html">
+    <title>Documentation technique — Portfolio Lilian Peyr</title>
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/documentation.css">
     <script src="js/header.js" defer></script>
     <script src="js/main.js" defer></script>
 </head>
-<body class="documentation-page">
+<body>
     <a href="#main-content" class="skip-link">Aller au contenu principal</a>
-    <main id="main-content" role="main">
-        <section id="documentation">
-            <div class="documentation-header">
+    <main id="main-content">
+        <section class="section fade-in-up">
+            <div class="container stack stack--spacious">
+                <header class="section__heading">
+                    <span class="section__eyebrow">documentation</span>
+                    <h1 class="section__title">Accéder à la base de connaissances SISR</h1>
+                    <p class="section__intro">
+                        Les procédures détaillées (Linux, Proxmox, réseaux, sécurité…) sont désormais centralisées dans le dépôt GitHub <strong>DOC_SISR</strong>. Cette page sert de hub pour y accéder rapidement et rappeler les règles de contribution.
+                    </p>
+                    <div class="hero__actions">
+                        <a class="button" href="https://github.com/SEIGI06/DOC_SISR" target="_blank" rel="noopener">Ouvrir la documentation complète</a>
+                        <a class="button button--ghost" href="https://github.com/SEIGI06/DOC_SISR/tree/main" target="_blank" rel="noopener">Explorer la structure</a>
+                    </div>
+                </header>
+
+                <section class="stack">
+                    <h2>Structure du dépôt DOC_SISR</h2>
+                    <p>
+                        Les contenus sont organisés par thématique. Chaque dossier contient un ou plusieurs fichiers Markdown que vous pouvez modifier depuis GitHub ou en local via Git.
+                    </p>
+                    <pre class="code-block">
+DOC_SISR/
+├── linux/                # Commandes, dépannage, scripts
+├── proxmox/              # Virtualisation, clustering, sauvegardes
+├── active-directory/     # Annuaire, GPO, best practices
+├── serveurs-web/         # Apache, HTTPS, reverse-proxy
+├── commandes-multi-os/   # Windows, Linux, macOS (gestion, réseau…)
+├── pfsense/              # Pare-feu, VPN, politiques de filtrage
+└── dns-ha-debian12.md    # Exemple de fiche technique autonome
+                    </pre>
+                </section>
+
+                <section class="stack">
+                    <h2>Guides thématiques en accès direct</h2>
+                    <div class="cards-grid">
+                        <article class="card">
+                            <span class="badge">Linux</span>
+                            <h3 class="card__title">Commandes & administration</h3>
+                            <p class="card__description">
+                                Gestion des utilisateurs, permissions, réseau, monitoring et scripts d’automatisation.
+                            </p>
+                            <div class="card__actions">
+                                <a class="button" href="https://github.com/SEIGI06/DOC_SISR/tree/main/linux" target="_blank" rel="noopener">Consulter</a>
+                                <a class="button button--ghost" href="https://github.com/SEIGI06/DOC_SISR/edit/main/linux/index.md" target="_blank" rel="noopener">Modifier</a>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <span class="badge">Virtualisation</span>
+                            <h3 class="card__title">Proxmox & supervision</h3>
+                            <p class="card__description">
+                                Installation, clustering, sauvegardes et intégration de la supervision au sein de l’infrastructure.
+                            </p>
+                            <div class="card__actions">
+                                <a class="button" href="https://github.com/SEIGI06/DOC_SISR/tree/main/Proxmox" target="_blank" rel="noopener">Consulter</a>
+                                <a class="button button--ghost" href="https://github.com/SEIGI06/DOC_SISR/edit/main/Proxmox/index.md" target="_blank" rel="noopener">Modifier</a>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <span class="badge">Infrastructures</span>
+                            <h3 class="card__title">Active Directory & services</h3>
+                            <p class="card__description">
+                                Déploiement d’AD DS, gestion des GPO, DNS/DHCP associés et bonnes pratiques de sécurisation.
+                            </p>
+                            <div class="card__actions">
+                                <a class="button" href="https://github.com/SEIGI06/DOC_SISR/tree/main/active-directory" target="_blank" rel="noopener">Consulter</a>
+                                <a class="button button--ghost" href="https://github.com/SEIGI06/DOC_SISR/edit/main/active-directory/index.md" target="_blank" rel="noopener">Modifier</a>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <span class="badge">Sécurité</span>
+                            <h3 class="card__title">pfSense & réseaux</h3>
+                            <p class="card__description">
+                                Pare-feu, VPN, segmentation VLAN et politiques de filtrage adaptées aux environnements SISR.
+                            </p>
+                            <div class="card__actions">
+                                <a class="button" href="https://github.com/SEIGI06/DOC_SISR/tree/main/pfsense" target="_blank" rel="noopener">Consulter</a>
+                                <a class="button button--ghost" href="https://github.com/SEIGI06/DOC_SISR/edit/main/pfsense/index.md" target="_blank" rel="noopener">Modifier</a>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <span class="badge">Commandes multi-OS</span>
+                            <h3 class="card__title">Windows, Linux, macOS</h3>
+                            <p class="card__description">
+                                Fiches pratiques pour la gestion des fichiers, utilisateurs, processus, réseau et permissions.
+                            </p>
+                            <div class="card__actions">
+                                <a class="button" href="https://github.com/SEIGI06/DOC_SISR/tree/main/commandes-multi-os" target="_blank" rel="noopener">Consulter</a>
+                                <a class="button button--ghost" href="https://github.com/SEIGI06/DOC_SISR/edit/main/commandes-multi-os/index.md" target="_blank" rel="noopener">Modifier</a>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <span class="badge">Web</span>
+                            <h3 class="card__title">Serveurs & HTTPS</h3>
+                            <p class="card__description">
+                                Déploiement Apache/Nginx, certificats, reverse-proxy et durcissement des services web.
+                            </p>
+                            <div class="card__actions">
+                                <a class="button" href="https://github.com/SEIGI06/DOC_SISR/tree/main/serveurs-web" target="_blank" rel="noopener">Consulter</a>
+                                <a class="button button--ghost" href="https://github.com/SEIGI06/DOC_SISR/edit/main/serveurs-web/index.md" target="_blank" rel="noopener">Modifier</a>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="stack">
+                    <h2>Workflow de contribution</h2>
+                    <div class="two-columns">
+                        <article class="card">
+                            <h3 class="card__title">Travailler en local</h3>
+                            <div class="list-clean">
+                                <p>1. Cloner le dépôt documentation :</p>
+                                <pre class="code-block">git clone https://github.com/SEIGI06/DOC_SISR.git
+cd DOC_SISR
+git checkout -b feature/nouvelle-fiche</pre>
+                                <p>2. Éditer ou créer des fichiers <code>.md</code>.</p>
+                                <p>3. Commiter et pousser la branche puis créer une Pull Request.</p>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <h3 class="card__title">Édition rapide sur GitHub</h3>
+                            <ul class="list-clean">
+                                <li>Ouvrir la fiche dans le navigateur.</li>
+                                <li>Cliquer sur <em>Edit</em>, apporter les modifications en Markdown.</li>
+                                <li>Décrire le changement et valider en créant une Pull Request.</li>
+                                <li>Les propositions sont relues avant intégration afin de garder un historique clair.</li>
+                            </ul>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="stack">
+                    <h2>Aller plus loin : publication automatique</h2>
+                    <p>
+                        Lorsque la volumétrie sera plus importante, vous pourrez générer une documentation statique (MkDocs, Docusaurus…) depuis ce dépôt et l’héberger via GitHub Pages. Les liens de cette page pointeront alors vers le site généré sans changer la structure actuelle.
+                    </p>
+                </section>
             </div>
-            <iframe 
-                src="site/index.html#:~:text=Documentation" 
-                class="documentation-container" 
-                title="Documentation Technique"
-                aria-label="Documentation technique complète"
-                scrolling="yes">
-            </iframe>
         </section>
     </main>
-
-    <footer class="footer" role="contentinfo">
-        <div class="container">
-            <div class="footer__content">
-                <nav class="footer__links" aria-label="Liens de réseaux sociaux">
-                    <a href="https://www.linkedin.com/in/lilian-peyr/" target="_blank" rel="noopener noreferrer" aria-label="Profil LinkedIn">LinkedIn</a>
-                </nav>
-                <p>&copy; 2024 Lilian Peyr - Tous droits réservés</p>
-            </div>
+    <footer class="site-footer" role="contentinfo">
+        <div class="container site-footer__inner">
+            <p>© 2025 Lilian Peyr — Portfolio BTS SIO SISR</p>
+            <nav aria-label="Liens externes" class="site-footer__links">
+                <a href="mailto:lpeyr.ledantec@gmail.com">Contact</a>
+                <a href="https://www.linkedin.com/in/lilian-peyr/" target="_blank">LinkedIn</a>
+            </nav>
         </div>
     </footer>
-    <script src="js/easter-egg.js" defer></script>
 </body>
-</html> 
+</html>
+

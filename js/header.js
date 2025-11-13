@@ -1,77 +1,92 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Détecter si nous sommes sur la page de jeux
-    const isGamesPage = window.location.pathname.includes('jeux.html');
-    
-    const logoElement = isGamesPage 
-        ? `<a href="index.html" class="nav__logo nav__logo--text" aria-label="Retour à l'accueil">Portfolio LP</a>`
-        : `<a href="index.html" class="nav__logo" aria-label="Retour à l'accueil">
-            <img src="assets/images/Portfolio LP.png" alt="Logo Portfolio LP" class="nav__logo-img" loading="lazy">
-        </a>`;
-    
-    const header = `
-        <header class="header" role="banner">
-            <nav class="nav" role="navigation" aria-label="Navigation principale">
-                ${logoElement}
-                <button class="menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
-                    <span class="hamburger"></span>
+document.addEventListener('DOMContentLoaded', () => {
+    const navigationItems = [
+        { href: 'index.html', label: 'Accueil' },
+        { href: 'parcours.html', label: 'Parcours' },
+        { href: 'projets.html', label: 'Projets' },
+        { href: 'certifications.html', label: 'Certifications' },
+        { href: 'documentation.html', label: 'Documentation' }
+    ];
+
+    const header = document.createElement('header');
+    header.className = 'site-header';
+    header.setAttribute('role', 'banner');
+
+    header.innerHTML = `
+        <div class="container site-header__inner">
+            <a href="index.html" class="brand" aria-label="Retour à l'accueil">
+                <img src="assets/images/Portfolio LP.png" alt="Logo de Lilian Peyr" loading="lazy" decoding="async">
+                <span>Portfolio LP</span>
+            </a>
+            <nav class="site-nav" aria-label="Navigation principale">
+                <button class="site-nav__toggle" type="button" aria-controls="site-navigation" aria-expanded="false">
+                    Menu
                 </button>
-                <div class="nav__links" id="nav-links">
-                    <a href="index.html" aria-current="page">Accueil</a>
-                    <a href="parcours.html">Parcours</a>
-                    <a href="certifications.html">Certifications</a>
-                    <a href="veille.html">Veille</a>
-                    <a href="projets.html">Projets</a>
-                    <a href="documentation.html">Documentation</a>
-                    <a href="e5.html">Épreuve E5</a>
-                    <a href="ia.html">IA</a>
-                </div>
+                <ul class="site-nav__list" id="site-navigation" aria-expanded="false">
+                    ${navigationItems.map(item => `
+                        <li>
+                            <a class="site-nav__link" href="${item.href}">${item.label}</a>
+                        </li>
+                    `).join('')}
+                </ul>
             </nav>
-        </header>
+        </div>
     `;
 
-    // Insérer le header au début du body
-    document.body.insertAdjacentHTML('afterbegin', header);
+    document.body.insertAdjacentElement('afterbegin', header);
 
-    // Mettre en surbrillance le lien actif
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    const navLinks = document.querySelectorAll('.nav__links a');
+    const navLinks = header.querySelectorAll('.site-nav__link');
+
     navLinks.forEach(link => {
-        if (link.getAttribute('href') === currentPage) {
-            link.classList.add('active');
+        const linkHref = link.getAttribute('href');
+        if (linkHref === currentPage || (linkHref === 'index.html' && currentPage === '')) {
             link.setAttribute('aria-current', 'page');
         } else {
             link.removeAttribute('aria-current');
         }
     });
 
-    // Gestion du menu mobile
-    const menuToggle = document.querySelector('.menu-toggle');
-    const navLinksContainer = document.querySelector('.nav__links');
-    
-    menuToggle.addEventListener('click', () => {
-        const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
-        menuToggle.setAttribute('aria-expanded', !isExpanded);
-        navLinksContainer.classList.toggle('active');
-        menuToggle.classList.toggle('active');
+    const toggleButton = header.querySelector('.site-nav__toggle');
+    const navList = header.querySelector('.site-nav__list');
+
+    const closeNavigation = () => {
+        toggleButton.setAttribute('aria-expanded', 'false');
+        navList.setAttribute('aria-expanded', 'false');
+    };
+
+    toggleButton.addEventListener('click', () => {
+        const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
+        toggleButton.setAttribute('aria-expanded', String(!isExpanded));
+        navList.setAttribute('aria-expanded', String(!isExpanded));
     });
 
-    // Fermer le menu lors du clic sur un lien
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
-            if (window.innerWidth <= 768) {
-                menuToggle.setAttribute('aria-expanded', 'false');
-                navLinksContainer.classList.remove('active');
-                menuToggle.classList.remove('active');
+            if (window.innerWidth < 921) {
+                closeNavigation();
             }
         });
     });
 
-    // Fermer le menu lors du redimensionnement de la fenêtre
     window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) {
-            menuToggle.setAttribute('aria-expanded', 'false');
-            navLinksContainer.classList.remove('active');
-            menuToggle.classList.remove('active');
+        if (window.innerWidth >= 921) {
+            closeNavigation();
         }
     });
+
+    let previousScrollY = window.scrollY;
+    const elevateHeader = () => {
+        const currentScrollY = window.scrollY;
+        if (currentScrollY > 10 && currentScrollY > previousScrollY) {
+            header.classList.add('site-header--elevated');
+        } else if (currentScrollY <= 10) {
+            header.classList.remove('site-header--elevated');
+        }
+        previousScrollY = currentScrollY;
+    };
+
+    window.addEventListener('scroll', elevateHeader, { passive: true });
+    elevateHeader();
+});
+
 }); 
