@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!prefersReducedMotion && elementsToReveal.length) {
         const observer = new IntersectionObserver((entries, obs) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
                     entry.target.classList.add('is-visible');
                     obs.unobserve(entry.target);
                 }
@@ -16,9 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         elementsToReveal.forEach(element => observer.observe(element));
-    } else {
+        } else {
         elementsToReveal.forEach(element => element.classList.add('is-visible'));
-    }
+            }
 
     const makeExternalLinksAccessible = () => {
         const links = document.querySelectorAll('a[target="_blank"]');
@@ -36,4 +36,4 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     makeExternalLinksAccessible();
-});
+        });
