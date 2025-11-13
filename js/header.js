@@ -88,5 +88,3 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', elevateHeader, { passive: true });
     elevateHeader();
 });
-
-}); 
