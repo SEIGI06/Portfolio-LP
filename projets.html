@@ -7,113 +7,133 @@
     <meta name="description"
         content="Projets réalisés par Lilian Peyr : administration systèmes, sécurisation réseau, documentation et développement web.">
     <meta name="author" content="Lilian Peyr">
-    <link rel="canonical" href="https://seigi06.github.io/Portfolio-LP/projets.html">
-    <title>Projets SISR — Lilian Peyr</title>
+    <title>Mes Projets | Lilian Peyr</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
-    <script src="js/header.js" defer></script>
+
+    <!-- Scripts -->
     <script src="js/main.js" defer></script>
 </head>
 
 <body>
     <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+
+    <header class="site-header">
+        <div class="container site-header__inner">
+            <a href="index.html" class="logo">Lilian<span>.</span></a>
+            <nav>
+                <ul class="nav-list">
+                    <li><a href="index.html" class="nav-link">Accueil</a></li>
+                    <li><a href="parcours.html" class="nav-link">Parcours</a></li>
+                    <li><a href="projets.html" class="nav-link active">Projets</a></li>
+                    <li><a href="mailto:lpeyr.ledantec@gmail.com" class="button button--primary"
+                            style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
     <main id="main-content">
-        <section class="section fade-in-up">
-            <div class="container stack stack--spacious">
-                <header class="section__heading">
-                    <span class="section__eyebrow">à changer</span>
-                    <h1 class="section__title">à changer</h1>
-                    <p class="section__intro">
-                        à changer
-                    </p>
-                </header>
+        <section class="section">
+            <div class="container">
+                <div class="fade-in-up">
+                    <h1 class="section__title">Mes <span class="text-gradient">Projets</span></h1>
+                    <p>Réalisations techniques et académiques.</p>
+                </div>
 
-                <div class="cards-grid">
-                    <article class="card">
-                        <figure class="card__media">
-                            <img src="assets/images/projets/gelram.jpg" alt="à changer" loading="lazy" decoding="async">
-                        </figure>
-                        <span class="badge">à changer</span>
-                        <h2 class="card__title">à changer</h2>
+                <div class="grid grid-3" style="margin-top: var(--space-lg);">
+
+                    <!-- Projet 1 -->
+                    <article class="card fade-in-up" style="transition-delay: 0.1s;">
+                        <div
+                            style="height: 200px; background: rgba(255,255,255,0.05); border-radius: var(--radius-md); margin-bottom: var(--space-md); overflow: hidden;">
+                            <!-- Placeholder Image -->
+                            <div
+                                style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--color-text-muted);">
+                                Image Projet
+                            </div>
+                        </div>
+                        <span class="badge">Infrastructure</span>
+                        <h3 class="card__title">à changer</h3>
                         <p class="card__description">
                             à changer
                         </p>
-                        <div class="card__meta">
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: auto; padding-top: 1rem;">
+                            <span
+                                style="font-size: 0.8rem; padding: 0.2rem 0.6rem; background: rgba(255,255,255,0.1); border-radius: 99px;">Tech
+                                1</span>
+                            <span
+                                style="font-size: 0.8rem; padding: 0.2rem 0.6rem; background: rgba(255,255,255,0.1); border-radius: 99px;">Tech
+                                2</span>
                         </div>
-                        <div class="card__actions">
-                            <a class="button button--ghost" href="mailto:lpeyr.ledantec@gmail.com">à changer</a>
+                        <div style="margin-top: 1.5rem;">
+                            <a href="#" class="button button--ghost" style="width: 100%;">Voir le détail</a>
                         </div>
                     </article>
 
-                    <article class="card">
-                        <figure class="card__media">
-                            <img src="assets/images/projets/portfolio.webp" alt="à changer" loading="lazy"
-                                decoding="async">
-                        </figure>
-                        <span class="badge">à changer</span>
-                        <h2 class="card__title">à changer</h2>
+                    <!-- Projet 2 -->
+                    <article class="card fade-in-up" style="transition-delay: 0.2s;">
+                        <div
+                            style="height: 200px; background: rgba(255,255,255,0.05); border-radius: var(--radius-md); margin-bottom: var(--space-md); overflow: hidden;">
+                            <div
+                                style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--color-text-muted);">
+                                Image Projet
+                            </div>
+                        </div>
+                        <span class="badge">Développement</span>
+                        <h3 class="card__title">à changer</h3>
                         <p class="card__description">
                             à changer
                         </p>
-                        <div class="card__meta">
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: auto; padding-top: 1rem;">
+                            <span
+                                style="font-size: 0.8rem; padding: 0.2rem 0.6rem; background: rgba(255,255,255,0.1); border-radius: 99px;">Tech
+                                A</span>
                         </div>
-                        <div class="card__actions">
-                            <a class="button button--ghost" href="documentation.html#architecture">à changer</a>
-                            <a class="button" href="https://github.com/SEIGI06/DOC_SISR/tree/main/active-directory"
-                                target="_blank">à changer</a>
+                        <div style="margin-top: 1.5rem;">
+                            <a href="#" class="button button--ghost" style="width: 100%;">Voir le détail</a>
                         </div>
                     </article>
 
-                    <article class="card">
-                        <figure class="card__media">
-                            <img src="assets/images/projets/portfolio.webp" alt="à changer" loading="lazy"
-                                decoding="async">
-                        </figure>
-                        <span class="badge">à changer</span>
-                        <h2 class="card__title">à changer</h2>
+                    <!-- Projet 3 -->
+                    <article class="card fade-in-up" style="transition-delay: 0.3s;">
+                        <div
+                            style="height: 200px; background: rgba(255,255,255,0.05); border-radius: var(--radius-md); margin-bottom: var(--space-md); overflow: hidden;">
+                            <div
+                                style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--color-text-muted);">
+                                Image Projet
+                            </div>
+                        </div>
+                        <span class="badge">Documentation</span>
+                        <h3 class="card__title">à changer</h3>
                         <p class="card__description">
                             à changer
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
-                            <span class="pill">à changer</span>
+                        </p>
+                        <div style="margin-top: 1.5rem;">
+                            <a href="#" class="button button--ghost" style="width: 100%;">Voir le détail</a>
+                        </div>
+                    </article>
+
                 </div>
-                <div class="card__actions">
-                    <a class="button" href="https://github.com/SEIGI06/DOC_SISR" target="_blank">à changer</a>
-                    <a class="button button--ghost" href="documentation.html">à changer</a>
-                </div>
-                </article>
-            </div>
             </div>
         </section>
     </main>
-    <footer class="site-footer" role="contentinfo">
+
+    <footer class="site-footer">
         <div class="container site-footer__inner">
-            <p>© 2025 Lilian Peyr — Portfolio BTS SIO SISR</p>
-            <nav aria-label="Liens externes" class="site-footer__links">
-                <a href="mailto:lpeyr.ledantec@gmail.com">Contact</a>
-                <a href="https://www.linkedin.com/in/lilian-peyr/" target="_blank">LinkedIn</a>
-            </nav>
+            <p>© 2025 Lilian Peyr. Tous droits réservés.</p>
+            <div class="hero__actions" style="margin: 0; gap: 1rem;">
+                <a href="https://www.linkedin.com/in/lilian-peyr/" target="_blank" class="nav-link">LinkedIn</a>
+                <a href="mailto:lpeyr.ledantec@gmail.com" class="nav-link">Email</a>
+            </div>
         </div>
     </footer>
 </body>

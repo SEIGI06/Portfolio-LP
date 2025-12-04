@@ -5,81 +5,106 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description"
-        content="Portfolio professionnel de Lilian Peyr, étudiant en BTS SIO SISR, spécialisé en cybersécurité, administration systèmes et réseaux.">
+        content="Portfolio professionnel de Lilian Peyr, étudiant en BTS SIO SISR. Expert en cybersécurité et systèmes.">
     <meta name="author" content="Lilian Peyr">
-    <link rel="canonical" href="https://seigi06.github.io/Portfolio-LP/">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://seigi06.github.io/Portfolio-LP/">
-    <meta property="og:title" content="Portfolio Lilian Peyr — BTS SIO SISR">
-    <meta property="og:description"
-        content="Découvrez mes projets, certifications et réalisations en administration systèmes, réseaux et cybersécurité.">
-    <meta property="og:image" content="https://seigi06.github.io/Portfolio-LP/assets/images/Portfolio LP.png">
-    <meta property="og:locale" content="fr_FR">
-    <title>Portfolio Lilian Peyr — BTS SIO SISR</title>
+    <title>Lilian Peyr | Portfolio Premium</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
-    <script src="js/header.js" defer></script>
+
+    <!-- Scripts -->
     <script src="js/main.js" defer></script>
 </head>
 
 <body>
     <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+
+    <header class="site-header">
+        <div class="container site-header__inner">
+            <a href="index.html" class="logo">Lilian<span>.</span></a>
+            <nav>
+                <ul class="nav-list">
+                    <li><a href="index.html" class="nav-link active">Accueil</a></li>
+                    <li><a href="parcours.html" class="nav-link">Parcours</a></li>
+                    <li><a href="projets.html" class="nav-link">Projets</a></li>
+                    <li><a href="mailto:lpeyr.ledantec@gmail.com" class="button button--primary"
+                            style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
     <main id="main-content">
-        <section id="accueil" class="section hero fade-in-up">
-            <div class="container hero__intro">
-                <div class="hero__heading">
-                    <span class="hero__eyebrow">Étudiant en BTS SIO option SISR</span>
-                    <h1>Portfolio Lilian</h1>
-                    <p class="hero__lead">
-                        Je m'appelle Lilian Peyr, j'ai 19 ans. Je suis actuellement en BTS SIO au lycée Félix Le Dantec.
-                    </p>
-                </div>
+        <!-- Hero Section -->
+        <section id="accueil" class="hero">
+            <div class="container hero__content fade-in-up">
+                <span class="badge">BTS SIO Option SISR</span>
+                <h1>
+                    Architecture Système <br>
+                    <span class="text-gradient">& Cybersécurité</span>
+                </h1>
+                <p>
+                    Je conçois des infrastructures réseaux sécurisées et performantes.
+                    Actuellement en formation au lycée Félix Le Dantec.
+                </p>
                 <div class="hero__actions">
-                    <a class="button" href="parcours.html">Voir mon parcours</a>
-                    <a class="button button--ghost" href="mailto:lpeyr.ledantec@gmail.com">Me contacter</a>
+                    <a class="button button--primary" href="projets.html">Voir mes projets</a>
+                    <a class="button button--ghost" href="parcours.html">Mon parcours</a>
                 </div>
             </div>
         </section>
-        <section id="expertises" class="section section--surface fade-in-up">
+
+        <!-- Atouts / Soft Skills -->
+        <section id="expertises">
             <div class="container">
-                <header class="section__heading">
-                    <span class="section__eyebrow">Savoir-être</span>
-                    <h2 class="section__title">Mes atouts humains</h2>
-                </header>
-                <div class="cards-grid">
-                    <article class="card">
+                <div class="fade-in-up">
+                    <h2 class="section__title">Mes Atouts <span class="text-gradient">Humains</span></h2>
+                </div>
+
+                <div class="grid grid-3">
+                    <article class="card fade-in-up" style="transition-delay: 0.1s;">
                         <span class="badge">Relationnel</span>
-                        <h3 class="card__title">Travail en équipe</h3>
+                        <h3 class="card__title">Travail d'équipe</h3>
                         <p class="card__description">
-                            Expérience concrète de la collaboration sur des projets techniques et scolaires.
+                            Collaboration fluide sur des projets techniques complexes. Communication claire et
+                            proactive.
                         </p>
                     </article>
-                    <article class="card">
-                        <span class="badge">Attitude</span>
-                        <h3 class="card__title">Détermination</h3>
+
+                    <article class="card fade-in-up" style="transition-delay: 0.2s;">
+                        <span class="badge">Mindset</span>
+                        <h3 class="card__title">Résolution de problèmes</h3>
                         <p class="card__description">
-                            Volonté constante de mener à bien les missions confiées.
+                            Approche analytique et méthodique pour diagnostiquer et résoudre les incidents critiques.
                         </p>
                     </article>
-                    <article class="card">
+
+                    <article class="card fade-in-up" style="transition-delay: 0.3s;">
                         <span class="badge">Évolution</span>
-                        <h3 class="card__title">Ouverture d'esprit</h3>
+                        <h3 class="card__title">Veille Technologique</h3>
                         <p class="card__description">
-                            Curiosité pour les nouvelles technologies et volonté d'apprendre en continu.
+                            Curiosité insatiable pour les nouvelles menaces et les solutions de sécurité émergentes.
                         </p>
                     </article>
                 </div>
             </div>
         </section>
     </main>
-    <footer class="site-footer" role="contentinfo">
+
+    <footer class="site-footer">
         <div class="container site-footer__inner">
-            <p>© 2025 Lilian Peyr — Portfolio BTS SIO SISR</p>
-            <nav aria-label="Liens externes" class="site-footer__links">
-                <a href="mailto:lpeyr.ledantec@gmail.com">Contact</a>
-                <a href="https://www.linkedin.com/in/lilian-peyr/" target="_blank">LinkedIn</a>
-            </nav>
+            <p>© 2025 Lilian Peyr. Tous droits réservés.</p>
+            <div class="hero__actions" style="margin: 0; gap: 1rem;">
+                <a href="https://www.linkedin.com/in/lilian-peyr/" target="_blank" class="nav-link">LinkedIn</a>
+                <a href="mailto:lpeyr.ledantec@gmail.com" class="nav-link">Email</a>
+            </div>
         </div>
     </footer>
 </body>
