@@ -208,3 +208,28 @@
     color: var(--color-text);
     margin-bottom: 1rem;
 }
+
+/* --- Glowing Dot --- */
+@keyframes pulse-glow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+.glowing-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: #10B981;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    animation: pulse-glow 2s infinite;
+}
