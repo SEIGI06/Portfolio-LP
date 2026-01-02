@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Administration des projets du portfolio"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Admin - Portfolio Lilian Peyr</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+
+    <style>
+      .admin-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--space-xl);
+      }
+
+      .admin-header {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-lg);
+        padding: var(--space-lg);
+        margin-bottom: var(--space-lg);
+      }
+
+      .projects-list {
+        display: grid;
+        gap: var(--space-md);
+      }
+
+      .project-item {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-md);
+        padding: var(--space-md);
+        display: grid;
+        grid-template-columns: 100px 1fr auto;
+        gap: var(--space-md);
+        align-items: center;
+        transition: all 0.3s ease;
+      }
+
+      .project-item:hover {
+        border-color: rgba(59, 130, 246, 0.5);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .project-thumbnail {
+        width: 100px;
+        height: 60px;
+        border-radius: var(--radius-sm);
+        object-fit: cover;
+      }
+
+      .project-info h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.1rem;
+      }
+
+      .project-info p {
+        margin: 0;
+        color: var(--color-text-muted);
+        font-size: 0.9rem;
+      }
+
+      .project-meta {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+
+      .status-published {
+        background: rgba(16, 185, 129, 0.2);
+        color: #34d399;
+      }
+
+      .status-draft {
+        background: rgba(251, 191, 36, 0.2);
+        color: #fbbf24;
+      }
+
+      .project-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .quick-action {
+        padding: 0.5rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: var(--radius-sm);
+        background: transparent;
+        color: var(--color-text);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+      }
+
+      .quick-action:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(59, 130, 246, 0.5);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--space-md);
+        margin-bottom: var(--space-lg);
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-md);
+        padding: var(--space-md);
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--color-primary);
+        margin-bottom: 0.25rem;
+      }
+
+      .stat-label {
+        color: var(--color-text-muted);
+        font-size: 0.9rem;
+      }
+
+      .loading {
+        text-align: center;
+        padding: var(--space-xl);
+        color: var(--color-text-muted);
+      }
+
+      .alert {
+        padding: var(--space-md);
+        border-radius: var(--radius-md);
+        margin-bottom: var(--space-md);
+      }
+
+      .alert-warning {
+        background: rgba(251, 191, 36, 0.1);
+        border: 1px solid rgba(251, 191, 36, 0.3);
+        color: #fbbf24;
+      }
+    </style>
+
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js"></script>
+  </head>
+
+  <body>
+    <div class="admin-container">
+      <div class="admin-header">
+        <h1>Administration du Portfolio</h1>
+        <p style="color: var(--color-text-muted); margin-top: 0.5rem">
+          <a href="index.html" style="color: var(--color-primary)"
+            >← Retour au portfolio</a
+          >
+        </p>
+      </div>
+
+      <div class="alert alert-warning">
+        <strong>⚠️ Lecture seule</strong> - Cette interface affiche vos projets
+        mais ne permet pas de les modifier. Pour ajouter ou modifier des
+        projets, utilisez le Dashboard Supabase.
+      </div>
+
+      <div class="stats-grid" id="stats">
+        <div class="stat-card">
+          <div class="stat-value">-</div>
+          <div class="stat-label">Projets académiques</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">-</div>
+          <div class="stat-label">Projets personnels</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">-</div>
+          <div class="stat-label">Compétences</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">-</div>
+          <div class="stat-label">Technologies</div>
+        </div>
+      </div>
+
+      <h2 style="margin-bottom: var(--space-md)">Projets Académiques</h2>
+      <div class="projects-list" id="academic-projects">
+        <div class="loading">Chargement des projets...</div>
+      </div>
+
+      <h2 style="margin: var(--space-xl) 0 var(--space-md)">
+        Projets Personnels
+      </h2>
+      <div class="projects-list" id="personal-projects">
+        <div class="loading">Chargement des projets...</div>
+      </div>
+    </div>
+
+    <script>
+      // Load statistics
+      async function loadStats() {
+        try {
+          const [academicProjects, personalProjects, competences] =
+            await Promise.all([
+              window.portfolioAPI.getProjects("academic"),
+              window.portfolioAPI.getProjects("personal"),
+              window.portfolioAPI.getCompetences(),
+            ]);
+
+          // Count total technologies
+          const techCount = academicProjects.reduce((count, project) => {
+            return count + (project.project_technologies?.length || 0);
+          }, 0);
+
+          const stats = document.getElementById("stats");
+          stats.children[0].querySelector(".stat-value").textContent =
+            academicProjects.length;
+          stats.children[1].querySelector(".stat-value").textContent =
+            personalProjects.length;
+          stats.children[2].querySelector(".stat-value").textContent =
+            competences.length;
+          stats.children[3].querySelector(".stat-value").textContent =
+            techCount;
+        } catch (error) {
+          console.error("Error loading stats:", error);
+        }
+      }
+
+      // Render project item
+      function renderProject(project) {
+        const statusClass = project.is_published
+          ? "status-published"
+          : "status-draft";
+        const statusText = project.is_published ? "Publié" : "Brouillon";
+        const competenceCount = project.project_competences?.length || 0;
+        const techCount = project.project_technologies?.length || 0;
+
+        return `
+                <div class="project-item">
+                    <img src="${
+                      project.image_url || "assets/images/placeholder.png"
+                    }" 
+                         alt="${project.title}" 
+                         class="project-thumbnail">
+                    <div class="project-info">
+                        <h3>${project.title}</h3>
+                        <p>${project.description}</p>
+                        <div class="project-meta">
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                            ${
+                              project.semester
+                                ? `<span class="badge">${project.semester}</span>`
+                                : ""
+                            }
+                            <span class="badge">${competenceCount} compétences</span>
+                            <span class="badge">${techCount} technologies</span>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <button class="quick-action" onclick="viewProject('${
+                          project.slug
+                        }')">
+                            👁️ Voir
+                        </button>
+                    </div>
+                </div>
+            `;
+      }
+
+      // Load academic projects
+      async function loadAcademicProjects() {
+        const container = document.getElementById("academic-projects");
+        try {
+          const projects = await window.portfolioAPI.getProjects("academic");
+          if (projects.length === 0) {
+            container.innerHTML =
+              '<p class="loading">Aucun projet académique trouvé.</p>';
+            return;
+          }
+          container.innerHTML = projects.map(renderProject).join("");
+        } catch (error) {
+          console.error("Error loading academic projects:", error);
+          container.innerHTML =
+            '<p class="loading" style="color: var(--color-error);">Erreur de chargement.</p>';
+        }
+      }
+
+      // Load personal projects
+      async function loadPersonalProjects() {
+        const container = document.getElementById("personal-projects");
+        try {
+          const projects = await window.portfolioAPI.getProjects("personal");
+          if (projects.length === 0) {
+            container.innerHTML =
+              '<p class="loading">Aucun projet personnel trouvé.</p>';
+            return;
+          }
+          container.innerHTML = projects.map(renderProject).join("");
+        } catch (error) {
+          console.error("Error loading personal projects:", error);
+          container.innerHTML =
+            '<p class="loading" style="color: var(--color-error);">Erreur de chargement.</p>';
+        }
+      }
+
+      // View project
+      function viewProject(slug) {
+        window.open(`${slug}.html`, "_blank");
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", () => {
+        loadStats();
+        loadAcademicProjects();
+        loadPersonalProjects();
+      });
+    </script>
+  </body>
+</html>

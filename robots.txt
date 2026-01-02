@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://seigi06.github.io/Portfolio-LP/sitemap.xml
+Sitemap: https://portfolio-lp-zeta.vercel.app/sitemap.xml
