@@ -1,7 +1,7 @@
 // ============================================
-// DYNAMIC PROJECT LOADER
+// DYNAMIC PROJECT LOADER - ENHANCED
 // ============================================
-// Description: Loads projects from Supabase and renders them dynamically
+// Description: Enhanced version to fully replace static HTML with Supabase data
 // ============================================
 
 /**
@@ -12,13 +12,13 @@ async function loadAcademicProjects() {
     if (!container) return;
 
     // Show loading state
-    container.innerHTML = '<p style="text-align: center; color: var(--color-text-muted);">Chargement des projets...</p>';
+    container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">Chargement des projets...</p>';
 
     try {
         const projects = await window.portfolioAPI.getProjects('academic');
         
         if (projects.length === 0) {
-            container.innerHTML = '<p style="text-align: center; color: var(--color-text-muted);">Aucun projet trouvé.</p>';
+            container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">Aucun projet trouvé.</p>';
             return;
         }
 
@@ -32,7 +32,7 @@ async function loadAcademicProjects() {
         });
     } catch (error) {
         console.error('Error loading projects:', error);
-        container.innerHTML = '<p style="text-align: center; color: var(--color-error);">Erreur lors du chargement des projets.</p>';
+        container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: red;">Erreur lors du chargement des projets.</p>';
     }
 }
 
@@ -56,7 +56,7 @@ function createProjectCard(project, index) {
         <h2 class="card__title">${project.title}</h2>
         <p class="card__description">${project.description}</p>
         <div style="margin-top: 1.5rem;">
-            <a href="${project.slug}.html" class="button button--ghost" style="width: 100%;">Voir le projet</a>
+            <a href="projet.html?slug=${project.slug}" class="button button--ghost" style="width: 100%;">Voir le projet</a>
         </div>
     `;
 
@@ -67,10 +67,9 @@ function createProjectCard(project, index) {
  * Load and render personal projects
  */
 async function loadPersonalProjects() {
-    const container = document.querySelector('.grid.grid-3');
     // Find the section containing personal projects
     const personalSection = Array.from(document.querySelectorAll('section')).find(section => 
-        section.textContent.includes('Projets personnels')
+        section.textContent.includes('Projets personnels') || section.textContent.includes('Projets Personnels')
     );
     
     if (!personalSection) return;
@@ -81,7 +80,10 @@ async function loadPersonalProjects() {
     try {
         const projects = await window.portfolioAPI.getProjects('personal');
         
-        if (projects.length === 0) return;
+        if (projects.length === 0) {
+            projectsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">Aucun projet personnel pour le moment.</p>';
+            return;
+        }
 
         // Clear container
         projectsContainer.innerHTML = '';
@@ -168,42 +170,130 @@ async function loadCompetenceMatrix() {
 }
 
 /**
- * Load individual project details
+ * Load individual project details on projet.html
  */
 async function loadProjectDetails() {
-    // Extract slug from URL (e.g., projet-1.html -> projet-1)
-    const path = window.location.pathname;
-    const match = path.match(/\/(projet-\d+)\.html$/);
+    // Get slug from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const slug = urlParams.get('slug');
     
-    if (!match) return;
-    
-    const slug = match[1];
+    if (!slug) {
+        console.warn('No slug provided in URL');
+        return;
+    }
 
     try {
         const project = await window.portfolioAPI.getProjectBySlug(slug);
         
         if (!project) {
-            console.warn('Project not found:', slug);
+            document.querySelector('main').innerHTML = '<div class="container" style="padding: var(--space-xl); text-align: center;"><h1>Projet non trouvé</h1><p><a href="projets.html" class="button button--primary">← Retour aux projets</a></p></div>';
             return;
         }
 
-        // Update page title and main heading if needed
-        const mainTitle = document.querySelector('h1.section__title');
-        if (mainTitle) {
-            mainTitle.textContent = project.title;
-        }
-
+        // Update page title
+        document.title = `${project.title} - Portfolio Lilian Peyr`;
+        
         // Update meta description
         const metaDescription = document.querySelector('meta[name="description"]');
         if (metaDescription) {
             metaDescription.setAttribute('content', project.description);
         }
 
-        // You can add more dynamic content updates here
-        console.log('Loaded project:', project);
+        // Render project content
+        renderProjectContent(project);
     } catch (error) {
         console.error('Error loading project details:', error);
     }
+}
+
+/**
+ * Render full project content
+ */
+function renderProjectContent(project) {
+    const main = document.querySelector('main');
+    if (!main) return;
+
+    // Build competences HTML
+    let competencesHTML = '';
+    if (project.project_competences && project.project_competences.length > 0) {
+        const compCards = project.project_competences.map((pc, index) => {
+            const colors = [
+                { bg: 'rgba(59, 130, 246, 0.2)', color: '#60A5FA' },
+                { bg: 'rgba(16, 185, 129, 0.2)', color: '#34D399' },
+                { bg: 'rgba(245, 158, 11, 0.2)', color: '#FBBF24' },
+                { bg: 'rgba(168, 85, 247, 0.2)', color: '#A78BFA' }
+            ];
+            const colorScheme = colors[index % colors.length];
+            
+            return `
+                <div class="card-glass" style="padding: 1.5rem; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="background: ${colorScheme.bg}; padding: 0.5rem; border-radius: 8px; color: ${colorScheme.color};">
+                            ✓
+                        </div>
+                        <h3 style="font-size: 1.1rem; margin: 0;">${pc.competence.name}</h3>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        competencesHTML = `
+            <div style="margin-top: var(--space-xl);">
+                <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Compétences Validées</h2>
+                <div class="grid grid-2" style="gap: 1.5rem;">
+                    ${compCards}
+                </div>
+            </div>
+        `;
+    }
+
+    // Build technologies HTML
+    let techHTML = '';
+    if (project.project_technologies && project.project_technologies.length > 0) {
+        const techBadges = project.project_technologies.map(tech => 
+            `<span class="badge">${tech.name}</span>`
+        ).join('');
+        
+        techHTML = `
+            <div style="margin-top: var(--space-lg);">
+                <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Technologies utilisées</h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    ${techBadges}
+                </div>
+            </div>
+        `;
+    }
+
+    main.innerHTML = `
+        <section class="section">
+            <div class="container">
+                <div class="fade-in-up">
+                    <a href="projets.html" class="button button--ghost" style="margin-bottom: var(--space-md); display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m15 18-6-6 6-6" />
+                        </svg>
+                        Retour aux projets
+                    </a>
+                    <h1 class="section__title">${project.title}</h1>
+                </div>
+
+                ${project.image_url ? `
+                <figure class="fade-in-up" style="margin: var(--space-lg) 0; border-radius: var(--radius-lg); overflow: hidden; transition-delay: 0.1s;">
+                    <img src="${project.image_url}" alt="${project.title}" style="width: 100%; height: auto; display: block;">
+                </figure>
+                ` : ''}
+
+                <div class="fade-in-up" style="transition-delay: 0.2s;">
+                    <p style="font-size: 1.1rem; color: var(--color-text-muted); line-height: 1.8;">
+                        ${project.description}
+                    </p>
+                    ${techHTML}
+                </div>
+
+                ${competencesHTML}
+            </div>
+        </section>
+    `;
 }
 
 // ============================================
@@ -217,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadAcademicProjects();
         loadPersonalProjects();
         loadCompetenceMatrix();
-    } else if (path.match(/projet-\d+\.html/)) {
+    } else if (path.includes('projet.html')) {
         loadProjectDetails();
     }
 });
