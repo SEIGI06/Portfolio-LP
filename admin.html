@@ -168,9 +168,9 @@
       }
     </style>
 
-    <!-- Supabase Client -->
+    <!-- Supabase Client - Load synchronously -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase-client.js"></script>
+    <script defer src="js/supabase-client.js"></script>
   </head>
 
   <body>
@@ -336,6 +336,16 @@
 
       // Initialize
       document.addEventListener("DOMContentLoaded", () => {
+        // Check if portfolioAPI is loaded
+        if (!window.portfolioAPI) {
+          console.error("portfolioAPI not loaded! Check if supabase-client.js is properly loaded.");
+          document.getElementById("academic-projects").innerHTML = 
+            '<p class="loading" style="color: red;">❌ Erreur: Le client Supabase n\'est pas chargé correctement.</p>';
+          document.getElementById("personal-projects").innerHTML = 
+            '<p class="loading" style="color: red;">❌ Vérifiez la console (F12) pour plus de détails.</p>';
+          return;
+        }
+
         loadStats();
         loadAcademicProjects();
         loadPersonalProjects();
