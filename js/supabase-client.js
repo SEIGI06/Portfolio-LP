@@ -10,7 +10,7 @@ const SUPABASE_ANON_KEY =
 
 // Initialize Supabase client (using CDN version)
 // Add this script tag to your HTML: <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ============================================
 // API FUNCTIONS
@@ -23,7 +23,7 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
  */
 async function getProjects(type = null) {
   try {
-    let query = supabase
+    let query = supabaseClient
       .from("projects")
       .select(
         `
@@ -60,7 +60,7 @@ async function getProjects(type = null) {
  */
 async function getProjectBySlug(slug) {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from("projects")
       .select(
         `
@@ -91,7 +91,7 @@ async function getProjectBySlug(slug) {
  */
 async function getCompetences() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from("competences")
       .select("*")
       .order("order_index", { ascending: true });
@@ -110,7 +110,7 @@ async function getCompetences() {
  */
 async function getCompetenceMatrix() {
   try {
-    const { data: projects, error: projectsError } = await supabase
+    const { data: projects, error: projectsError } = await supabaseClient
       .from("projects")
       .select(
         `
@@ -127,7 +127,7 @@ async function getCompetenceMatrix() {
       .eq("is_published", true)
       .order("order_index", { ascending: true });
 
-    const { data: competences, error: competencesError } = await supabase
+    const { data: competences, error: competencesError } = await supabaseClient
       .from("competences")
       .select("*")
       .order("order_index", { ascending: true });
