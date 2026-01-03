@@ -24,7 +24,7 @@ WITH new_project AS (
         'Mise en place d''un réseau web complet avec sécurité et segmentation (VLANs).',
         'Semestre 1',
         -- Utilisation des noms exacts des fichiers uploadés
-        'https://luetejjufuemdqpkcbrk.supabase.co/storage/v1/object/public/projects/Schema%20ap%201.webp',
+        'https://luetejjufuemdqpkcbrk.supabase.co/storage/v1/object/public/images-projets/Schema%20ap%201.webp',
         'academic',
         1,
         true
@@ -78,7 +78,7 @@ WITH new_project AS (
         'ap-2-gsb',
         'Architecture réseau d''entreprise complète : LAN/WAN/DMZ avec services Microsoft et Linux.',
         'Semestre 2',
-        'https://luetejjufuemdqpkcbrk.supabase.co/storage/v1/object/public/projects/schema%20ap2.webp',
+        'https://luetejjufuemdqpkcbrk.supabase.co/storage/v1/object/public/images-projets/schema%20ap2.webp',
         'academic',
         2,
         true
@@ -141,7 +141,7 @@ WITH new_project AS (
         'ap-3-gsb',
         'Conception d''un SI Haute Disponibilité pour SODECAF avec redondance des services.',
         'Semestre 3',
-        'https://luetejjufuemdqpkcbrk.supabase.co/storage/v1/object/public/projects/schema%20ap3.webp',
+        'https://luetejjufuemdqpkcbrk.supabase.co/storage/v1/object/public/images-projets/schema%20ap3.webp',
         'academic',
         3,
         true

@@ -311,6 +311,20 @@ function renderProjectContent(project) {
                     <p style="font-size: 1.1rem; color: var(--color-text-muted); line-height: 1.8;">
                         ${project.description}
                     </p>
+                    
+                    ${/* Sections rendering logic */ ''}
+                    ${project.project_sections && project.project_sections.length > 0 
+                        ? project.project_sections.sort((a, b) => a.order_index - b.order_index).map(section => `
+                            <div style="margin-top: 2rem;">
+                                <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--color-text);">${section.title}</h3>
+                                <div style="color: var(--color-text-muted); line-height: 1.6;">
+                                    ${section.content}
+                                </div>
+                            </div>
+                        `).join('') 
+                        : ''
+                    }
+
                     ${techHTML}
                 </div>
 
