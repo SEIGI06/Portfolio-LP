@@ -60,6 +60,11 @@ function createProjectCard(project, index) {
         </div>
     `;
 
+    // Trigger animation after a short delay
+    setTimeout(() => {
+        article.classList.add('is-visible');
+    }, 100);
+
     return article;
 }
 
@@ -124,6 +129,11 @@ function createPersonalProjectCard(project, index) {
             ${linksHTML}
         </div>
     `;
+
+    // Trigger animation after a short delay
+    setTimeout(() => {
+        article.classList.add('is-visible');
+    }, 100);
 
     return article;
 }
@@ -308,6 +318,13 @@ function renderProjectContent(project) {
             </div>
         </section>
     `;
+
+    // Trigger animations
+    setTimeout(() => {
+        main.querySelectorAll('.fade-in-up').forEach(el => {
+            el.classList.add('is-visible');
+        });
+    }, 100);
 }
 
 // ============================================
