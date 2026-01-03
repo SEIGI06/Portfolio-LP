@@ -236,8 +236,8 @@
         try {
           const [academicProjects, personalProjects, competences] =
             await Promise.all([
-              window.portfolioAPI.getProjects("academic"),
-              window.portfolioAPI.getProjects("personal"),
+              window.portfolioAPI.getProjects("academic", false),
+              window.portfolioAPI.getProjects("personal", false),
               window.portfolioAPI.getCompetences(),
             ]);
 
@@ -308,7 +308,7 @@
       async function loadAcademicProjects() {
         const container = document.getElementById("academic-projects");
         try {
-          const projects = await window.portfolioAPI.getProjects("academic");
+          const projects = await window.portfolioAPI.getProjects("academic", false);
           container.innerHTML = projects.length === 0 
             ? '<p class="loading">Aucun projet trouvé.</p>' 
             : projects.map(renderProject).join("");
@@ -322,7 +322,7 @@
       async function loadPersonalProjects() {
         const container = document.getElementById("personal-projects");
         try {
-          const projects = await window.portfolioAPI.getProjects("personal");
+          const projects = await window.portfolioAPI.getProjects("personal", false);
           container.innerHTML = projects.length === 0 
             ? '<p class="loading">Aucun projet trouvé.</p>' 
             : projects.map(renderProject).join("");

@@ -21,7 +21,7 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_
  * @param {string} type - 'academic' or 'personal' or null for all
  * @returns {Promise<Array>}
  */
-async function getProjects(type = null) {
+async function getProjects(type = null, onlyPublished = true) {
   try {
     let query = supabaseClient
       .from("projects")
@@ -36,8 +36,11 @@ async function getProjects(type = null) {
                 personal_project_links (*)
             `
       )
-      .eq("is_published", true)
       .order("order_index", { ascending: true });
+
+    if (onlyPublished) {
+      query = query.eq("is_published", true);
+    }
 
     if (type) {
       query = query.eq("project_type", type);
@@ -74,7 +77,6 @@ async function getProjectBySlug(slug) {
             `
       )
       .eq("slug", slug)
-      .eq("is_published", true)
       .single();
 
     if (error) throw error;

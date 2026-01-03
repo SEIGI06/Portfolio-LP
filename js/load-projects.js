@@ -203,6 +203,13 @@ async function loadProjectDetails() {
         renderProjectContent(project);
     } catch (error) {
         console.error('Error loading project details:', error);
+        document.querySelector('main').innerHTML = `
+            <div class="container" style="padding: var(--space-xl); text-align: center;">
+                <h1>Erreur</h1>
+                <p style="color: red; margin: 1rem 0;">Impossible de charger les détails du projet.</p>
+                <p><a href="projets.html" class="button button--primary">← Retour aux projets</a></p>
+            </div>
+        `;
     }
 }
 
@@ -300,14 +307,18 @@ function renderProjectContent(project) {
 // AUTO-INITIALIZATION
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
-    const path = window.location.pathname;
+    const path = window.location.pathname.toLowerCase();
+
+    // Support both with and without .html, and handle direct file opening
+    const isProjectListPage = path.endsWith('projets.html') || path.endsWith('projets') || path.endsWith('projets/');
+    const isProjectDetailPage = path.endsWith('projet.html') || path.endsWith('projet') || path.endsWith('projet/');
 
     // Load appropriate content based on current page
-    if (path.includes('projets.html')) {
+    if (isProjectListPage) {
         loadAcademicProjects();
         loadPersonalProjects();
         loadCompetenceMatrix();
-    } else if (path.includes('projet.html')) {
+    } else if (isProjectDetailPage) {
         loadProjectDetails();
     }
 });
