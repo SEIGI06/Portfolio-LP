@@ -179,6 +179,13 @@ async function loadProjectDetails() {
     
     if (!slug) {
         console.warn('No slug provided in URL');
+        document.querySelector('main').innerHTML = `
+            <div class="container" style="padding: var(--space-xl); text-align: center;">
+                <h1>Projet introuvable</h1>
+                <p style="color: var(--color-text-muted); margin: 1rem 0;">Aucun identifiant de projet n'a été fourni.</p>
+                <p><a href="projets.html" class="button button--primary">← Retour aux projets</a></p>
+            </div>
+        `;
         return;
     }
 
