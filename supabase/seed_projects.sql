@@ -1,8 +1,8 @@
 -- ============================================
--- SEED DATA: ACADEMIC PROJECTS
+-- SEED DATA: ACADEMIC PROJECTS (CORRECTED)
 -- ============================================
 -- Execute this script in the Supabase SQL Editor
--- It will DELETE existing academic projects and INSERT the new ones
+-- It will DELETE existing academic projects and INSERT them again properly
 -- ============================================
 
 BEGIN;
@@ -23,6 +23,7 @@ WITH new_project AS (
         'ap-1-geltram',
         'Mise en place d''un réseau web complet avec sécurité et segmentation (VLANs).',
         'Semestre 1',
+        -- Utilisation des noms exacts des fichiers uploadés
         'https://luetejjufuemdqpkcbrk.supabase.co/storage/v1/object/public/projects/Schema%20ap%201.webp',
         'academic',
         1,
@@ -52,6 +53,17 @@ technologies AS (
     INSERT INTO project_technologies (project_id, name, category)
     SELECT id, unnest(ARRAY['Debian 12', 'Apache2', 'DNS', 'RDP', 'Cisco Packet Tracer', 'VLAN']), 'software'
     FROM new_project
+),
+competences_link AS (
+    INSERT INTO project_competences (project_id, competence_id)
+    SELECT p.id, c.id 
+    FROM new_project p, competences c
+    WHERE c.name IN (
+        'Gérer le patrimoine informatique',
+        'Développer la présence en ligne',
+        'Mettre à disposition des services',
+        'Organiser son développement professionnel'
+    )
 )
 SELECT id FROM new_project;
 
@@ -104,6 +116,17 @@ technologies AS (
     INSERT INTO project_technologies (project_id, name, category)
     SELECT id, unnest(ARRAY['Windows Server', 'Debian 12', 'Active Directory', 'GLPI', 'FOG', 'WSUS', 'Honey Pot', 'Cisco']), 'mixed'
     FROM new_project
+),
+competences_link AS (
+    INSERT INTO project_competences (project_id, competence_id)
+    SELECT p.id, c.id 
+    FROM new_project p, competences c
+    WHERE c.name IN (
+        'Gérer le patrimoine informatique',
+        'Répondre aux incidents et demandes',
+        'Mettre à disposition des services',
+        'Organiser son développement professionnel'
+    )
 )
 SELECT id FROM new_project;
 
@@ -151,6 +174,17 @@ technologies AS (
     INSERT INTO project_technologies (project_id, name, category)
     SELECT id, unnest(ARRAY['Haute Disponibilité', 'Failover', 'Load Balancing', 'Firewall', 'SQL Cluster', 'Windows Server']), 'advanced'
     FROM new_project
+),
+competences_link AS (
+    INSERT INTO project_competences (project_id, competence_id)
+    SELECT p.id, c.id 
+    FROM new_project p, competences c
+    WHERE c.name IN (
+        'Gérer le patrimoine informatique',
+        'Travailler en mode projet',
+        'Mettre à disposition des services',
+        'Organiser son développement professionnel'
+    )
 )
 SELECT id FROM new_project;
 
