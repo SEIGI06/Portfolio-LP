@@ -164,6 +164,102 @@
         color: var(--color-text-muted);
       }
 
+      /* --- Modal --- */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .modal-overlay.is-visible {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal {
+        background: #0f172a;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-lg);
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: var(--space-lg);
+        transform: translateY(20px);
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .modal-overlay.is-visible .modal {
+        transform: translateY(0);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--color-text);
+        font-weight: 500;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-sm);
+        color: var(--color-text);
+        font-family: inherit;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      textarea.form-input {
+        min-height: 100px;
+        resize: vertical;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .close-button {
+        background: none;
+        border: none;
+        color: var(--color-text-muted);
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        transition: color 0.2s;
+      }
+
+      .close-button:hover {
+        color: var(--color-text);
+      }
+
       .badge {
           font-size: 0.7rem;
       }
@@ -227,6 +323,55 @@
       </h2>
       <div class="projects-list" id="personal-projects">
         <div class="loading">Chargement des projets...</div>
+      </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 style="margin: 0">Éditer le projet</h2>
+          <button class="close-button" onclick="closeModal()">×</button>
+        </div>
+        <form id="editForm" onsubmit="handleEditSubmit(event)">
+          <input type="hidden" id="edit_id" name="id">
+          
+          <div class="form-group">
+            <label class="form-label" for="edit_title">Titre</label>
+            <input type="text" id="edit_title" name="title" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+             <label class="form-label" for="edit_slug">Slug (URL)</label>
+             <input type="text" id="edit_slug" name="slug" class="form-input" required>
+             <small style="color: var(--color-text-muted)">Identifiant unique pour l'URL</small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="edit_description">Description courte</label>
+            <textarea id="edit_description" name="description" class="form-input" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="edit_image_url">URL de l'image (Bannière)</label>
+            <input type="text" id="edit_image_url" name="image_url" class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="edit_semester">Semestre (ex: Semestre 1)</label>
+            <input type="text" id="edit_semester" name="semester" class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="edit_order">Ordre d'affichage</label>
+            <input type="number" id="edit_order" name="order_index" class="form-input">
+          </div>
+
+          <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+            <button type="button" class="button button--ghost" onclick="closeModal()">Annuler</button>
+            <button type="submit" class="button button--primary">Enregistrer</button>
+          </div>
+        </form>
       </div>
     </div>
 
@@ -337,8 +482,95 @@
         window.open(`projet.html?slug=${slug}`, "_blank");
       }
 
-      function editProject(id) {
-          alert('ID du projet : ' + id + '\nLe formulaire d\'édition sera implémenté dans la phase suivante (Phase 4).');
+      async function editProject(id) {
+          const btn = event.target; // Simple way to show feedback, though event is deprecated in some contexts, it works for onclick
+          const originalText = btn.innerText;
+          btn.innerText = '⌛...';
+          
+          try {
+              // We need to fetch the single project data again to be sure we have everything or just filter from list?
+              // fetching by slug would be cleaner API wise but we have ID here.
+              // Let's filter from the DOM or fetch again. Let's fetch the specific project data using the ID isn't directly exposed in client API
+              // But client API has getProjects. Efficient way: find in memory if possible, but we haven't stored them globally.
+              // Let's just fetch all and find (not optimal but safe) or we can just use the data if we had it.
+              // Better: Let's reuse the getProjects data or update admin-api to fetch one.
+              // For now, I will use getProjects since it's cached/fast for small sets.
+              
+              // Actually, looking at admin-api.js, we don't have getProjectById.
+              // But we can use the list we just loaded.
+              // To make it robust, let's just reload the list or assume we can find it.
+              
+              // NOTE: For better UX we should store loaded projects in a global variable.
+              // Quick fix: fetch all again (supabase is fast).
+              const allProjects = await window.adminAPI.checkAuth() ? await window.portfolioAPI.getProjects(null, false) : [];
+              const project = allProjects.find(p => p.id === id);
+
+              if (!project) {
+                  alert("Erreur : Projet introuvable.");
+                  return;
+              }
+
+              // Populate Form
+              document.getElementById('edit_id').value = project.id;
+              document.getElementById('edit_title').value = project.title || '';
+              document.getElementById('edit_slug').value = project.slug || '';
+              document.getElementById('edit_description').value = project.description || '';
+              document.getElementById('edit_image_url').value = project.image_url || '';
+              document.getElementById('edit_semester').value = project.semester || '';
+              document.getElementById('edit_order').value = project.order_index || 0;
+
+              // Show Modal
+              document.getElementById('editModal').classList.add('is-visible');
+
+          } catch (e) {
+              console.error(e);
+              alert("Erreur lors du chargement du projet.");
+          } finally {
+              btn.innerText = originalText;
+          }
+      }
+
+      function closeModal() {
+          document.getElementById('editModal').classList.remove('is-visible');
+      }
+
+      async function handleEditSubmit(e) {
+          e.preventDefault();
+          const form = e.target;
+          const id = form.id.value;
+          const btn = form.querySelector('button[type="submit"]');
+          const originalText = btn.innerText;
+
+          // Collect data
+          const updates = {
+              title: form.title.value,
+              slug: form.slug.value,
+              description: form.description.value,
+              image_url: form.image_url.value,
+              semester: form.semester.value,
+              order_index: parseInt(form.order_index.value)
+          };
+
+          btn.innerText = 'Sauvegarde...';
+          btn.disabled = true;
+
+          try {
+              const { error } = await window.adminAPI.updateProject(id, updates);
+              if (error) throw error;
+
+              closeModal();
+              // Reload lists
+              loadAcademicProjects();
+              loadPersonalProjects();
+              // alert('Projet mis à jour !'); 
+
+          } catch (error) {
+              console.error(error);
+              alert('Erreur lors de la mise à jour: ' + error.message);
+          } finally {
+              btn.innerText = originalText;
+              btn.disabled = false;
+          }
       }
 
       async function deleteProjectConfirm(id, title) {
