@@ -150,6 +150,16 @@ async function loadCompetenceMatrix() {
         
         if (competences.length === 0) return;
 
+        // Update table header
+        const tableHeadRow = document.querySelector('table thead tr');
+        if (tableHeadRow) {
+            let headerHTML = '<th style="text-align: left; padding: 1.5rem; color: var(--color-text-muted); width: 250px;">Compétences du référentiel</th>';
+            projects.forEach(project => {
+                headerHTML += `<th style="text-align: center; padding: 1.5rem; color: var(--color-white);">${project.title}</th>`;
+            });
+            tableHeadRow.innerHTML = headerHTML;
+        }
+
         // Clear existing rows
         tableBody.innerHTML = '';
 
