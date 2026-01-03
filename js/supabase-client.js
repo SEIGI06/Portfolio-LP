@@ -125,7 +125,6 @@ async function getCompetenceMatrix() {
                 )
             `
       )
-      .eq("project_type", "academic")
       .eq("is_published", true)
       .order("order_index", { ascending: true });
 
