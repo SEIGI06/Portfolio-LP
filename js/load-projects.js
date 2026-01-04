@@ -122,7 +122,19 @@ function createPersonalProjectCard(project, index) {
         linksHTML = `<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">${links}</div>`;
     }
 
+    // Image logic (like academic projects)
+    const imageHTML = project.image_url 
+        ? `<figure class="card__media" style="margin: -2rem -2rem 1.5rem -2rem; height: 200px; overflow: hidden;">
+                <img src="${project.image_url}" 
+                     alt="${project.title}" 
+                     loading="lazy" 
+                     decoding="async" 
+                     style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+           </figure>`
+        : '';
+
     article.innerHTML = `
+        ${imageHTML}
         <div class="card__content">
             <h3 class="card__title" style="margin-bottom: 0.5rem;">${project.title}</h3>
             <p class="card__description" style="margin-bottom: 1.5rem;">${project.description}</p>
