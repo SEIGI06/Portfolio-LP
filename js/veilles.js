@@ -80,8 +80,18 @@ function renderVeilles(veilles) {
 
     // Re-trigger animations if needed (simple hack)
     const cards = document.querySelectorAll('.veille-card');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
     cards.forEach((card, index) => {
-        card.style.animationDelay = `${index * 0.1}s`;
+        card.style.transitionDelay = `${index * 0.1}s`; // Use transitionDelay instead of animationDelay for CSS transitions
+        observer.observe(card);
     });
 }
 
