@@ -5,7 +5,9 @@
     <script>
         // REDIRECTION GITHUB PAGES -> VERCEL
         if (window.location.hostname.includes('github.io')) {
-            window.location.replace('https://portfolio-lp-zeta.vercel.app' + window.location.pathname + window.location.search);
+            // Remove /Portfolio-LP from path if present
+            var newPath = window.location.pathname.replace('/Portfolio-LP', '');
+            window.location.replace('https://portfolio-lp-zeta.vercel.app' + newPath + window.location.search);
         }
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
