@@ -3,6 +3,12 @@
 
 <head>
     <meta charset="utf-8">
+    <script>
+        // REDIRECTION GITHUB PAGES -> VERCEL
+        if (window.location.hostname.includes('github.io')) {
+            window.location.replace('https://portfolio-lp-zeta.vercel.app' + window.location.pathname + window.location.search);
+        }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description"
         content="Découvrez mon parcours en BTS SIO SISR au lycée Félix Le Dantec. Expériences en tant que Technicien Systèmes et Réseaux chez AXE Info.">
