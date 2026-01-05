@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <script>
+        // REDIRECTION GITHUB PAGES -> VERCEL
+        if (window.location.hostname.includes('github.io')) {
+            var path = window.location.pathname;
+            var newPath = path.replace(/\/Portfolio-LP/i, '');
+            if (newPath === '' || newPath === '/') newPath = '/index.html';
+            window.location.replace('https://portfolio-lp-zeta.vercel.app' + newPath + window.location.search);
+        }
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Veille Technologique et Informatique de Lilian Peyr. Actualités Cyber, Dev, Cloud et Hardware.">
+    <title>Veille Technologique | Lilian Peyr</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        /* Specific Styles for Veille */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+            position: relative;
+        }
+
+        .marquee-content {
+            display: inline-flex;
+            gap: 2rem;
+            animation: marquee 30s linear infinite;
+            padding-left: 100%; /* Start from right */
+        }
+
+        .marquee-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-surface-glass);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .marquee-item:hover {
+            border-color: var(--color-primary);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .marquee-item img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-text-muted);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            color: var(--color-primary);
+            border-color: var(--color-primary);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .veille-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .veille-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .veille-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: var(--radius-lg);
+            margin-bottom: 1rem;
+            background: rgba(0,0,0,0.2);
+        }
+    </style>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/components.js" defer></script>
+    <script src="js/veilles.js" defer></script>
+</head>
+
+<body>
+    <header class="site-header" id="main-header"></header>
+
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero" style="min-height: 40vh;">
+            <div class="container hero__content fade-in-up">
+                <span class="badge">BTS SIO • SISR</span>
+                <h1>
+                    Ma <span class="text-gradient">Veille Technologique</span>
+                </h1>
+                <p>
+                    Suivi quotidien des actualités informatiques : Cybersécurité, Développement, Hardware et Cloud.
+                </p>
+            </div>
+        </section>
+
+        <!-- YouTube/News Ticker -->
+        <div class="marquee-container" id="news-ticker">
+            <div class="marquee-content" id="ticker-content">
+                <!-- Items will be injected here via JS -->
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <section class="container" style="padding-bottom: 4rem;">
+            <!-- Filters -->
+            <div class="filters fade-in-up" id="veille-filters">
+                <button class="filter-btn active" data-filter="all">Tout</button>
+                <button class="filter-btn" data-filter="Cyber">Cybersécurité</button>
+                <button class="filter-btn" data-filter="Dev">Développement</button>
+                <button class="filter-btn" data-filter="Cloud">Cloud/Réseau</button>
+                <button class="filter-btn" data-filter="Hardware">Hardware</button>
+            </div>
+
+            <!-- Grid -->
+            <div class="veille-grid" id="veille-grid">
+                <!-- Veille cards will be injected here -->
+                <div class="card" style="text-align: center; grid-column: 1/-1; padding: 4rem;">
+                    <p>Chargement des actualités...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer" id="main-footer"></footer>
+</body>
+</html>

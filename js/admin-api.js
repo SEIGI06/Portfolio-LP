@@ -259,6 +259,67 @@ async function deleteProjectLink(linkId) {
 }
 
 // ============================================
+// VEILLE CRUD
+// ============================================
+
+/**
+ * Create a new veille
+ */
+async function createVeille(veilleData) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('veilles')
+      .insert([veilleData])
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error('Create veille error:', error);
+    return { data: null, error };
+  }
+}
+
+/**
+ * Update a veille
+ */
+async function updateVeille(id, updates) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('veilles')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error('Update veille error:', error);
+    return { data: null, error };
+  }
+}
+
+/**
+ * Delete a veille
+ */
+async function deleteVeille(id) {
+  try {
+    const { error } = await supabaseClient
+      .from('veilles')
+      .delete()
+      .eq('id', id);
+    
+    if (error) throw error;
+    return { error: null };
+  } catch (error) {
+    console.error('Delete veille error:', error);
+    return { error };
+  }
+}
+
+// ============================================
 // EXPORT FOR USE IN ADMIN PAGE
 // ============================================
 window.adminAPI = {
@@ -279,4 +340,9 @@ window.adminAPI = {
   deleteProjectTechnology,
   addProjectLink,
   deleteProjectLink,
+
+  // Veille CRUD
+  createVeille,
+  updateVeille,
+  deleteVeille,
 };

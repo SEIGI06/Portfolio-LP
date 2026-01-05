@@ -379,6 +379,16 @@
       <div class="projects-list" id="personal-projects">
         <div class="loading">Chargement des projets...</div>
       </div>
+
+      <h2 style="margin: var(--space-xl) 0 var(--space-md); display: flex; justify-content: space-between; align-items: center;">
+        <span>Des Veilles Technologiques</span>
+        <button class="quick-action" onclick="openVeilleModal()">
+            ➕ Nouvelle Veille
+        </button>
+      </h2>
+      <div class="projects-list" id="veilles-list">
+        <div class="loading">Chargement des veilles...</div>
+      </div>
     </div>
 
     <!-- Edit Modal -->
@@ -640,6 +650,110 @@
           }
       }
 
+      // --- Recette Veille ---
+      async function loadVeilles() {
+          const container = document.getElementById("veilles-list");
+          try {
+              const veilles = await window.portfolioAPI.getVeilles();
+              
+              if (veilles.length === 0) {
+                  container.innerHTML = '<p class="loading">Aucune veille trouvée.</p>';
+              } else {
+                  container.innerHTML = veilles.map(v => `
+                    <div class="project-item">
+                        <img src="${v.image_url || 'assets/images/placeholder.png'}" class="project-thumbnail">
+                        <div class="project-info">
+                            <h3>${v.title}</h3>
+                            <p>${v.category} • ${new Date(v.published_date).toLocaleDateString()}</p>
+                        </div>
+                        <div class="project-actions">
+                            <button class="quick-action" onclick="openVeilleModal('${v.id}')">✏️</button>
+                            <button class="quick-action btn-danger" onclick="deleteVeilleConfirm('${v.id}')">🗑️</button>
+                            <a href="${v.url}" target="_blank" class="quick-action">🔗</a>
+                        </div>
+                    </div>
+                  `).join('');
+              }
+          } catch(e) {
+              console.error(e);
+              container.innerHTML = '<p class="loading" style="color: red">Erreur chargement veille</p>';
+          }
+      }
+
+      async function openVeilleModal(id = null) {
+          const modal = document.getElementById('veilleModal');
+          const form = document.getElementById('veilleForm');
+          const title = document.getElementById('veilleModalTitle');
+          
+          form.reset();
+          
+          if (id) {
+              title.innerText = 'Modifier Veille';
+              // Fetch details (optimize by using loaded list if possible, but fetch is safer)
+              const veilles = await window.portfolioAPI.getVeilles(); // simple approach
+              const v = veilles.find(x => x.id === id);
+              if(v) {
+                  document.getElementById('v_id').value = v.id;
+                  document.getElementById('v_title').value = v.title;
+                  document.getElementById('v_category').value = v.category;
+                  document.getElementById('v_url').value = v.url;
+                  document.getElementById('v_image_url').value = v.image_url || '';
+                  document.getElementById('v_description').value = v.description || '';
+              }
+          } else {
+              title.innerText = 'Nouvelle Veille';
+              document.getElementById('v_id').value = '';
+          }
+          
+          modal.classList.add('is-visible');
+      }
+
+      function closeVeilleModal() {
+          document.getElementById('veilleModal').classList.remove('is-visible');
+      }
+
+      async function handleVeilleSubmit(e) {
+          e.preventDefault();
+          const form = e.target;
+          const id = document.getElementById('v_id').value;
+          
+          const data = {
+              title: document.getElementById('v_title').value,
+              category: document.getElementById('v_category').value,
+              url: document.getElementById('v_url').value,
+              image_url: document.getElementById('v_image_url').value,
+              description: document.getElementById('v_description').value
+          };
+
+          const btn = form.querySelector('button[type="submit"]');
+          btn.disabled = true;
+          btn.innerText = '...';
+
+          try {
+              if (id) {
+                  // Update
+                  await window.adminAPI.updateVeille(id, data);
+              } else {
+                  // Create
+                  await window.adminAPI.createVeille(data);
+              }
+              closeVeilleModal();
+              loadVeilles();
+          } catch(err) {
+              alert('Erreur: ' + err.message);
+          } finally {
+              btn.disabled = false;
+              btn.innerText = 'Enregistrer';
+          }
+      }
+
+      async function deleteVeilleConfirm(id) {
+          if(confirm("Supprimer cette veille ?")) {
+              await window.adminAPI.deleteVeille(id);
+              loadVeilles();
+          }
+      }
+
       // Initialize
       document.addEventListener("DOMContentLoaded", async () => {
         // Wait for APIs to be ready
@@ -675,6 +789,7 @@
         loadStats();
         loadAcademicProjects();
         loadPersonalProjects();
+        loadVeilles();
       }
     </script>
   </body>

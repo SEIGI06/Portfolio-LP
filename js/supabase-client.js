@@ -146,6 +146,25 @@ async function getCompetenceMatrix() {
   }
 }
 
+/**
+ * Fetch all veille items
+ * @returns {Promise<Array>}
+ */
+async function getVeilles() {
+  try {
+    const { data, error } = await supabaseClient
+      .from("veilles")
+      .select("*")
+      .order("published_date", { ascending: false });
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error fetching veilles:", error);
+    return [];
+  }
+}
+
 // ============================================
 // EXPORT FOR USE IN OTHER FILES
 // ============================================
@@ -154,4 +173,5 @@ window.portfolioAPI = {
   getProjectBySlug,
   getCompetences,
   getCompetenceMatrix,
+  getVeilles,
 };
