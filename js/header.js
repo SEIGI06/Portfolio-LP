@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { href: 'index.html', label: 'Accueil' },
         { href: 'parcours.html', label: 'Parcours' },
         { href: 'projets.html', label: 'Projets' },
+        { href: 'veille.html', label: 'Veille' },
         { href: 'certifications.html', label: 'Certifications' },
         { href: 'documentation.html', label: 'Documentation' }
     ];
