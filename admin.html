@@ -1010,6 +1010,7 @@
       async function handleCertSubmit(e) {
           e.preventDefault();
           const form = e.target;
+          const id = document.getElementById('c_id').value;
           
           const data = {
               title: form.c_title.value,
@@ -1025,7 +1026,16 @@
           btn.innerText = 'Enregistrement...';
 
           try {
-              await window.adminAPI.createCertification(data);
+              if (id) {
+                  // Update
+                  await window.adminAPI.updateCertification(id, data);
+                  // Don't reset if we want to keep editing? Maybe better to close.
+                  // Current flow closes modal.
+              } else {
+                  // Create
+                  await window.adminAPI.createCertification(data);
+              }
+              
               closeCertModal();
               form.reset();
               loadCertifications();

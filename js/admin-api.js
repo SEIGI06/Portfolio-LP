@@ -344,6 +344,26 @@ async function createCertification(certData) {
 }
 
 /**
+ * Update a certification
+ */
+async function updateCertification(id, certData) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('certifications')
+      .update(certData)
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error('Update certification error:', error);
+    return { data: null, error };
+  }
+}
+
+/**
  * Delete a certification
  */
 async function deleteCertification(id) {
@@ -470,6 +490,7 @@ window.adminAPI = {
 
   // Certification CRUD
   createCertification,
+  updateCertification,
   deleteCertification,
   addCertificationImage,
   deleteCertificationImage,
