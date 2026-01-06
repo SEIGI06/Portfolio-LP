@@ -88,9 +88,18 @@ function openCertModal(cert) {
     currentCertification = cert;
     currentImageIndex = 0;
 
+    // Use image_url as a single-image gallery if certification_images is empty
+    if ((!cert.certification_images || cert.certification_images.length === 0) && cert.image_url) {
+        cert.certification_images = [{
+            image_url: cert.image_url,
+            caption: cert.title,
+            order_index: 0
+        }];
+    }
+
     // Sort images by order_index
     if (cert.certification_images && cert.certification_images.length > 0) {
-        cert.certification_images.sort((a, b) => a.order_index - b.order_index);
+        cert.certification_images.sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
         showModalImage();
         document.getElementById('cert-modal').classList.add('active');
         document.body.style.overflow = 'hidden'; // Prevent scrolling
