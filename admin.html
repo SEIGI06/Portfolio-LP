@@ -498,6 +498,55 @@
       </div>
     </div>
 
+    <!-- Certification Modal -->
+    <div class="modal-overlay" id="certModal">
+      <div class="modal">
+        <h2 style="margin: 0" id="certModalTitle">Nouvelle Certification</h2>
+        <button class="close-button" onclick="closeCertModal()">×</button>
+        
+        <form id="certForm" onsubmit="handleCertSubmit(event)">
+          <input type="hidden" id="c_id" name="id">
+          
+          <div class="form-group">
+            <label class="form-label" for="c_title">Titre</label>
+            <input type="text" id="c_title" name="title" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="c_provider">Organisme</label>
+            <input type="text" id="c_provider" name="provider" class="form-input" value="CNIL">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="c_logo_url">URL du Logo</label>
+            <input type="text" id="c_logo_url" name="logo_url" class="form-input" placeholder="https://...">
+            <small style="color: var(--color-text-muted); font-size: 0.85rem;">Logo de l'organisme (PNG/SVG transparent recommandé)</small>
+          </div>
+
+          <div class="form-group">
+             <label class="form-label" for="c_image_url">URL du Certificat (Image)</label>
+             <input type="text" id="c_image_url" name="image_url" class="form-input" placeholder="https://...">
+             <small style="color: var(--color-text-muted); font-size: 0.85rem;">L'image scanée de votre reçu/diplôme</small>
+          </div>
+
+          <div class="form-group">
+             <label class="form-label" for="c_pdf_url">URL du PDF (optionnel)</label>
+             <input type="text" id="c_pdf_url" name="pdf_url" class="form-input" placeholder="https://...">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="c_description">Description (optionnelle)</label>
+            <textarea id="c_description" name="description" class="form-input" style="min-height: 60px;"></textarea>
+          </div>
+
+          <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+            <button type="button" class="button button--ghost" onclick="closeCertModal()">Annuler</button>
+            <button type="submit" class="button button--primary">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <script>
       // Load statistics
       async function loadStats() {
