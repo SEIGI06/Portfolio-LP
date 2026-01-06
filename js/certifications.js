@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const errorEl = document.getElementById('error-state');
 
     try {
-        // Fetch certifications with their images
+        // Fetch certifications with images and docs
         const { data: certifications, error } = await supabaseClient
             .from('certifications')
             .select(`
@@ -17,6 +17,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     id,
                     image_url,
                     caption,
+                    order_index
+                ),
+                certification_docs (
+                    id,
+                    doc_url,
+                    name,
                     order_index
                 )
             `)
@@ -96,17 +102,70 @@ function openCertModal(cert) {
             order_index: 0
         }];
     }
+    
+    // Sort images & docs
+    if (cert.certification_images) cert.certification_images.sort((a,b) => (a.order_index||0) - (b.order_index||0));
+    if (cert.certification_docs) cert.certification_docs.sort((a,b) => (a.order_index||0) - (b.order_index||0));
 
-    // Sort images by order_index
-    if (cert.certification_images && cert.certification_images.length > 0) {
-        cert.certification_images.sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
-        showModalImage();
-        document.getElementById('cert-modal').classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent scrolling
-    } else {
-        // No images, show alert
-        alert('Aucune image disponible pour cette certification.');
+    const hasImages = cert.certification_images && cert.certification_images.length > 0;
+    const hasDocs = cert.certification_docs && cert.certification_docs.length > 0;
+    const hasMainPdf = !!cert.pdf_url;
+
+    if (!hasImages && !hasDocs && !hasMainPdf) {
+        alert('Aucun contenu (image ou PDF) disponible pour cette certification.');
+        return;
     }
+
+    // Populate Modal Content
+    
+    // 1. Setup Image Viewer
+    if (hasImages) {
+        document.getElementById('modal-image-container').style.display = 'block';
+        showModalImage();
+    } else {
+        document.getElementById('modal-image-container').style.display = 'none';
+    }
+
+    // 2. Setup Docs List
+    const docsContainer = document.getElementById('modal-docs-container');
+    docsContainer.innerHTML = '';
+    
+    let docsHTML = '';
+    
+    // Main PDF if exists
+    if (hasMainPdf) {
+         docsHTML += `
+            <a href="${cert.pdf_url}" target="_blank" class="cert-modal-doc-btn">
+                📄 Voir le certificat principal (PDF)
+            </a>
+         `;
+    }
+
+    // Additional Docs
+    if (hasDocs) {
+        cert.certification_docs.forEach(doc => {
+            docsHTML += `
+                <a href="${doc.doc_url}" target="_blank" class="cert-modal-doc-btn">
+                    📄 ${doc.name || 'Document PDF'}
+                </a>
+            `;
+        });
+    }
+
+    if (docsHTML) {
+        docsContainer.innerHTML = `
+            <div style="margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+                <h3 style="color: white; font-size: 1.2rem; margin-bottom: 0.5rem;">Documents associés</h3>
+                ${docsHTML}
+            </div>
+        `;
+        docsContainer.style.display = 'block';
+    } else {
+        docsContainer.style.display = 'none';
+    }
+
+    document.getElementById('cert-modal').classList.add('active');
+    document.body.style.overflow = 'hidden'; 
 }
 
 function closeCertModal() {
