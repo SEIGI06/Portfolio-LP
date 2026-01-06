@@ -165,6 +165,25 @@ async function getVeilles() {
   }
 }
 
+/**
+ * Fetch all certifications
+ * @returns {Promise<Array>}
+ */
+async function getCertifications() {
+  try {
+    const { data, error } = await supabaseClient
+      .from("certifications")
+      .select("*")
+      .order("issued_date", { ascending: false });
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error fetching certifications:", error);
+    return [];
+  }
+}
+
 // ============================================
 // EXPORT FOR USE IN OTHER FILES
 // ============================================
@@ -174,4 +193,5 @@ window.portfolioAPI = {
   getCompetences,
   getCompetenceMatrix,
   getVeilles,
+  getCertifications,
 };

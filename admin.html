@@ -389,6 +389,16 @@
       <div class="projects-list" id="veilles-list">
         <div class="loading">Chargement des veilles...</div>
       </div>
+
+      <h2 style="margin: var(--space-xl) 0 var(--space-md); display: flex; justify-content: space-between; align-items: center;">
+        <span>Certifications</span>
+        <button class="quick-action" onclick="openCertModal()">
+            ➕ Nouvelle Certification
+        </button>
+      </h2>
+      <div class="projects-list" id="cert-list">
+        <div class="loading">Chargement des certifications...</div>
+      </div>
     </div>
 
     <!-- Edit Modal -->
@@ -802,6 +812,88 @@
           }
       }
 
+      // --- Recette Certifications ---
+      async function loadCertifications() {
+          const container = document.getElementById("cert-list");
+          try {
+              // Ensure we have this function in supoabase-client or use raw query if needed, 
+              // but we added getCertifications to supabase-client.js
+              if (!window.portfolioAPI.getCertifications) {
+                   console.warn("getCertifications not found in API yet");
+                   return;
+              }
+              
+              const certs = await window.portfolioAPI.getCertifications();
+              
+              if (certs.length === 0) {
+                  container.innerHTML = '<p class="loading">Aucune certification trouvée.</p>';
+              } else {
+                  container.innerHTML = certs.map(c => `
+                    <div class="project-item">
+                        <div class="project-thumbnail" style="display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);color:var(--color-primary);font-size:1.5rem;">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <div class="project-info">
+                            <h3>${c.title}</h3>
+                            <p>${c.provider} • ${new Date(c.issued_date).toLocaleDateString()}</p>
+                        </div>
+                        <div class="project-actions">
+                             <a href="${c.pdf_url}" target="_blank" class="quick-action">📄 PDF</a>
+                             <button class="quick-action btn-danger" onclick="deleteCertConfirm('${c.id}')">🗑️</button>
+                        </div>
+                    </div>
+                  `).join('');
+              }
+          } catch(e) {
+              console.error(e);
+              container.innerHTML = '<p class="loading" style="color: red">Erreur chargement certifications</p>';
+          }
+      }
+
+      function openCertModal() {
+          document.getElementById('certModal').classList.add('is-visible');
+      }
+
+      function closeCertModal() {
+        document.getElementById('certModal').classList.remove('is-visible');
+      }
+
+      async function handleCertSubmit(e) {
+          e.preventDefault();
+          const form = e.target;
+          
+          const data = {
+              title: form.c_title.value,
+              provider: form.c_provider.value,
+              pdf_url: form.c_pdf_url.value,
+              image_url: form.c_image_url.value,
+              description: form.c_description.value
+          };
+
+          const btn = form.querySelector('button[type="submit"]');
+          btn.disabled = true;
+          btn.innerText = 'Enregistrement...';
+
+          try {
+              await window.adminAPI.createCertification(data);
+              closeCertModal();
+              form.reset();
+              loadCertifications();
+          } catch(err) {
+              alert('Erreur: ' + err.message);
+          } finally {
+              btn.disabled = false;
+              btn.innerText = 'Enregistrer';
+          }
+      }
+
+      async function deleteCertConfirm(id) {
+          if(confirm("Supprimer cette certification ?")) {
+              await window.adminAPI.deleteCertification(id);
+              loadCertifications();
+          }
+      }
+
       // Initialize
       document.addEventListener("DOMContentLoaded", async () => {
         // Wait for APIs to be ready
@@ -838,6 +930,7 @@
         loadAcademicProjects();
         loadPersonalProjects();
         loadVeilles();
+        loadCertifications();
       }
     </script>
   </body>

@@ -1,121 +1,266 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description"
-        content="Certifications et attestations de Lilian Peyr dans les domaines cybersécurité, RGPD et bonnes pratiques ANSSI.">
-    <meta name="author" content="Lilian Peyr">
-    <title>Certifications & attestations — Lilian Peyr</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certifications | Lilian Peyr</title>
+    
+    <!-- Design System & Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/components.js"></script>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Premium Page Specific Styles */
+        :root {
+            --cert-glass-bg: rgba(255, 255, 255, 0.03);
+            --cert-glass-border: rgba(255, 255, 255, 0.08);
+            --cert-accent: #64ffda; /* Teal accent matching portfolio */
+            --cert-gradient: linear-gradient(135deg, rgba(100, 255, 218, 0.1) 0%, rgba(10, 25, 47, 0) 100%);
+        }
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/components.css">
+        body {
+            background-color: #0a192f;
+            color: #ccd6f6;
+            overflow-x: hidden;
+        }
 
-    <!-- Scripts -->
-    <script src="js/components.js" defer></script>
-    <script src="js/main.js" defer></script>
+        /* Ambient Background */
+        .ambient-glow {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            height: 80vh;
+            background: radial-gradient(circle, rgba(100, 255, 218, 0.05) 0%, rgba(10, 25, 47, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .cert-header {
+            padding: 8rem 0 4rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .cert-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #ccd6f6, #64ffda);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .cert-header p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            color: #8892b0;
+        }
+
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0 6rem;
+        }
+
+        /* Glassmorphism Card */
+        .cert-card {
+            position: relative;
+            background: var(--cert-glass-bg);
+            border: 1px solid var(--cert-glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+            min-height: 280px;
+        }
+
+        .cert-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(100, 255, 218, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .cert-card__glass {
+            position: absolute;
+            inset: 0;
+            background: var(--cert-gradient);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 0;
+        }
+
+        .cert-card:hover .cert-card__glass {
+            opacity: 1;
+        }
+
+        .cert-card__content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .cert-icon {
+            font-size: 2.5rem;
+            color: var(--cert-accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .cert-provider {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: var(--cert-accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .cert-title {
+            font-size: 1.5rem;
+            color: #e6f1ff;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .cert-description {
+            font-size: 0.95rem;
+            color: #8892b0;
+            margin-bottom: auto;
+            line-height: 1.6;
+            display: -webkit-box;
+            line-clamp: 3;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .cert-meta {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--cert-glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cert-date {
+            font-size: 0.85rem;
+            color: #8892b0;
+        }
+
+        .cert-link {
+            text-decoration: none;
+            color: var(--cert-accent);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.2s ease;
+        }
+
+        .cert-link:hover {
+            gap: 0.8rem;
+        }
+
+        /* Loading & Empty States */
+        .state-container {
+            text-align: center;
+            padding: 4rem 0;
+            color: #8892b0;
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--cert-accent);
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        .loader::after {
+            content: '';  
+            box-sizing: border-box;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-bottom-color: #0a192f;
+        }
+        
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cert-header {
+                padding: 6rem 0 3rem;
+            }
+            .cert-header h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
 </head>
-
 <body>
-    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
 
-    <header class="site-header" id="main-header"></header>
+    <!-- Shared Header -->
+    <header id="main-header" class="site-header"></header>
 
-    <main id="main-content">
-        <section class="section">
-            <div class="container">
-                <div class="fade-in-up">
-                    <span class="section__eyebrow"
-                        style="color: var(--color-primary); text-transform: uppercase; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.05em;">à
-                        changer</span>
-                    <h1 class="section__title">à changer</h1>
-                    <p class="section__intro">
-                        à changer
-                    </p>
-                </div>
+    <!-- Ambient Background -->
+    <div class="ambient-glow"></div>
 
-                <div class="grid grid-3" style="margin-top: var(--space-lg);">
-
-                    <!-- Certification 1 -->
-                    <article class="card fade-in-up" style="transition-delay: 0.1s;">
-                        <figure class="card__media"
-                            style="margin: -2rem -2rem 1.5rem -2rem; height: 200px; overflow: hidden; background: white; display: flex; align-items: center; justify-content: center;">
-                            <img src="assets/certifications/ANSSI-certifications.png" alt="à changer" loading="lazy"
-                                decoding="async" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                        </figure>
-                        <span class="badge">à changer</span>
-                        <h2 class="card__title">à changer</h2>
-                        <p class="card__description">
-                            à changer
-                        </p>
-                        <div class="card__meta" style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                            <span class="badge" style="background: rgba(255,255,255,0.1); border: none;">à
-                                changer</span>
-                        </div>
-                    </article>
-
-                    <!-- Certification 2 -->
-                    <article class="card fade-in-up" style="transition-delay: 0.2s;">
-                        <figure class="card__media"
-                            style="margin: -2rem -2rem 1.5rem -2rem; height: 200px; overflow: hidden; background: white; display: flex; align-items: center; justify-content: center;">
-                            <img src="assets/certifications/RGPD-certifications.png" alt="à changer" loading="lazy"
-                                decoding="async" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                        </figure>
-                        <span class="badge">à changer</span>
-                        <h2 class="card__title">à changer</h2>
-                        <p class="card__description">
-                            à changer
-                        </p>
-                        <div class="card__meta" style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                            <span class="badge" style="background: rgba(255,255,255,0.1); border: none;">à
-                                changer</span>
-                        </div>
-                    </article>
-
-                    <!-- Certification 3 -->
-                    <article class="card fade-in-up" style="transition-delay: 0.3s;">
-                        <figure class="card__media"
-                            style="margin: -2rem -2rem 1.5rem -2rem; height: 200px; overflow: hidden; background: white; display: flex; align-items: center; justify-content: center;">
-                            <img src="assets/certifications/ai-certifications.png" alt="à changer" loading="lazy"
-                                decoding="async" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-                        </figure>
-                        <span class="badge">à changer</span>
-                        <h2 class="card__title">à changer</h2>
-                        <p class="card__description">
-                            à changer
-                        </p>
-                        <div class="card__meta" style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                            <span class="badge" style="background: rgba(255,255,255,0.1); border: none;">à
-                                changer</span>
-                        </div>
-                    </article>
-
-                </div>
-
-                <div class="stack fade-in-up" style="margin-top: var(--space-xl); transition-delay: 0.4s;">
-                    <h2 class="section__title">à changer</h2>
-                    <div class="card">
-                        <p class="card__description">
-                            à changer
-                        </p>
-                        <ul style="list-style: none; padding: 0; margin-top: 1rem; color: var(--color-text-muted);">
-                            <li>• à changer</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+    <main class="container">
+        <section class="cert-header">
+            <h1>Certifications</h1>
+            <p>Validation de mes compétences et de mon apprentissage continu.</p>
         </section>
+
+        <!-- Loading State -->
+        <div id="loading-state" class="state-container">
+            <span class="loader"></span>
+            <p style="margin-top: 1rem;">Récupération des certifications...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-state" class="state-container" style="display: none;">
+            <i class="fas fa-exclamation-circle" style="font-size: 2rem; color: #ff6b6b; margin-bottom: 1rem;"></i>
+            <p>Impossible de charger les certifications.</p>
+        </div>
+
+        <!-- Grid Container -->
+        <div id="certifications-container" class="cert-grid">
+            <!-- Cards will be injected here JS -->
+        </div>
     </main>
 
-    <footer class="site-footer" id="main-footer"></footer>
-</body>
+    <!-- Shared Footer -->
+    <footer id="main-footer" class="site-footer"></footer>
 
+    <!-- Logic -->
+    <script src="js/certifications.js"></script>
+</body>
 </html>

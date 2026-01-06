@@ -319,9 +319,47 @@ async function deleteVeille(id) {
   }
 }
 
+
 // ============================================
-// EXPORT FOR USE IN ADMIN PAGE
+// CERTIFICATION CRUD
 // ============================================
+
+/**
+ * Create a new certification
+ */
+async function createCertification(certData) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('certifications')
+      .insert([certData])
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error('Create certification error:', error);
+    return { data: null, error };
+  }
+}
+
+/**
+ * Delete a certification
+ */
+async function deleteCertification(id) {
+  try {
+    const { error } = await supabaseClient
+      .from('certifications')
+      .delete()
+      .eq('id', id);
+    
+    if (error) throw error;
+    return { error: null };
+  } catch (error) {
+    console.error('Delete certification error:', error);
+    return { error };
+  }
+}
 window.adminAPI = {
   // Auth
   checkAuth,
@@ -345,4 +383,8 @@ window.adminAPI = {
   createVeille,
   updateVeille,
   deleteVeille,
+
+  // Certification CRUD
+  createCertification,
+  deleteCertification,
 };
