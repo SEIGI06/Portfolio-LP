@@ -16,6 +16,210 @@
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
 
+    <style>
+        /* Certification Cards */
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .cert-card {
+            background: var(--color-surface-glass);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cert-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--color-primary);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .cert-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cert-card:hover::before {
+            opacity: 1;
+        }
+
+        .cert-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+        }
+
+        .cert-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .cert-logo-placeholder {
+            font-size: 3rem;
+            color: var(--color-primary);
+        }
+
+        .cert-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .cert-provider {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Modal Lightbox */
+        .cert-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .cert-modal.active {
+            display: flex;
+        }
+
+        .cert-modal-content {
+            max-width: 1200px;
+            max-height: 90vh;
+            width: 100%;
+            position: relative;
+        }
+
+        .cert-modal-close {
+            position: absolute;
+            top: -3rem;
+            right: 0;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            line-height: 1;
+            transition: transform 0.2s ease;
+        }
+
+        .cert-modal-close:hover {
+            transform: scale(1.2);
+        }
+
+        .cert-modal-image {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .cert-modal-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            gap: 1rem;
+        }
+
+        .cert-modal-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .cert-modal-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--color-primary);
+        }
+
+        .cert-modal-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .cert-modal-info {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .cert-modal-caption {
+            text-align: center;
+            color: white;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+        }
+
+        /* Loading & Empty States */
+        .state-container {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--color-text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .cert-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .cert-logo {
+                width: 100px;
+                height: 100px;
+            }
+
+            .cert-modal {
+                padding: 1rem;
+            }
+
+            .cert-modal-close {
+                top: -2.5rem;
+            }
+        }
+    </style>
+
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-client.js"></script>
@@ -29,14 +233,14 @@
 
     <main id="main-content">
         <!-- Hero Section -->
-        <section class="hero">
+        <section class="hero" style="min-height: 50vh;">
             <div class="container hero__content fade-in-up">
                 <span class="badge">Apprentissage Continu</span>
                 <h1>
                     Mes <span class="text-gradient">Certifications</span>
                 </h1>
                 <p>
-                    Validation de mes compétences à travers des formations reconnues (CNIL, ANSSI, Cisco...).
+                    Validation de mes compétences à travers des formations reconnues.
                 </p>
             </div>
         </section>
@@ -45,17 +249,17 @@
         <section class="container" style="padding-bottom: 4rem;">
             
             <!-- Loading State -->
-            <div id="loading-state" style="text-align: center; padding: 2rem; color: var(--color-text-muted);">
+            <div id="loading-state" class="state-container">
                 <p>Chargement des certifications...</p>
             </div>
 
             <!-- Error State -->
-            <div id="error-state" style="display: none; text-align: center; color: #ef4444;">
+            <div id="error-state" class="state-container" style="display: none; color: #ef4444;">
                 <p>Impossible de charger les certifications.</p>
             </div>
 
             <!-- Grid -->
-            <div id="certifications-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem;">
+            <div id="certifications-container" class="cert-grid">
                 <!-- Cards injected via JS -->
             </div>
 
@@ -64,6 +268,20 @@
 
     <!-- Shared Footer -->
     <footer class="site-footer" id="main-footer"></footer>
+
+    <!-- Modal Lightbox -->
+    <div id="cert-modal" class="cert-modal">
+        <div class="cert-modal-content">
+            <button class="cert-modal-close" onclick="closeCertModal()">✕</button>
+            <img id="modal-image" class="cert-modal-image" src="" alt="">
+            <div class="cert-modal-caption" id="modal-caption"></div>
+            <div class="cert-modal-nav">
+                <button class="cert-modal-btn" id="modal-prev" onclick="navigateImage(-1)">← Précédent</button>
+                <div class="cert-modal-info" id="modal-counter"></div>
+                <button class="cert-modal-btn" id="modal-next" onclick="navigateImage(1)">Suivant →</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Logic -->
     <script src="js/certifications.js"></script>
