@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         contentContainer.innerHTML = `
             <div class="grid grid-2">
                 ${docs.map(doc => `
-                    <article class="card fade-in-up" onclick="viewDoc('${doc.slug}')" style="cursor: pointer; transition: transform 0.2s;">
+                    <article class="card" onclick="viewDoc('${doc.slug}')" style="cursor: pointer; transition: transform 0.2s;">
                         <div style="margin-bottom: 0.5rem;">
                             <span class="badge">${doc.doc_categories ? doc.doc_categories.name : 'Général'}</span>
                         </div>
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const htmlContent = marked.parse(doc.content || '');
 
         contentContainer.innerHTML = `
-            <article class="card fade-in-up" style="max-width: 100%;">
+            <article class="card" style="max-width: 100%;">
                 <button onclick="resetView()" class="button button--ghost" style="margin-bottom: 1rem;">← Retour</button>
                 
                 <header style="margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
