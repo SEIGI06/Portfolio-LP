@@ -227,8 +227,7 @@ async function getDocumentations(slug = null, categoryId = null) {
           name,
           slug
         )
-      `)
-      .count('exact', { head: false }); // Get count if needed
+      `);
 
     if (slug) {
       query = query.eq("slug", slug).single();
