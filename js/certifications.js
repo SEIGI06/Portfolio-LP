@@ -21,9 +21,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Render cards
-        certifications.forEach(cert => {
+        certifications.forEach((cert, index) => {
             const card = createCertificationCard(cert);
             container.appendChild(card);
+            
+            // Trigger animation with stagger
+            setTimeout(() => {
+                card.classList.add('is-visible');
+            }, 100 * index);
         });
 
     } catch (err) {
