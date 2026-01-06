@@ -173,10 +173,19 @@ async function getCertifications() {
   try {
     const { data, error } = await supabaseClient
       .from("certifications")
-      .select("*")
+      .select(`
+        *,
+        certification_images (*),
+        certification_docs (*)
+      `)
       .order("issued_date", { ascending: false });
 
     if (error) throw error;
+    // Sort images and docs by order_index in JS if needed, or rely on client sorting
+    data.forEach(cert => {
+        if(cert.certification_images) cert.certification_images.sort((a,b) => a.order_index - b.order_index);
+        if(cert.certification_docs) cert.certification_docs.sort((a,b) => a.order_index - b.order_index);
+    });
     return data;
   } catch (error) {
     console.error("Error fetching certifications:", error);

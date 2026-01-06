@@ -554,13 +554,45 @@
           </div>
 
           <div class="form-group">
-             <label class="form-label" for="c_pdf_url">URL du PDF (optionnel)</label>
-             <input type="text" id="c_pdf_url" name="pdf_url" class="form-input" placeholder="https://...">
+             <label class="form-label" for="c_pdf_url">URL du PDF Principal (optionnel)</label>
+             <div style="display: flex; gap: 0.5rem; align-items: center;">
+                 <input type="text" id="c_pdf_url" name="pdf_url" class="form-input" placeholder="https://..." style="flex: 1">
+                 <label class="button button--ghost" style="cursor: pointer; padding: 0.75rem;" title="Télécharger un PDF">
+                     📂
+                     <input type="file" onchange="handleImageUpload(event, 'c_pdf_url')" accept="application/pdf" style="display: none;">
+                 </label>
+             </div>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="c_description">Description (optionnelle)</label>
             <textarea id="c_description" name="description" class="form-input" style="min-height: 60px;"></textarea>
+          </div>
+
+          <!-- Gallery Section (Edit Mode Only) -->
+          <div class="form-group" id="cert-gallery-group" style="display:none; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+            <label class="form-label">Galerie d'images additionnelles</label>
+            <div id="cert_gallery_list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.5rem; margin-bottom: 0.5rem;"></div>
+            <label class="button button--ghost" style="cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem;">
+                ➕ Ajouter images
+                <input type="file" multiple accept="image/*" onchange="handleCertGalleryUpload(event)" style="display: none;">
+                <span id="gallery_upload_status" style="font-size: 0.8em; color: var(--color-text-muted);"></span>
+            </label>
+          </div>
+
+          <!-- Docs Section (Edit Mode Only) -->
+          <div class="form-group" id="cert-docs-group" style="display:none; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+            <label class="form-label">Documents PDF additionnels</label>
+            <div id="cert_docs_list" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.5rem;"></div>
+            <label class="button button--ghost" style="cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem;">
+                ➕ Ajouter PDF
+                <input type="file" multiple accept="application/pdf" onchange="handleCertDocsUpload(event)" style="display: none;">
+                <span id="docs_upload_status" style="font-size: 0.8em; color: var(--color-text-muted);"></span>
+            </label>
+          </div>
+          
+          <div id="cert-save-msg" style="display:none; color: var(--color-primary); margin-bottom: 1rem; font-style: italic;">
+              Enregistrez la certification pour ajouter des fichiers additionnels.
           </div>
 
           <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
@@ -911,6 +943,7 @@
                               <p>${c.provider} • ${c.issued_date ? new Date(c.issued_date).toLocaleDateString() : 'Date non définie'}</p>
                           </div>
                           <div class="project-actions">
+                               <button class="quick-action" onclick="openCertModal('${c.id}')">✏️</button>
                                ${c.pdf_url ? `<a href="${c.pdf_url}" target="_blank" class="quick-action">📄 PDF</a>` : ''}
                                ${c.image_url ? `<a href="${c.image_url}" target="_blank" class="quick-action">🖼️ Image</a>` : ''}
                                <button class="quick-action btn-danger" onclick="deleteCertConfirm('${c.id}')">🗑️</button>
@@ -924,10 +957,49 @@
           }
       }
 
-      function openCertModal() {
-          document.getElementById('certForm').reset();
-          document.getElementById('c_id').value = '';
-          document.getElementById('certModalTitle').innerText = 'Nouvelle Certification';
+      async function openCertModal(id = null) {
+          const form = document.getElementById('certForm');
+          form.reset();
+          
+          const galleryGroup = document.getElementById('cert-gallery-group');
+          const docsGroup = document.getElementById('cert-docs-group');
+          const saveMsg = document.getElementById('cert-save-msg');
+
+          if (id) {
+              document.getElementById('certModalTitle').innerText = 'Modifier Certification';
+              document.getElementById('c_id').value = id;
+              
+              // Load details
+              const certs = await window.portfolioAPI.getCertifications();
+              const cert = certs.find(c => c.id === id);
+              
+              if(cert) {
+                  document.getElementById('c_title').value = cert.title;
+                  document.getElementById('c_provider').value = cert.provider;
+                  document.getElementById('c_logo_url').value = cert.logo_url || '';
+                  document.getElementById('c_image_url').value = cert.image_url || '';
+                  document.getElementById('c_pdf_url').value = cert.pdf_url || '';
+                  document.getElementById('c_description').value = cert.description || '';
+              }
+              
+              // Show extra sections
+              galleryGroup.style.display = 'block';
+              docsGroup.style.display = 'block';
+              saveMsg.style.display = 'none';
+
+              // Load lists
+              loadCertGallery(id);
+              loadCertDocs(id);
+          } else {
+              document.getElementById('certModalTitle').innerText = 'Nouvelle Certification';
+              document.getElementById('c_id').value = '';
+              
+              // Hide extra sections (must save first)
+              galleryGroup.style.display = 'none';
+              docsGroup.style.display = 'none';
+              saveMsg.style.display = 'block';
+          }
+          
           document.getElementById('certModal').classList.add('is-visible');
       }
 
@@ -1015,7 +1087,6 @@
         if (!file) return;
 
         const targetInput = document.getElementById(targetInputId);
-        const originalPlaceholder = targetInput.placeholder;
         
         // Visual feedback
         targetInput.value = "Téléchargement en cours...";
@@ -1028,16 +1099,136 @@
             if (error) throw error;
 
             targetInput.value = publicUrl;
-            // Trigger input event to update any listeners if necessary (though simple value set usually enough for plain forms)
         } catch (error) {
             console.error(error);
             alert("Erreur lors du téléchargement de l'image: " + error.message);
-            targetInput.value = ""; // Clear on error
+            targetInput.value = ""; 
         } finally {
             targetInput.disabled = false;
             event.target.disabled = false;
-            event.target.value = ""; // Reset file input so same file can be selected again if needed
+            event.target.value = ""; 
         }
+      }
+
+      // --- Multi-File Upload Logic ---
+
+      async function handleCertGalleryUpload(event) {
+          const files = event.target.files;
+          const certId = document.getElementById('c_id').value;
+          const status = document.getElementById('gallery_upload_status');
+          
+          if (!files.length || !certId) return;
+
+          status.innerText = 'Envoi...';
+          event.target.parentElement.classList.add('disabled');
+
+          try {
+              for (let file of files) {
+                  // Upload
+                  const { publicUrl, error } = await window.adminAPI.uploadFile(file, 'uploads');
+                  if (error) throw error;
+
+                  // Add to DB
+                  const { error: dbError } = await window.adminAPI.addCertificationImage(certId, publicUrl, file.name);
+                  if (dbError) throw dbError;
+              }
+              // Refresh
+              loadCertGallery(certId);
+          } catch (e) {
+              console.error(e);
+              alert('Erreur upload galerie: ' + e.message);
+          } finally {
+              status.innerText = '';
+              event.target.parentElement.classList.remove('disabled');
+              event.target.value = '';
+          }
+      }
+
+      async function handleCertDocsUpload(event) {
+          const files = event.target.files;
+          const certId = document.getElementById('c_id').value;
+          const status = document.getElementById('docs_upload_status');
+          
+          if (!files.length || !certId) return;
+
+          status.innerText = 'Envoi...';
+          event.target.parentElement.classList.add('disabled');
+
+          try {
+              for (let file of files) {
+                  // Upload
+                  const { publicUrl, error } = await window.adminAPI.uploadFile(file, 'uploads');
+                  if (error) throw error;
+
+                  // Add to DB
+                  const { error: dbError } = await window.adminAPI.addCertificationDoc(certId, publicUrl, file.name);
+                  if (dbError) throw dbError;
+              }
+              // Refresh
+              loadCertDocs(certId);
+          } catch (e) {
+              console.error(e);
+              alert('Erreur upload docs: ' + e.message);
+          } finally {
+              status.innerText = '';
+              event.target.parentElement.classList.remove('disabled');
+              event.target.value = '';
+          }
+      }
+
+      async function loadCertGallery(certId) {
+           const container = document.getElementById('cert_gallery_list');
+           container.innerHTML = '...';
+           
+           // We need to re-fetch cert details or just filtering from memory if we had it global
+           // Simplest: fetch fresh list
+           const certs = await window.portfolioAPI.getCertifications();
+           const cert = certs.find(c => c.id === certId);
+           
+           if (!cert || !cert.certification_images) {
+               container.innerHTML = '';
+               return;
+           }
+
+           container.innerHTML = cert.certification_images.map(img => `
+                <div style="position:relative; width:80px; height:80px;">
+                    <img src="${img.image_url}" style="width:100%; height:100%; object-fit:cover; border-radius:4px; border:1px solid rgba(255,255,255,0.1);">
+                    <button onclick="deleteCertImage('${img.id}', '${certId}')" style="position:absolute; top:-5px; right:-5px; background:red; color:white; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:10px; display:flex; align-items:center; justify-content:center;">×</button>
+                </div>
+           `).join('');
+      }
+
+      async function loadCertDocs(certId) {
+           const container = document.getElementById('cert_docs_list');
+           container.innerHTML = '...';
+           
+           const certs = await window.portfolioAPI.getCertifications();
+           const cert = certs.find(c => c.id === certId);
+           
+           if (!cert || !cert.certification_docs) {
+               container.innerHTML = '';
+               return;
+           }
+
+           container.innerHTML = cert.certification_docs.map(doc => `
+                <div style="display:flex; align-items:center; gap:0.5rem; background:rgba(255,255,255,0.05); padding:0.5rem; border-radius:4px;">
+                    <span style="font-size:1.2rem;">📄</span>
+                    <a href="${doc.doc_url}" target="_blank" style="flex:1; color:inherit; text-decoration:none; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:0.9rem;">${doc.name || 'Document'}</a>
+                    <button onclick="deleteCertDoc('${doc.id}', '${certId}')" style="background:none; border:none; color:#ef4444; cursor:pointer;">🗑️</button>
+                </div>
+           `).join('');
+      }
+
+      async function deleteCertImage(imgId, certId) {
+          if (!confirm('Supprimer cette image ?')) return;
+          await window.adminAPI.deleteCertificationImage(imgId);
+          loadCertGallery(certId);
+      }
+
+      async function deleteCertDoc(docId, certId) {
+           if (!confirm('Supprimer ce document ?')) return;
+           await window.adminAPI.deleteCertificationDoc(docId);
+           loadCertDocs(certId);
       }
     </script>
   </body>

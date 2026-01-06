@@ -360,6 +360,90 @@ async function deleteCertification(id) {
     return { error };
   }
 }
+
+/**
+ * Add Image to Certification
+ */
+async function addCertificationImage(certId, imageUrl, caption = '', orderIndex = 0) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('certification_images')
+      .insert([{
+        certification_id: certId,
+        image_url: imageUrl,
+        caption: caption,
+        order_index: orderIndex
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error('Add cert image error:', error);
+    return { data: null, error };
+  }
+}
+
+/**
+ * Delete Certification Image
+ */
+async function deleteCertificationImage(imageId) {
+  try {
+    const { error } = await supabaseClient
+      .from('certification_images')
+      .delete()
+      .eq('id', imageId);
+
+    if (error) throw error;
+    return { error: null };
+  } catch (error) {
+     console.error('Delete cert image error:', error);
+     return { error };
+  }
+}
+
+/**
+ * Add Doc to Certification
+ */
+async function addCertificationDoc(certId, docUrl, name = '', orderIndex = 0) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('certification_docs')
+      .insert([{
+        certification_id: certId,
+        doc_url: docUrl,
+        name: name,
+        order_index: orderIndex
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error('Add cert doc error:', error);
+    return { data: null, error };
+  }
+}
+
+/**
+ * Delete Certification Doc
+ */
+async function deleteCertificationDoc(docId) {
+  try {
+    const { error } = await supabaseClient
+      .from('certification_docs')
+      .delete()
+      .eq('id', docId);
+
+    if (error) throw error;
+    return { error: null };
+  } catch (error) {
+     console.error('Delete cert doc error:', error);
+     return { error };
+  }
+}
 window.adminAPI = {
   // Auth
   checkAuth,
@@ -387,6 +471,10 @@ window.adminAPI = {
   // Certification CRUD
   createCertification,
   deleteCertification,
+  addCertificationImage,
+  deleteCertificationImage,
+  addCertificationDoc,
+  deleteCertificationDoc,
 
   // Storage
   uploadFile,
