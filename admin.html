@@ -640,11 +640,11 @@
     </div>
 
     <!-- DOCUMENTATION EDITOR MODAL -->
-    <div class="modal" id="docModal">
-        <div class="modal-content" style="max-width: 95vw; height: 90vh; display: flex; flex-direction: column;">
+    <div class="modal-overlay" id="docModal">
+        <div class="modal" style="max-width: 95vw; height: 90vh; display: flex; flex-direction: column;">
             <div class="modal-header">
                 <h2 class="modal-title" id="docModalTitle">Nouvel Article</h2>
-                <button class="modal-close" onclick="closeDocModal()">✕</button>
+                <button class="close-button" onclick="closeDocModal()">✕</button>
             </div>
             
             <form id="docForm" onsubmit="handleDocSubmit(event)" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
@@ -700,6 +700,7 @@
                 </div>
             </form>
         </div>
+    </div>
 
     <script>
       // Load statistics
