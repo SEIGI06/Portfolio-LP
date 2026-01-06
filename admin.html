@@ -429,7 +429,13 @@
 
           <div class="form-group">
             <label class="form-label" for="edit_image_url">URL de l'image (Bannière)</label>
-            <input type="text" id="edit_image_url" name="image_url" class="form-input">
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="text" id="edit_image_url" name="image_url" class="form-input" style="flex: 1">
+                <label class="button button--ghost" style="cursor: pointer; padding: 0.75rem;" title="Télécharger une image">
+                    📂
+                    <input type="file" onchange="handleImageUpload(event, 'edit_image_url')" accept="image/*" style="display: none;">
+                </label>
+            </div>
           </div>
 
           <div class="form-group">
@@ -482,7 +488,13 @@
 
           <div class="form-group">
             <label class="form-label" for="v_image_url">URL Image</label>
-            <input type="text" id="v_image_url" name="image_url" class="form-input">
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="text" id="v_image_url" name="image_url" class="form-input" style="flex: 1">
+                <label class="button button--ghost" style="cursor: pointer; padding: 0.75rem;" title="Télécharger une image">
+                    📂
+                    <input type="file" onchange="handleImageUpload(event, 'v_image_url')" accept="image/*" style="display: none;">
+                </label>
+            </div>
           </div>
           
           <div class="form-group">
@@ -519,13 +531,25 @@
 
           <div class="form-group">
             <label class="form-label" for="c_logo_url">URL du Logo</label>
-            <input type="text" id="c_logo_url" name="logo_url" class="form-input" placeholder="https://...">
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="text" id="c_logo_url" name="logo_url" class="form-input" placeholder="https://..." style="flex: 1">
+                <label class="button button--ghost" style="cursor: pointer; padding: 0.75rem;" title="Télécharger un logo">
+                    📂
+                    <input type="file" onchange="handleImageUpload(event, 'c_logo_url')" accept="image/*" style="display: none;">
+                </label>
+            </div>
             <small style="color: var(--color-text-muted); font-size: 0.85rem;">Logo de l'organisme (PNG/SVG transparent recommandé)</small>
           </div>
 
           <div class="form-group">
              <label class="form-label" for="c_image_url">URL du Certificat (Image)</label>
-             <input type="text" id="c_image_url" name="image_url" class="form-input" placeholder="https://...">
+             <div style="display: flex; gap: 0.5rem; align-items: center;">
+                 <input type="text" id="c_image_url" name="image_url" class="form-input" placeholder="https://..." style="flex: 1">
+                 <label class="button button--ghost" style="cursor: pointer; padding: 0.75rem;" title="Télécharger une image">
+                     📂
+                     <input type="file" onchange="handleImageUpload(event, 'c_image_url')" accept="image/*" style="display: none;">
+                 </label>
+             </div>
              <small style="color: var(--color-text-muted); font-size: 0.85rem;">L'image scanée de votre reçu/diplôme</small>
           </div>
 
@@ -985,6 +1009,35 @@
         loadPersonalProjects();
         loadVeilles();
         loadCertifications();
+      }
+      async function handleImageUpload(event, targetInputId) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const targetInput = document.getElementById(targetInputId);
+        const originalPlaceholder = targetInput.placeholder;
+        
+        // Visual feedback
+        targetInput.value = "Téléchargement en cours...";
+        targetInput.disabled = true;
+        event.target.disabled = true;
+
+        try {
+            const { publicUrl, error } = await window.adminAPI.uploadFile(file);
+            
+            if (error) throw error;
+
+            targetInput.value = publicUrl;
+            // Trigger input event to update any listeners if necessary (though simple value set usually enough for plain forms)
+        } catch (error) {
+            console.error(error);
+            alert("Erreur lors du téléchargement de l'image: " + error.message);
+            targetInput.value = ""; // Clear on error
+        } finally {
+            targetInput.disabled = false;
+            event.target.disabled = false;
+            event.target.value = ""; // Reset file input so same file can be selected again if needed
+        }
       }
     </script>
   </body>

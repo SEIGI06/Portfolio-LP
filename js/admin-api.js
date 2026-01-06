@@ -387,4 +387,46 @@ window.adminAPI = {
   // Certification CRUD
   createCertification,
   deleteCertification,
+
+  // Storage
+  uploadFile,
 };
+
+// ============================================
+// STORAGE
+// ============================================
+
+/**
+ * Upload a file to Supabase Storage
+ * @param {File} file - File object to upload
+ * @param {string} bucket - Storage bucket name (default: 'uploads')
+ * @returns {Promise<Object>} - { publicUrl, error }
+ */
+async function uploadFile(file, bucket = 'uploads') {
+  try {
+    // 1. Sanitize filename
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+    const filePath = fileName;
+
+    // 2. Upload
+    const { data, error } = await supabaseClient.storage
+      .from(bucket)
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (error) throw error;
+
+    // 3. Get Public URL
+    const { data: { publicUrl } } = supabaseClient.storage
+      .from(bucket)
+      .getPublicUrl(filePath);
+
+    return { publicUrl, error: null };
+  } catch (error) {
+    console.error('Upload error:', error);
+    return { publicUrl: null, error };
+  }
+}
