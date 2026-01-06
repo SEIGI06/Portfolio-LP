@@ -320,10 +320,11 @@
       }
     </style>
 
-    <!-- Supabase Client - Load synchronously -->
+    <!-- Supabase Client - Load    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script defer src="js/supabase-client.js"></script>
-    <script defer src="js/admin-api.js"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/admin-api.js"></script>
   </head>
 
   <body>
@@ -602,6 +603,103 @@
         </form>
       </div>
     </div>
+
+    <!-- DOCUMENTATION MANAGER -->
+    <div id="documentation-manager" class="tab-content">
+        <div class="admin-header">
+            <h1>Gestion Documentation</h1>
+            <p>Rédigez et publiez vos articles techniques.</p>
+            <button class="button button--primary" onclick="openDocModal()" style="margin-top: 1rem;">
+                + Nouvel Article
+            </button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 250px 1fr; gap: 2rem;">
+            <!-- Categories Sidebar -->
+            <div class="card" style="height: fit-content; padding: 1.5rem;">
+                <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--color-primary);">Catégories</h3>
+                
+                <div id="doc-categories-list" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+                    <!-- Categories injected here -->
+                </div>
+
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                    <input type="text" id="new-cat-name" placeholder="Nouvelle catégorie..." class="form-input" style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+                    <button onclick="handleAddCategory()" class="button button--ghost" style="width: 100%; font-size: 0.85rem;">Ajouter</button>
+                </div>
+            </div>
+
+            <!-- Articles List -->
+            <div class="card" style="padding: 0;">
+                <div id="doc-list" class="projects-list">
+                    <!-- Articles injected here -->
+                    <p class="loading">Chargement...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOCUMENTATION EDITOR MODAL -->
+    <div class="modal" id="docModal">
+        <div class="modal-content" style="max-width: 95vw; height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="docModalTitle">Nouvel Article</h2>
+                <button class="modal-close" onclick="closeDocModal()">✕</button>
+            </div>
+            
+            <form id="docForm" onsubmit="handleDocSubmit(event)" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+                <input type="hidden" id="doc_id">
+                
+                <!-- Meta controls -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr 200px; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <div>
+                        <label class="form-label">Titre</label>
+                        <input type="text" id="doc_title" required class="form-input" oninput="generateSlug(this.value)">
+                    </div>
+                    <div>
+                        <label class="form-label">Slug (URL)</label>
+                        <input type="text" id="doc_slug" required class="form-input">
+                    </div>
+                    <div>
+                        <label class="form-label">Catégorie</label>
+                        <select id="doc_category" class="form-select">
+                            <option value="">Aucune</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Editor Area (Split View) -->
+                <div style="display: flex; flex: 1; min-height: 0; margin-top: 1rem; gap: 1rem;">
+                    <!-- Editor -->
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                        <label class="form-label">Contenu (Markdown)</label>
+                        <textarea id="doc_content" class="form-input" style="flex: 1; font-family: monospace; resize: none; line-height: 1.5;" 
+                            placeholder="# Titre..." oninput="updatePreview(this.value)"></textarea>
+                    </div>
+
+                    <!-- Preview -->
+                    <div style="flex: 1; display: flex; flex-direction: column; background: rgba(255,255,255,0.02); border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.05);">
+                        <label class="form-label" style="padding: 0.5rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.2);">Prévisualisation</label>
+                        <div id="doc_preview" class="prose" style="flex: 1; padding: 1rem; overflow-y: auto; color: var(--color-text);"></div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 1rem;">
+                     <div>
+                         <label class="checkbox-container">
+                             <input type="checkbox" id="doc_published">
+                             <span class="checkmark"></span>
+                             Publier immédiatement
+                         </label>
+                     </div>
+                     <div style="display: flex; gap: 1rem;">
+                         <button type="button" class="button button--ghost" onclick="closeDocModal()">Annuler</button>
+                         <button type="submit" class="button button--primary">Enregistrer</button>
+                     </div>
+                </div>
+            </form>
+        </div>
 
     <script>
       // Load statistics
@@ -1240,6 +1338,209 @@
            await window.adminAPI.deleteCertificationDoc(docId);
            loadCertDocs(certId);
       }
+      // --- DOCUMENTATION LOGIC ---
+
+      async function loadDocCategories() {
+          const list = document.getElementById('doc-categories-list');
+          const select = document.getElementById('doc_category');
+          
+          list.innerHTML = '<p class="loading">Chargement...</p>';
+          select.innerHTML = '<option value="">Aucune</option>';
+
+          try {
+              const categories = await window.portfolioAPI.getDocCategories();
+              
+              // Render Sidebar List
+              list.innerHTML = categories.map(cat => `
+                  <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 0.5rem; border-radius: 4px;">
+                      <span>${cat.name}</span>
+                      <button onclick="deleteDocCategoryConfirm('${cat.id}')" style="background: none; border: none; color: #ef4444; cursor: pointer;">×</button>
+                  </div>
+              `).join('');
+
+              // Render Select Options
+              categories.forEach(cat => {
+                  const option = document.createElement('option');
+                  option.value = cat.id;
+                  option.textContent = cat.name;
+                  select.appendChild(option);
+              });
+
+          } catch (e) {
+              console.error(e);
+              list.innerHTML = '<p style="color:red">Erreur</p>';
+          }
+      }
+
+      async function handleAddCategory() {
+          const input = document.getElementById('new-cat-name');
+          const name = input.value.trim();
+          if (!name) return;
+
+          const slug = generateSlug(name);
+          
+          try {
+              const { error } = await window.adminAPI.createDocCategory(name, slug);
+              if (error) throw error;
+              input.value = '';
+              loadDocCategories();
+          } catch (e) {
+              alert('Erreur: ' + e.message);
+          }
+      }
+
+      async function deleteDocCategoryConfirm(id) {
+          if(!confirm('Supprimer cette catégorie ?')) return;
+          await window.adminAPI.deleteDocCategory(id);
+          loadDocCategories();
+      }
+
+      async function loadDocumentations() {
+          const container = document.getElementById('doc-list');
+          container.innerHTML = '<p class="loading">Chargement...</p>';
+
+          try {
+              const docs = await window.portfolioAPI.getAllDocumentationsAdmin();
+              
+              if (docs.length === 0) {
+                  container.innerHTML = '<p style="text-align:center; color:var(--color-text-muted);">Aucun article.</p>';
+                  return;
+              }
+
+              container.innerHTML = docs.map(doc => `
+                  <div class="project-item">
+                      <div class="project-thumbnail" style="display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);color:var(--color-primary);font-size:1.5rem;">
+                          📄
+                      </div>
+                      <div class="project-info">
+                          <h3>${doc.title}</h3>
+                          <p>${doc.is_published ? '<span class="status-badge status-published">Publié</span>' : '<span class="status-badge status-draft">Brouillon</span>'} • ${doc.doc_categories ? doc.doc_categories.name : 'Sans catégorie'}</p>
+                      </div>
+                      <div class="project-actions">
+                          <button class="quick-action" onclick="openDocModal('${doc.id}')">✏️</button>
+                          <button class="quick-action btn-danger" onclick="deleteDocConfirm('${doc.id}')">🗑️</button>
+                      </div>
+                  </div>
+              `).join('');
+
+          } catch (e) {
+              console.error(e);
+              container.innerHTML = '<p style="color:red">Erreur chargement</p>';
+          }
+      }
+
+      // Modal & Editor Logic
+      let currentDocId = null;
+
+      async function openDocModal(id = null) {
+          const modal = document.getElementById('docModal');
+          const form = document.getElementById('docForm');
+          form.reset();
+          currentDocId = id;
+          document.getElementById('doc_preview').innerHTML = '';
+
+          if (id) {
+              document.getElementById('docModalTitle').innerText = 'Modifier Article';
+              const docs = await window.portfolioAPI.getAllDocumentationsAdmin();
+              const doc = docs.find(d => d.id === id);
+              
+              if (doc) {
+                  document.getElementById('doc_title').value = doc.title;
+                  document.getElementById('doc_slug').value = doc.slug;
+                  document.getElementById('doc_category').value = doc.category_id || '';
+                  document.getElementById('doc_content').value = doc.content || '';
+                  document.getElementById('doc_published').checked = doc.is_published;
+                  updatePreview(doc.content || '');
+              }
+          } else {
+              document.getElementById('docModalTitle').innerText = 'Nouvel Article';
+              updatePreview('');
+          }
+
+          modal.classList.add('is-visible');
+      }
+
+      function closeDocModal() {
+          document.getElementById('docModal').classList.remove('is-visible');
+      }
+
+      async function handleDocSubmit(e) {
+          e.preventDefault();
+          
+          const data = {
+              title: document.getElementById('doc_title').value,
+              slug: document.getElementById('doc_slug').value,
+              category_id: document.getElementById('doc_category').value || null,
+              content: document.getElementById('doc_content').value,
+              is_published: document.getElementById('doc_published').checked
+          };
+
+          try {
+              if (currentDocId) {
+                  await window.adminAPI.updateDocumentation(currentDocId, data);
+              } else {
+                  await window.adminAPI.createDocumentation(data);
+              }
+              closeDocModal();
+              loadDocumentations();
+          } catch (e) {
+              alert('Erreur: ' + e.message);
+          }
+      }
+
+      async function deleteDocConfirm(id) {
+          if(!confirm('Supprimer cet article ?')) return;
+          await window.adminAPI.deleteDocumentation(id);
+          loadDocumentations();
+      }
+
+      function updatePreview(markdown) {
+          const preview = document.getElementById('doc_preview');
+          // Basic markdown parsing if marked is not loaded yet (fallback)
+          if (typeof marked !== 'undefined') {
+              preview.innerHTML = marked.parse(markdown);
+          } else {
+              preview.innerHTML = markdown;
+          }
+      }
+
+      function generateSlug(text) {
+          const slug = text.toLowerCase()
+              .replace(/[^\w\s-]/g, '')
+              .replace(/\s+/g, '-');
+          document.getElementById('doc_slug').value = slug;
+          return slug;
+      }
+
+      // Tab Switching Logic
+      document.addEventListener('DOMContentLoaded', () => {
+          document.querySelectorAll('.admin-nav-item').forEach(item => {
+              item.addEventListener('click', () => {
+                  // Active class
+                  document.querySelectorAll('.admin-nav-item').forEach(nav => nav.classList.remove('active'));
+                  item.classList.add('active');
+                  
+                  // Show content
+                  const tabId = item.dataset.tab;
+                  document.querySelectorAll('.tab-content').forEach(content => {
+                      content.style.display = 'none';
+                  });
+                  
+                  // Show specific manager
+                  if (tabId === 'projects') {
+                      document.getElementById('projects-manager').style.display = 'block';
+                  } else if (tabId === 'veilles') {
+                      document.getElementById('veilles-manager').style.display = 'block';
+                  } else if (tabId === 'certifications') {
+                      document.getElementById('certifications-manager').style.display = 'block';
+                  } else if (tabId === 'documentation') {
+                      document.getElementById('documentation-manager').style.display = 'block';
+                      loadDocCategories();
+                      loadDocumentations();
+                  }
+              });
+          });
+      });
     </script>
   </body>
 </html>

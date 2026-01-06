@@ -18,10 +18,15 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 
     <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/components.js" defer></script>
-    <script src="js/main.js" defer></script>
+    <script src="js/supabase-client.js" defer></script>
+    <script src="js/documentation.js" defer></script> <!-- New file -->
 </head>
 
 <body>
@@ -33,156 +38,44 @@
         <section class="section">
             <div class="container">
                 <div class="fade-in-up">
-                    <span class="section__eyebrow"
-                        style="color: var(--color-primary); text-transform: uppercase; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.05em;">à
-                        changer</span>
-                    <h1 class="section__title">à changer</h1>
+                    <span class="section__eyebrow" style="color: var(--color-primary);">Ressources</span>
+                    <h1 class="section__title">Documentation Technique</h1>
                     <p class="section__intro">
-                        à changer
+                        Guides, tutoriels et références techniques pour l'administration système et réseau.
                     </p>
+                </div>
 
-                    <div class="hero__actions" style="justify-content: flex-start; margin-top: var(--space-md);">
-                        <a class="button button--primary" href="https://github.com/SEIGI06/DOC_SISR" target="_blank"
-                            rel="noopener">
-                            à changer
-                        </a>
-                        <a class="button button--ghost" href="https://github.com/SEIGI06/DOC_SISR/tree/main"
-                            target="_blank" rel="noopener">
-                            à changer
-                        </a>
+                <!-- Documentation Interface -->
+                <div id="doc-app" style="margin-top: var(--space-xl);">
+                    
+                    <!-- Search & Filter Bar -->
+                    <div class="card" style="margin-bottom: 2rem; padding: 1rem;">
+                        <input type="text" id="doc-search" class="form-input" placeholder="🔍 Rechercher un article..." 
+                            style="width: 100%; font-size: 1.1rem; padding: 1rem;">
                     </div>
-                </div>
 
-                <div class="stack fade-in-up" style="margin-top: var(--space-xl); transition-delay: 0.1s;">
-                    <h2 class="section__title" style="font-size: 1.5rem;">à changer</h2>
-                    <p>à changer</p>
-                    <pre class="code-block"
-                        style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: var(--radius-sm); font-family: monospace; color: var(--color-primary);">
-à changer
-                    </pre>
-                </div>
-
-                <div class="stack fade-in-up" style="margin-top: var(--space-xl); transition-delay: 0.1s;">
-                    <h2 class="section__title" style="font-size: 1.5rem;">à changer</h2>
-                    <div class="grid grid-3">
-
-                        <!-- Card 1 -->
-                        <article class="card">
-                            <span class="badge">à changer</span>
-                            <h3 class="card__title">à changer</h3>
-                            <p class="card__description">à changer</p>
-                            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                                <a href="https://github.com/SEIGI06/DOC_SISR/tree/main/linux" target="_blank"
-                                    rel="noopener" class="button" style="flex: 1; font-size: 0.9rem;">à changer</a>
-                                <a href="https://github.com/SEIGI06/DOC_SISR/edit/main/linux/index.md" target="_blank"
-                                    rel="noopener" class="button button--ghost" style="flex: 1; font-size: 0.9rem;">à
-                                    changer</a>
+                    <!-- Layout: Sidebar + Content -->
+                    <div style="display: grid; grid-template-columns: 280px 1fr; gap: 2rem; align-items: start;">
+                        
+                        <!-- Sidebar (Categories) -->
+                        <aside class="card" style="padding: 1.5rem; position: sticky; top: 100px;">
+                            <h3 style="margin-bottom: 1rem; color: var(--color-primary); font-size: 1.1rem;">Catégories</h3>
+                            <div id="doc-categories" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <!-- Injected via JS -->
+                                <p class="loading">Chargement...</p>
                             </div>
-                        </article>
+                        </aside>
 
-                        <!-- Card 2 -->
-                        <article class="card">
-                            <span class="badge">à changer</span>
-                            <h3 class="card__title">à changer</h3>
-                            <p class="card__description">à changer</p>
-                            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                                <a href="https://github.com/SEIGI06/DOC_SISR/tree/main/Proxmox" target="_blank"
-                                    rel="noopener" class="button" style="flex: 1; font-size: 0.9rem;">à changer</a>
-                                <a href="https://github.com/SEIGI06/DOC_SISR/edit/main/Proxmox/index.md" target="_blank"
-                                    rel="noopener" class="button button--ghost" style="flex: 1; font-size: 0.9rem;">à
-                                    changer</a>
-                            </div>
-                        </article>
-
-                        <!-- Card 3 -->
-                        <article class="card">
-                            <span class="badge">à changer</span>
-                            <h3 class="card__title">à changer</h3>
-                            <p class="card__description">à changer</p>
-                            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                                <a href="https://github.com/SEIGI06/DOC_SISR/tree/main/active-directory" target="_blank"
-                                    rel="noopener" class="button" style="flex: 1; font-size: 0.9rem;">à changer</a>
-                                <a href="https://github.com/SEIGI06/DOC_SISR/edit/main/active-directory/index.md"
-                                    target="_blank" rel="noopener" class="button button--ghost"
-                                    style="flex: 1; font-size: 0.9rem;">à changer</a>
-                            </div>
-                        </article>
-
-                        <!-- Card 4 -->
-                        <article class="card">
-                            <span class="badge">à changer</span>
-                            <h3 class="card__title">à changer</h3>
-                            <p class="card__description">à changer</p>
-                            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                                <a href="https://github.com/SEIGI06/DOC_SISR/tree/main/pfsense" target="_blank"
-                                    rel="noopener" class="button" style="flex: 1; font-size: 0.9rem;">à changer</a>
-                                <a href="https://github.com/SEIGI06/DOC_SISR/edit/main/pfsense/index.md" target="_blank"
-                                    rel="noopener" class="button button--ghost" style="flex: 1; font-size: 0.9rem;">à
-                                    changer</a>
-                            </div>
-                        </article>
-
-                        <!-- Card 5 -->
-                        <article class="card">
-                            <span class="badge">à changer</span>
-                            <h3 class="card__title">à changer</h3>
-                            <p class="card__description">à changer</p>
-                            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                                <a href="https://github.com/SEIGI06/DOC_SISR/tree/main/commandes-multi-os"
-                                    target="_blank" rel="noopener" class="button" style="flex: 1; font-size: 0.9rem;">à
-                                    changer</a>
-                                <a href="https://github.com/SEIGI06/DOC_SISR/edit/main/commandes-multi-os/index.md"
-                                    target="_blank" rel="noopener" class="button button--ghost"
-                                    style="flex: 1; font-size: 0.9rem;">à changer</a>
-                            </div>
-                        </article>
-
-                        <!-- Card 6 -->
-                        <article class="card">
-                            <span class="badge">à changer</span>
-                            <h3 class="card__title">à changer</h3>
-                            <p class="card__description">à changer</p>
-                            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
-                                <a href="https://github.com/SEIGI06/DOC_SISR/tree/main/serveurs-web" target="_blank"
-                                    rel="noopener" class="button" style="flex: 1; font-size: 0.9rem;">à changer</a>
-                                <a href="https://github.com/SEIGI06/DOC_SISR/edit/main/serveurs-web/index.md"
-                                    target="_blank" rel="noopener" class="button button--ghost"
-                                    style="flex: 1; font-size: 0.9rem;">à changer</a>
-                            </div>
-                        </article>
-
-                    </div>
-                </div>
-
-                <div class="grid grid-2" style="margin-top: var(--space-xl);">
-                    <article class="card fade-in-up" style="transition-delay: 0.2s;">
-                        <h3 class="card__title">à changer</h3>
-                        <div class="list-clean">
-                            <p>à changer</p>
-                            <pre class="code-block"
-                                style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: var(--radius-sm); font-family: monospace; color: var(--color-primary);">à changer</pre>
-                            <p>à changer</p>
-                            <p>à changer</p>
+                        <!-- Main Content (List or Article) -->
+                        <div id="doc-container" style="min-height: 500px;">
+                            <!-- Injected via JS -->
+                            <p class="loading" style="text-align: center;">Chargement des articles...</p>
                         </div>
-                    </article>
+                    </div>
 
-                    <article class="card fade-in-up" style="transition-delay: 0.3s;">
-                        <h3 class="card__title">à changer</h3>
-                        <ul style="list-style: none; padding: 0; color: var(--color-text-muted);">
-                            <li style="margin-bottom: 0.5rem;">à changer</li>
-                            <li style="margin-bottom: 0.5rem;">à changer</li>
-                            <li style="margin-bottom: 0.5rem;">à changer</li>
-                            <li style="margin-bottom: 0.5rem;">à changer</li>
-                        </ul>
-                    </article>
                 </div>
+            </div>
 
-                <section class="stack" style="margin-top: var(--space-xl);">
-                    <h2>à changer</h2>
-                    <p>
-                        à changer
-                    </p>
-                </section>
 
             </div>
         </section>

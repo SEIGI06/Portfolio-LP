@@ -191,6 +191,22 @@ async function getCertifications() {
     console.error("Error fetching certifications:", error);
     return [];
   }
+/**
+ * Fetch all documentation categories
+ */
+async function getDocCategories() {
+  try {
+    const { data, error } = await supabaseClient
+      .from("doc_categories")
+      .select("*")
+      .order("name", { ascending: true });
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error fetching doc categories:", error);
+    return [];
+  }
 }
 
 // ============================================
@@ -198,6 +214,92 @@ async function getCertifications() {
 // ============================================
 window.portfolioAPI = {
   getProjects,
+  getProjectBySlug,
+  getCompetences,
+  getCompetenceMatrix,
+  getVeilles,
+  getCertifications,
+  getDocCategories,
+  getDocumentations,
+  getAllDocumentationsAdmin
+};
+
+/**
+ * Fetch documentations
+ * @param {string} slug - Optional slug to fetch single doc
+ * @param {string} categoryId - Optional category to filter
+ */
+async function getDocumentations(slug = null, categoryId = null) {
+  try {
+    let query = supabaseClient
+      .from("documentations")
+      .select(`
+        *,
+        doc_categories (
+          id,
+          name,
+          slug
+        )
+      `)
+      .count('exact', { head: false }); // Get count if needed
+
+    if (slug) {
+      query = query.eq("slug", slug).single();
+    } else {
+      query = query.eq("is_published", true).order("created_at", { ascending: false });
+      
+      if (categoryId) {
+        query = query.eq("category_id", categoryId);
+      }
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error fetching documentations:", error);
+    return slug ? null : [];
+  }
+}
+
+/**
+ * Fetch ALL documentations (for Admin)
+ */
+async function getAllDocumentationsAdmin() {
+    try {
+        const { data, error } = await supabaseClient
+            .from("documentations")
+            .select(`
+                *,
+                doc_categories (
+                    id,
+                    name
+                )
+            `)
+            .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        return data;
+    } catch (error) {
+        console.error("Error fetching admin docs:", error);
+        return [];
+    }
+}
+
+// ============================================
+// EXPORT FOR USE IN OTHER FILES
+// ============================================
+window.portfolioAPI = {
+  getProjects,
+  getProjectBySlug,
+  getCompetences,
+  getCompetenceMatrix,
+  getVeilles,
+  getCertifications,
+  getDocCategories,
+  getDocumentations,
+  getAllDocumentationsAdmin,
   getProjectBySlug,
   getCompetences,
   getCompetenceMatrix,

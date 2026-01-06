@@ -464,6 +464,100 @@ async function deleteCertificationDoc(docId) {
      return { error };
   }
 }
+/**
+ * Create a new documentation category
+ */
+async function createDocCategory(name, slug) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('doc_categories')
+      .insert([{ name, slug }])
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error('Create doc category error:', error);
+    return { data: null, error };
+  }
+}
+
+/**
+ * Delete a documentation category
+ */
+async function deleteDocCategory(id) {
+  try {
+    const { error } = await supabaseClient
+      .from('doc_categories')
+      .delete()
+      .eq('id', id);
+    
+    if (error) throw error;
+    return { error: null };
+  } catch (error) {
+    console.error('Delete doc category error:', error);
+    return { error };
+  }
+}
+
+/**
+ * Create a new documentation
+ */
+async function createDocumentation(docData) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('documentations')
+      .insert([docData])
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error('Create documentation error:', error);
+    return { data: null, error };
+  }
+}
+
+/**
+ * Update a documentation
+ */
+async function updateDocumentation(id, docData) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('documentations')
+      .update(docData)
+      .eq('id', id)
+      .select()
+      .single();
+      
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error('Update documentation error:', error);
+    return { data: null, error };
+  }
+}
+
+/**
+ * Delete a documentation
+ */
+async function deleteDocumentation(id) {
+  try {
+    const { error } = await supabaseClient
+      .from('documentations')
+      .delete()
+      .eq('id', id);
+      
+    if (error) throw error;
+    return { error: null };
+  } catch (error) {
+    console.error('Delete documentation error:', error);
+    return { error };
+  }
+}
+
 window.adminAPI = {
   // Auth
   checkAuth,
@@ -496,6 +590,13 @@ window.adminAPI = {
   deleteCertificationImage,
   addCertificationDoc,
   deleteCertificationDoc,
+  
+  // Documentation CRUD
+  createDocCategory,
+  deleteDocCategory,
+  createDocumentation,
+  updateDocumentation,
+  deleteDocumentation,
 
   // Storage
   uploadFile,
