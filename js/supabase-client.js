@@ -191,6 +191,8 @@ async function getCertifications() {
     console.error("Error fetching certifications:", error);
     return [];
   }
+}
+
 /**
  * Fetch all documentation categories
  */
@@ -208,21 +210,6 @@ async function getDocCategories() {
     return [];
   }
 }
-
-// ============================================
-// EXPORT FOR USE IN OTHER FILES
-// ============================================
-window.portfolioAPI = {
-  getProjects,
-  getProjectBySlug,
-  getCompetences,
-  getCompetenceMatrix,
-  getVeilles,
-  getCertifications,
-  getDocCategories,
-  getDocumentations,
-  getAllDocumentationsAdmin
-};
 
 /**
  * Fetch documentations
@@ -299,10 +286,5 @@ window.portfolioAPI = {
   getCertifications,
   getDocCategories,
   getDocumentations,
-  getAllDocumentationsAdmin,
-  getProjectBySlug,
-  getCompetences,
-  getCompetenceMatrix,
-  getVeilles,
-  getCertifications,
+  getAllDocumentationsAdmin
 };
