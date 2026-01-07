@@ -4,9 +4,6 @@
  */
 
 function getHeaderHTML() {
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    const showAdmin = currentPage === 'projets.html' || currentPage === 'projets';
-
     return `
     <div class="container site-header__inner">
         <a href="/index.html" class="logo">Lilian<span>.</span></a>
@@ -18,7 +15,6 @@ function getHeaderHTML() {
                 <li><a href="/veille.html" class="nav-link">Veille</a></li>
                 <li><a href="/certifications.html" class="nav-link">Certifications</a></li>
                 <li><a href="/documentation.html" class="nav-link">Documentation</a></li>
-                ${showAdmin ? '<li><a href="/admin-login.html" class="nav-link" style="opacity: 0.5" title="Administration">🔐 Admin</a></li>' : ''}
                 <li><a href="mailto:lpeyr.ledantec@gmail.com" class="button button--primary" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">Me contacter</a></li>
             </ul>
         </nav>
@@ -29,9 +25,10 @@ function getHeaderHTML() {
 const FOOTER_HTML = `
     <div class="container site-footer__inner">
         <p>© 2025 Lilian Peyr — Portfolio BTS SIO SISR</p>
-        <div class="hero__actions" style="margin: 0; gap: 1rem;">
+        <div class="hero__actions" style="margin: 0; gap: 1rem; align-items: center;">
             <a href="mailto:lpeyr.ledantec@gmail.com" class="nav-link">Contact</a>
             <a href="https://www.linkedin.com/in/lilian-peyr/" target="_blank" class="nav-link">LinkedIn</a>
+            <a href="/admin-login.html" class="nav-link" style="opacity: 0.5; font-size: 0.8rem;" title="Administration">🔐 Admin</a>
         </div>
     </div>
 `;
