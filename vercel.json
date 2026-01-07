@@ -33,5 +33,11 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/doc/:slug",
+      "destination": "/documentation.html"
+    }
   ]
 }

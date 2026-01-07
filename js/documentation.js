@@ -8,9 +8,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const categoriesContainer = document.getElementById('doc-categories');
     const contentContainer = document.getElementById('doc-container');
 
-    // Check URL params for deep linking
+    // Check URL params for deep linking (Rewrite Support)
     const urlParams = new URLSearchParams(window.location.search);
-    const docSlug = urlParams.get('doc');
+    const pathSlug = window.location.pathname.match(/\/doc\/([^/]+)/);
+    const docSlug = (pathSlug && pathSlug[1]) || urlParams.get('doc');
     const catSlug = urlParams.get('category');
 
     try {
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (doc) {
                 renderDocDetail(doc);
             } else {
-                contentContainer.innerHTML = '<div class="card"><p>Article non trouvé.</p><button class="button button--ghost" onclick="resetView()">Retour</button></div>';
+                contentContainer.innerHTML = '<div class="card"><p>Article non trouvé.</p><a href="/documentation.html" class="button button--ghost" onclick="event.preventDefault(); resetView()">Retour</a></div>';
             }
         } else {
             renderDocList(docs);
@@ -77,8 +78,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Update Side UI
         document.querySelectorAll('.doc-cat-btn').forEach(btn => btn.classList.remove('active'));
-        // Re-render categories to set active class properly or just toggle class
-        // Simpler: Just filter list
+        // We re-render logic handled by class check above if re-rendered, but here we just update list
         
         const filtered = catId 
             ? allDocs.filter(d => d.category_id === catId)
@@ -89,8 +89,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Clear search
         searchInput.value = '';
         
-        // Update URL (optional)
+        // Update URL
         const url = new URL(window.location);
+        url.pathname = '/documentation.html'; // Reset path if deep linked
         url.searchParams.delete('doc');
         if(catId) url.searchParams.set('category', catId);
         else url.searchParams.delete('category');
@@ -99,9 +100,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     window.resetView = () => {
         const url = new URL(window.location);
+        url.pathname = '/documentation.html';
         url.searchParams.delete('doc');
         window.history.pushState({}, '', url);
         renderDocList(allDocs);
+        document.title = "Documentation technique — Portfolio Lilian Peyr";
     }
 
     function renderDocList(docs) {
@@ -113,7 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         contentContainer.innerHTML = `
             <div class="grid grid-2">
                 ${docs.map(doc => `
-                    <article class="card" onclick="viewDoc('${doc.slug}')" style="cursor: pointer; transition: transform 0.2s;">
+                    <a href="/doc/${doc.slug}" class="card" onclick="handleDocLink(event, '${doc.slug}')" style="display:block; text-decoration:none; color:inherit; transition: transform 0.2s;">
                         <div style="margin-bottom: 0.5rem;">
                             <span class="badge">${doc.doc_categories ? doc.doc_categories.name : 'Général'}</span>
                         </div>
@@ -122,20 +125,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                             ${(doc.excerpt || doc.content || '').substring(0, 150)}...
                         </p>
                         <span class="button button--ghost" style="margin-top: 1rem; font-size: 0.85rem;">Lire l'article →</span>
-                    </article>
+                    </a>
                 `).join('')}
             </div>
         `;
     }
+
+    window.handleDocLink = (e, slug) => {
+        // Allow open in new tab
+        if (e.metaKey || e.ctrlKey) return;
+        e.preventDefault();
+        viewDoc(slug);
+    };
 
     window.viewDoc = (slug) => {
         const doc = allDocs.find(d => d.slug === slug);
         if (!doc) return;
         
         // Update URL
-        const url = new URL(window.location);
-        url.searchParams.set('doc', slug);
-        window.history.pushState({}, '', url);
+        window.history.pushState({}, '', `/doc/${slug}`);
 
         renderDocDetail(doc);
     };
@@ -143,6 +151,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderDocDetail(doc) {
         // Parse Markdown
         const htmlContent = marked.parse(doc.content || '');
+
+        // SEO Update
+        document.title = `${doc.title} — Documentation`;
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if(metaDesc) metaDesc.content = doc.excerpt || `Documentation pour ${doc.title}`;
 
         contentContainer.innerHTML = `
             <article class="card" style="max-width: 100%;">
