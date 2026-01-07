@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (docSlug) {
             const doc = docs.find(d => d.slug === docSlug);
             if (doc) {
+                toggleLayout(true);
                 renderDocDetail(doc);
             } else {
                 contentContainer.innerHTML = '<div class="card"><p>Article non trouvé.</p><a href="/documentation.html" class="button button--ghost" onclick="event.preventDefault(); resetView()">Retour</a></div>';
@@ -103,11 +104,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         url.pathname = '/documentation.html';
         url.searchParams.delete('doc');
         window.history.pushState({}, '', url);
+        toggleLayout(false); // Show sidebar
         renderDocList(allDocs);
         document.title = "Documentation technique — Portfolio Lilian Peyr";
     }
 
+    function toggleLayout(isDetail) {
+        const grid = contentContainer.parentElement;
+        const sidebar = categoriesContainer.closest('aside');
+        const search = document.getElementById('doc-search').closest('.card');
+
+        if (isDetail) {
+            search.style.display = 'none';
+            sidebar.style.display = 'none';
+            grid.style.display = 'block'; // Full width
+        } else {
+            search.style.display = 'block';
+            sidebar.style.display = 'block';
+            grid.style.display = 'grid'; // Restore grid
+        }
+    }
+
     function renderDocList(docs) {
+        // Ensure layout is correct if entering directly
+        toggleLayout(false);
+        
         if (docs.length === 0) {
             contentContainer.innerHTML = '<div class="card"><p>Aucun article disponible.</p></div>';
             return;
@@ -144,7 +165,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Update URL
         window.history.pushState({}, '', `/doc/${slug}`);
-
+        
+        toggleLayout(true); // Hide sidebar
         renderDocDetail(doc);
     };
 
