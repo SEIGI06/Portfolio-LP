@@ -9,16 +9,16 @@ function getHeaderHTML() {
 
     return `
     <div class="container site-header__inner">
-        <a href="index.html" class="logo">Lilian<span>.</span></a>
+        <a href="/index.html" class="logo">Lilian<span>.</span></a>
         <nav>
             <ul class="nav-list">
-                <li><a href="index.html" class="nav-link">Accueil</a></li>
-                <li><a href="parcours.html" class="nav-link">Parcours</a></li>
-                <li><a href="projets.html" class="nav-link">Projets</a></li>
-                <li><a href="veille.html" class="nav-link">Veille</a></li>
-                <li><a href="certifications.html" class="nav-link">Certifications</a></li>
-                <li><a href="documentation.html" class="nav-link">Documentation</a></li>
-                ${showAdmin ? '<li><a href="admin-login.html" class="nav-link" style="opacity: 0.5" title="Administration">🔐 Admin</a></li>' : ''}
+                <li><a href="/index.html" class="nav-link">Accueil</a></li>
+                <li><a href="/parcours.html" class="nav-link">Parcours</a></li>
+                <li><a href="/projets.html" class="nav-link">Projets</a></li>
+                <li><a href="/veille.html" class="nav-link">Veille</a></li>
+                <li><a href="/certifications.html" class="nav-link">Certifications</a></li>
+                <li><a href="/documentation.html" class="nav-link">Documentation</a></li>
+                ${showAdmin ? '<li><a href="/admin-login.html" class="nav-link" style="opacity: 0.5" title="Administration">🔐 Admin</a></li>' : ''}
                 <li><a href="mailto:lpeyr.ledantec@gmail.com" class="button button--primary" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">Me contacter</a></li>
             </ul>
         </nav>
