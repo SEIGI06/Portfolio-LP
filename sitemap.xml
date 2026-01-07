@@ -2,37 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://portfolio-lp-zeta.vercel.app/</loc>
-        <lastmod>2026-01-04</lastmod>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>https://portfolio-lp-zeta.vercel.app/parcours.html</loc>
-        <lastmod>2026-01-02</lastmod>
+        <loc>https://portfolio-lp-zeta.vercel.app/parcours</loc>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>quarterly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://portfolio-lp-zeta.vercel.app/projets.html</loc>
-        <lastmod>2026-01-04</lastmod>
+        <loc>https://portfolio-lp-zeta.vercel.app/projets</loc>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://portfolio-lp-zeta.vercel.app/projet.html</loc>
-        <lastmod>2026-01-04</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://portfolio-lp-zeta.vercel.app/certifications.html</loc>
-        <lastmod>2026-01-04</lastmod>
+        <loc>https://portfolio-lp-zeta.vercel.app/certifications</loc>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>quarterly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://portfolio-lp-zeta.vercel.app/documentation.html</loc>
-        <lastmod>2026-01-04</lastmod>
+        <loc>https://portfolio-lp-zeta.vercel.app/veille</loc>
+        <lastmod>2026-01-07</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://portfolio-lp-zeta.vercel.app/documentation</loc>
+        <lastmod>2026-01-07</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>

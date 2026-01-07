@@ -39,5 +39,6 @@
       "source": "/doc/:slug",
       "destination": "/documentation.html"
     }
-  ]
+  ],
+  "cleanUrls": true
 }
