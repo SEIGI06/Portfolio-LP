@@ -9,7 +9,7 @@
     <url>
         <loc>https://seigi-tech.fr/parcours</loc>
         <lastmod>2026-01-07</lastmod>
-        <changefreq>quarterly</changefreq>
+        <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
@@ -21,7 +21,7 @@
     <url>
         <loc>https://seigi-tech.fr/certifications</loc>
         <lastmod>2026-01-07</lastmod>
-        <changefreq>quarterly</changefreq>
+        <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
