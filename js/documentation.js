@@ -175,9 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const htmlContent = marked.parse(doc.content || '');
 
         // SEO Update
-        document.title = `${doc.title} — Documentation`;
-        const metaDesc = document.querySelector('meta[name="description"]');
-        if(metaDesc) metaDesc.content = doc.excerpt || `Documentation pour ${doc.title}`;
+        updateSEO(doc);
 
         contentContainer.innerHTML = `
             <article class="card" style="max-width: 100%;">
@@ -202,5 +200,63 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateSEO(doc) {
+        // 1. Basic Meta (document.title is already handled, but good to ensure)
+        document.title = `${doc.title} — Documentation`;
+
+        // 2. Meta Description
+        let metaDesc = document.querySelector('meta[name="description"]');
+        if (!metaDesc) {
+             metaDesc = document.createElement('meta');
+             metaDesc.name = "description";
+             document.head.appendChild(metaDesc);
+        }
+        metaDesc.content = (doc.excerpt || doc.content || '').substring(0, 160).replace(/\n/g, ' ');
+
+        // 3. Open Graph (Social)
+        const ogTitle = document.querySelector('meta[property="og:title"]');
+        if(ogTitle) ogTitle.content = doc.title;
+
+        const ogDesc = document.querySelector('meta[property="og:description"]');
+        if(ogDesc) ogDesc.content = (doc.excerpt || doc.content || '').substring(0, 160).replace(/\n/g, ' ');
+
+        const ogUrl = document.querySelector('meta[property="og:url"]');
+        if(ogUrl) ogUrl.content = `https://seigi-tech.fr/doc/${doc.slug}`;
+
+        // 4. JSON-LD (Google Rich Snippets)
+        let script = document.getElementById('json-ld-article');
+        if (!script) {
+            script = document.createElement('script');
+            script.id = 'json-ld-article';
+            script.type = 'application/ld+json';
+            document.head.appendChild(script);
+        }
+
+        const schema = {
+            "@context": "https://schema.org",
+            "@type": "TechArticle",
+            "headline": doc.title,
+            "description": (doc.excerpt || doc.content || '').substring(0, 160).replace(/\n/g, ' '),
+            "author": {
+                "@type": "Person",
+                "name": "Lilian Peyr",
+                "url": "https://seigi-tech.fr"
+            },
+            "datePublished": doc.created_at,
+            "dateModified": doc.updated_at || doc.created_at,
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": `https://seigi-tech.fr/doc/${doc.slug}`
+            },
+            "publisher": {
+                "@type": "Person",
+                "name": "Lilian Peyr",
+                "url": "https://seigi-tech.fr"
+            }
+        };
+
+        script.textContent = JSON.stringify(schema, null, 2);
     }
 });
