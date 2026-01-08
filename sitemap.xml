@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>https://portfolio-lp-zeta.vercel.app/</loc>
+        <loc>https://seigi-tech.fr/</loc>
         <lastmod>2026-01-07</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>https://portfolio-lp-zeta.vercel.app/parcours</loc>
+        <loc>https://seigi-tech.fr/parcours</loc>
         <lastmod>2026-01-07</lastmod>
         <changefreq>quarterly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://portfolio-lp-zeta.vercel.app/projets</loc>
+        <loc>https://seigi-tech.fr/projets</loc>
         <lastmod>2026-01-07</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://portfolio-lp-zeta.vercel.app/certifications</loc>
+        <loc>https://seigi-tech.fr/certifications</loc>
         <lastmod>2026-01-07</lastmod>
         <changefreq>quarterly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://portfolio-lp-zeta.vercel.app/veille</loc>
+        <loc>https://seigi-tech.fr/veille</loc>
         <lastmod>2026-01-07</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://portfolio-lp-zeta.vercel.app/documentation</loc>
+        <loc>https://seigi-tech.fr/documentation</loc>
         <lastmod>2026-01-07</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>

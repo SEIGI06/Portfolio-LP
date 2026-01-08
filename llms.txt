@@ -18,6 +18,6 @@ Lilian Peyr est un étudiant en informatique, spécialisé en Cybersécurité et
 Je recherche des opportunités dans l'administration système et réseaux, avec une forte composante en cybersécurité. Je suis particulièrement intéressé par l'automatisation et les architectures cloud.
 
 ## Contact
-- **Site Web** : https://portfolio-lp-zeta.vercel.app/
+- **Site Web** : https://seigi-tech.fr/
 - **LinkedIn** : https://www.linkedin.com/in/lilian-peyr/
 - **Email** : lpeyr.ledantec@gmail.com

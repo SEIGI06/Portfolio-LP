@@ -9,6 +9,7 @@
 - **Backend/DB**: Supabase (PostgreSQL + Auth + Storage).
 - **Hosting**: Vercel (Automatic deployments via GitHub).
 - **URL Strategy**: SPA-like feel with URL Rewriting for SEO-friendly links (e.g., `/doc/my-slug`).
+- **Production URL**: `https://seigi-tech.fr`
 
 ## 2. Architecture
 
