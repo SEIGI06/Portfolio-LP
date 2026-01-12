@@ -11,8 +11,8 @@ async function loadAcademicProjects() {
     const container = document.querySelector('.grid.grid-3');
     if (!container) return;
 
-    // Show loading state
-    container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">Chargement des projets...</p>';
+    // Show loading state - COMMENTED OUT FOR SEO (LCP)
+    // container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--color-text-muted);">Chargement des projets...</p>';
 
     try {
         const projects = await window.portfolioAPI.getProjects('academic');
