@@ -182,7 +182,9 @@ function showModalImage() {
     const currentImage = images[currentImageIndex];
 
     // Update image
-    document.getElementById('modal-image').src = currentImage.image_url;
+    const modalImg = document.getElementById('modal-image');
+    modalImg.src = currentImage.image_url;
+    modalImg.alt = currentImage.caption || currentCertification.title; // SEO/Accessibilité
     
     // Update caption
     const caption = currentImage.caption || currentCertification.title;
