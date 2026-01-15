@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://seigi-tech.fr/sitemap.xml
+Sitemap: https://www.seigi-tech.fr/sitemap.xml
