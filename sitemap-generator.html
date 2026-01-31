@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sitemap Generator - Portfolio Lilian Peyr</title>
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/supabase-client.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #eee;
+        }
+        h1 { color: #00d9ff; }
+        .btn {
+            background: #00d9ff;
+            color: #000;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        .btn:hover { background: #00b8d9; }
+        .output {
+            background: #0f0f23;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        .output pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #a8ff60;
+        }
+        .status {
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .status.success { background: #28a745; color: white; }
+        .status.error { background: #dc3545; color: white; }
+        .status.info { background: #17a2b8; color: white; }
+    </style>
+</head>
+<body>
+    <h1>🗺️ Générateur de Sitemap Dynamique</h1>
+    <p>Cet outil génère un sitemap XML incluant toutes les pages statiques ET les articles de documentation dynamiques.</p>
+    
+    <button class="btn" onclick="generateSitemap()">🚀 Générer le Sitemap</button>
+    <button class="btn" onclick="copySitemap()" style="background: #6c757d;">📋 Copier le XML</button>
+    
+    <div id="status"></div>
+    <div class="output" id="output" style="display: none;">
+        <pre id="sitemap-content"></pre>
+    </div>
+
+    <script>
+        let generatedXML = '';
+
+        async function generateSitemap() {
+            const statusDiv = document.getElementById('status');
+            const outputDiv = document.getElementById('output');
+            const contentDiv = document.getElementById('sitemap-content');
+
+            try {
+                statusDiv.innerHTML = '<div class="status info">⏳ Chargement des articles depuis Supabase...</div>';
+
+                // Fetch published documentation articles
+                const docs = await window.portfolioAPI.getDocumentations();
+                
+                statusDiv.innerHTML = `<div class="status success">✅ ${docs.length} articles trouvés !</div>`;
+
+                // Build XML
+                const today = new Date().toISOString().split('T')[0];
+                
+                let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Static Pages -->
+    <url>
+        <loc>https://www.seigi-tech.fr/</loc>
+        <lastmod>${today}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://www.seigi-tech.fr/parcours</loc>
+        <lastmod>${today}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://www.seigi-tech.fr/projets</loc>
+        <lastmod>${today}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://www.seigi-tech.fr/certifications</loc>
+        <lastmod>${today}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://www.seigi-tech.fr/veille</loc>
+        <lastmod>${today}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://www.seigi-tech.fr/documentation</loc>
+        <lastmod>${today}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <!-- Dynamic Documentation Articles -->\n`;
+
+                // Add each documentation article
+                docs.forEach(doc => {
+                    const lastmod = doc.updated_at || doc.created_at;
+                    const formattedDate = new Date(lastmod).toISOString().split('T')[0];
+                    
+                    xml += `    <url>
+        <loc>https://www.seigi-tech.fr/doc/${doc.slug}</loc>
+        <lastmod>${formattedDate}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>\n`;
+                });
+
+                xml += `</urlset>`;
+
+                generatedXML = xml;
+                contentDiv.textContent = xml;
+                outputDiv.style.display = 'block';
+
+                statusDiv.innerHTML = `<div class="status success">
+                    ✅ Sitemap généré avec succès !<br>
+                    📊 Total: ${docs.length + 6} URLs (6 pages statiques + ${docs.length} articles)
+                </div>`;
+
+            } catch (error) {
+                console.error(error);
+                statusDiv.innerHTML = `<div class="status error">❌ Erreur: ${error.message}</div>`;
+            }
+        }
+
+        function copySitemap() {
+            if (!generatedXML) {
+                alert('⚠️ Veuillez d\'abord générer le sitemap !');
+                return;
+            }
+
+            navigator.clipboard.writeText(generatedXML).then(() => {
+                alert('✅ Sitemap copié dans le presse-papiers !');
+            }).catch(err => {
+                alert('❌ Erreur lors de la copie: ' + err);
+            });
+        }
+
+        // Auto-generate on load
+        window.addEventListener('DOMContentLoaded', generateSitemap);
+    </script>
+</body>
+</html>

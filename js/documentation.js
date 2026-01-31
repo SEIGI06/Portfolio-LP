@@ -223,9 +223,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         if(ogDesc) ogDesc.content = (doc.excerpt || doc.content || '').substring(0, 160).replace(/\n/g, ' ');
 
         const ogUrl = document.querySelector('meta[property="og:url"]');
-        if(ogUrl) ogUrl.content = `https://seigi-tech.fr/doc/${doc.slug}`;
+        if(ogUrl) ogUrl.content = `https://www.seigi-tech.fr/doc/${doc.slug}`;
 
-        // 4. JSON-LD (Google Rich Snippets)
+        // 4. Canonical URL (Critical for SEO)
+        let canonical = document.querySelector('link[rel="canonical"]');
+        if (!canonical) {
+            canonical = document.createElement('link');
+            canonical.rel = 'canonical';
+            document.head.appendChild(canonical);
+        }
+        canonical.href = `https://www.seigi-tech.fr/doc/${doc.slug}`;
+
+        // 5. JSON-LD (Google Rich Snippets)
         let script = document.getElementById('json-ld-article');
         if (!script) {
             script = document.createElement('script');
@@ -242,18 +251,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             "author": {
                 "@type": "Person",
                 "name": "Lilian Peyr",
-                "url": "https://seigi-tech.fr"
+                "url": "https://www.seigi-tech.fr"
             },
             "datePublished": doc.created_at,
             "dateModified": doc.updated_at || doc.created_at,
             "mainEntityOfPage": {
                 "@type": "WebPage",
-                "@id": `https://seigi-tech.fr/doc/${doc.slug}`
+                "@id": `https://www.seigi-tech.fr/doc/${doc.slug}`
             },
             "publisher": {
                 "@type": "Person",
                 "name": "Lilian Peyr",
-                "url": "https://seigi-tech.fr"
+                "url": "https://www.seigi-tech.fr"
             }
         };
 

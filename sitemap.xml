@@ -2,38 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://www.seigi-tech.fr/</loc>
-        <lastmod>2026-01-07</lastmod>
+        <lastmod>2026-01-25</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
         <loc>https://www.seigi-tech.fr/parcours</loc>
-        <lastmod>2026-01-07</lastmod>
+        <lastmod>2026-01-25</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://www.seigi-tech.fr/projets</loc>
-        <lastmod>2026-01-07</lastmod>
+        <lastmod>2026-01-25</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://www.seigi-tech.fr/certifications</loc>
-        <lastmod>2026-01-07</lastmod>
+        <lastmod>2026-01-25</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
         <loc>https://www.seigi-tech.fr/veille</loc>
-        <lastmod>2026-01-07</lastmod>
+        <lastmod>2026-01-25</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
         <loc>https://www.seigi-tech.fr/documentation</loc>
-        <lastmod>2026-01-07</lastmod>
-        <changefreq>monthly</changefreq>
+        <lastmod>2026-01-25</lastmod>
+        <changefreq>weekly</changefreq>
         <priority>0.6</priority>
     </url>
 </urlset>
