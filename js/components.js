@@ -6,10 +6,10 @@
 function getHeaderHTML() {
     return `
     <div class="container site-header__inner">
-        <a href="/index.html" class="logo">Lilian<span>.</span></a>
+        <a href="/" class="logo">Lilian<span>.</span></a>
         <nav>
             <ul class="nav-list">
-                <li><a href="/index.html" class="nav-link">Accueil</a></li>
+                <li><a href="/" class="nav-link">Accueil</a></li>
                 <li><a href="/parcours.html" class="nav-link">Parcours</a></li>
                 <li><a href="/projets.html" class="nav-link">Projets</a></li>
                 <li><a href="/veille.html" class="nav-link">Veille</a></li>
