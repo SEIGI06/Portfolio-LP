@@ -1,0 +1,23 @@
+# Lilian Peyr - Portfolio et Profil Technique
+
+## Qui je suis
+Lilian Peyr est un étudiant en informatique, spécialisé en Cybersécurité et Administration Réseaux (BTS SIO option SISR) au lycée Félix Le Dantec. Passionné par l'infrastructure IT, la sécurisation des systèmes et le développement web moderne.
+
+## Compétences Clés
+- **Réseaux & Infrastructure** : Cisco (CCNA), VLANs, Routage, Firewalling.
+- **Systèmes** : Administration Linux (Debian/Ubuntu), Windows Server (AD, DNS, DHCP).
+- **Cybersécurité** : Durcissement (Hardening), Veille technologique, RLS (Row Level Security).
+- **Développement** : HTML5, CSS3 (Glassmorphism), JavaScript (Vanilla), Supabase (PostgreSQL), Vercel.
+
+## Projets Principaux
+1. **Portfolio Personnel** : Site vitrine statique haute performance, sécurisé (HSTS, CSP strict) et optimisé SEO.
+2. **Lilabs** : Blog dédié à l'IA, l'investissement et la tech.
+3. **Projets Académiques** : Mises en situation professionnelle sur des architectures réseaux complexes.
+
+## Objectifs Professionnels
+Je recherche des opportunités dans l'administration système et réseaux, avec une forte composante en cybersécurité. Je suis particulièrement intéressé par l'automatisation et les architectures cloud.
+
+## Contact
+- **Site Web** : https://seigi-tech.fr/
+- **LinkedIn** : https://www.linkedin.com/in/lilian-peyr/
+- **Email** : lpeyr.ledantec@gmail.com

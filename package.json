@@ -4,12 +4,13 @@
   "description": "Portfolio Lilian Peyr",
   "main": "index.html",
   "scripts": {
-    "build": "node scripts/generate-sitemap.js",
+    "build": "node scripts/build.js",
     "prebuild": "npm install"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
-    "xml2js": "^0.6.2"
+    "xml2js": "^0.6.2",
+    "ncp": "^2.0.0"
   },
   "author": "Lilian Peyr",
   "license": "ISC"

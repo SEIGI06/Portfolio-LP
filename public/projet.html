@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Détails du projet">
+    <meta name="author" content="Lilian Peyr">
+    <title>Projet - Portfolio Lilian Peyr</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+    <link rel="manifest" href="/assets/images/site.webmanifest">
+    <link rel="canonical" href="https://www.seigi-tech.fr/projet" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/components.js" defer></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/load-projects.js" defer></script>
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+
+    <noscript>
+        <div style="padding: 1rem; background: #ff4757; color: white; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 9999;">
+            ⚠️ Ce site nécessite JavaScript pour afficher les détails du projet. Veuillez l'activer dans votre navigateur.
+        </div>
+    </noscript>
+
+    <header class="site-header" id="main-header"></header>
+
+    <main id="main-content">
+        <!-- Content will be dynamically loaded from Supabase -->
+        <section class="section">
+            <div class="container">
+                <p style="text-align: center; color: var(--color-text-muted); padding: var(--space-xl);">
+                    Chargement du projet...
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer" id="main-footer"></footer>
+</body>
+</html>

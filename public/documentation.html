@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="Documentation technique du portfolio de Lilian Peyr : architecture, conventions de code et bonnes pratiques de contribution.">
+    <meta name="author" content="Lilian Peyr">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+    <link rel="manifest" href="/assets/images/site.webmanifest">
+    <link rel="canonical" href="https://www.seigi-tech.fr/documentation" />
+    <title>Documentation technique | Lilian Peyr</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/components.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/js/components.js" defer></script>
+    <script src="/js/supabase-client.js" defer></script>
+    <script src="/js/documentation.js" defer></script> <!-- New file -->
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+
+    <header class="site-header" id="main-header"></header>
+
+    <main id="main-content">
+        <section class="section">
+            <div class="container">
+                <div class="fade-in-up">
+                    <span class="section__eyebrow" style="color: var(--color-primary);">Ressources</span>
+                    <h1 class="section__title">Documentation Technique</h1>
+                    <p class="section__intro">
+                        Guides, tutoriels et références techniques pour l'administration système et réseau.
+                    </p>
+                </div>
+
+                <!-- Documentation Interface -->
+                <div id="doc-app" style="margin-top: var(--space-xl);">
+                    
+                    <!-- Search & Filter Bar -->
+                    <div class="card" style="margin-bottom: 2rem; padding: 1rem;">
+                        <input type="text" id="doc-search" class="form-input" placeholder="🔍 Rechercher un article..." 
+                            style="width: 100%; font-size: 1.1rem; padding: 1rem;">
+                    </div>
+
+                    <!-- Layout: Sidebar + Content -->
+                    <div style="display: grid; grid-template-columns: 280px 1fr; gap: 2rem; align-items: start;">
+                        
+                        <!-- Sidebar (Categories) -->
+                        <aside class="card" style="padding: 1.5rem; position: sticky; top: 100px;">
+                            <h3 style="margin-bottom: 1rem; color: var(--color-primary); font-size: 1.1rem;">Catégories</h3>
+                            <div id="doc-categories" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <!-- Injected via JS -->
+                                <p class="loading">Chargement...</p>
+                            </div>
+                        </aside>
+
+                        <!-- Main Content (List or Article) -->
+                        <div id="doc-container" style="min-height: 500px;">
+                            <!-- Injected via JS -->
+                            <p class="loading" style="text-align: center;">Chargement des articles...</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer" id="main-footer"></footer>
+</body>
+
+</html>

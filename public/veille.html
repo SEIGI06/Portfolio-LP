@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Veille Technologique et Informatique de Lilian Peyr. Actualités Cyber, Dev, Cloud et Hardware.">
+    <title>Veille Technologique — Lilian Peyr</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+    <link rel="manifest" href="/assets/images/site.webmanifest">
+    <link rel="canonical" href="https://www.seigi-tech.fr/veille" />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <style>
+        /* Specific Styles for Veille */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+            position: relative;
+        }
+
+        .marquee-content {
+            display: inline-flex;
+            gap: 2rem;
+            animation: marquee 30s linear infinite;
+            padding-left: 100%; /* Start from right */
+        }
+
+        .marquee-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-surface-glass);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--color-border);
+            color: var(--color-text);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .marquee-item:hover {
+            border-color: var(--color-primary);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .marquee-item img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--color-border);
+            color: var(--color-text-muted);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            color: var(--color-primary);
+            border-color: var(--color-primary);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .veille-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .veille-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .veille-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: var(--radius-lg);
+            margin-bottom: 1rem;
+            background: rgba(0,0,0,0.2);
+        }
+    </style>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/components.js" defer></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/veilles.js" defer></script>
+</head>
+
+<body>
+    <header class="site-header" id="main-header"></header>
+
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero" style="min-height: 40vh;">
+            <div class="container hero__content fade-in-up">
+                <span class="badge">BTS SIO • SISR</span>
+                <h1>
+                    Ma <span class="text-gradient">Veille Technologique</span>
+                </h1>
+                <p>
+                    Suivi quotidien des actualités informatiques : Cybersécurité, Développement, Hardware et Cloud.
+                </p>
+            </div>
+        </section>
+
+        <!-- YouTube/News Ticker -->
+        <div class="marquee-container" id="news-ticker">
+            <div class="marquee-content" id="ticker-content">
+                <!-- Items will be injected here via JS -->
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <section class="container" style="padding-bottom: 4rem;">
+            <!-- Filters -->
+            <div class="filters fade-in-up" id="veille-filters">
+                <button class="filter-btn active" data-filter="all">Tout</button>
+                <button class="filter-btn" data-filter="Cyber">Cybersécurité</button>
+                <button class="filter-btn" data-filter="Dev">Développement</button>
+                <button class="filter-btn" data-filter="Cloud">Cloud/Réseau</button>
+                <button class="filter-btn" data-filter="Hardware">Hardware</button>
+            </div>
+
+            <!-- Grid -->
+            <div class="veille-grid" id="veille-grid" style="min-height: 200px; margin-bottom: 4rem;">
+                <!-- Veille cards will be injected here -->
+                <div class="card" style="text-align: center; grid-column: 1/-1; padding: 4rem;">
+                    <p>Chargement des actualités...</p>
+                </div>
+            </div>
+
+            <!-- Sources & Outils Section -->
+            <div class="fade-in-up" style="border-top: 1px solid var(--color-border); padding-top: 4rem;">
+                <h2 style="text-align: center; margin-bottom: 3rem;">Mes Sources & <span class="text-gradient">Outils</span></h2>
+                
+                <div class="grid-2">
+                    <!-- Sources -->
+                    <div>
+                        <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            📡 Sources d'information
+                        </h3>
+                        <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                            <a href="https://www.cert.ssi.gouv.fr/" target="_blank" class="card" style="padding: 1rem; flex: 1; min-width: 140px; text-align: center; text-decoration: none;">
+                                <strong>CERT-FR</strong>
+                                <p style="font-size: 0.8rem; margin: 0; color: var(--color-text-muted);">Alerte Cyber</p>
+                            </a>
+                            <a href="https://www.lemondeinformatique.fr/" target="_blank" class="card" style="padding: 1rem; flex: 1; min-width: 140px; text-align: center; text-decoration: none;">
+                                <strong>LMI</strong>
+                                <p style="font-size: 0.8rem; margin: 0; color: var(--color-text-muted);">Actu IT Pro</p>
+                            </a>
+                            <a href="https://thehackernews.com/" target="_blank" class="card" style="padding: 1rem; flex: 1; min-width: 140px; text-align: center; text-decoration: none;">
+                                <strong>Hacker News</strong>
+                                <p style="font-size: 0.8rem; margin: 0; color: var(--color-text-muted);">Cyber Int.</p>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Outils -->
+                    <div>
+                        <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            🛠️ Outils de Veille
+                        </h3>
+                        <div class="card" style="padding: 1.5rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <div style="background: #2bb24c; color: white; padding: 0.5rem; border-radius: 8px; font-weight: bold;">Feedly</div>
+                                <div>
+                                    <h4 style="margin: 0; font-size: 1rem;">Agrégateur RSS</h4>
+                                    <p style="margin: 0; font-size: 0.8rem;">Centralisation des flux</p>
+                                </div>
+                            </div>
+                            <p style="font-size: 0.9rem; margin: 0;">
+                                J'utilise Feedly quotidiennement pour centraliser plus de <strong>15 flux RSS</strong> différents et filtrer l'information pertinente efficacement.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer" id="main-footer"></footer>
+</body>
+</html>

@@ -1,0 +1,55 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+@context BTS SIO SISR - Cybersécurité
+@target GitHub Pages
+- Prioriser l'accessibilité WCAG 2.2
+- Utiliser Flexbox/Grid pour le responsive
+- Éviter les frameworks CSS externes
+- Optimiser les images (max 500KB)
+- Valider le HTML/CSS via W3C
+Développe du code HTML, CSS et JavaScript pour un portfolio professionnel hébergé sur GitHub Pages.
+
+**Style et Structure de Code**
+- Écris du code HTML5 sémantique et accessible
+- Utilise CSS moderne avec Flexbox et Grid
+- Privilégie les conventions SISR/cybersécurité pour les projets
+- Structure claire : header, navigation, sections de contenu, footer
+
+**Conventions de nommage**
+- Classes CSS en kebab-case (ex: project-card, skill-item)
+- IDs significatifs pour la navigation
+- Noms de fichiers en minuscules avec tirets
+
+**Optimisation GitHub Pages**
+- Code optimisé pour les sites statiques
+- Images compressées et au format web (WebP, AVIF si supporté)
+- CSS et JS minifiés en production
+- Fichiers séparés pour faciliter la maintenance
+- Utiliser des URLs absolues avec HTTPS pour les ressources externes et les balises meta.
+
+**Performance et Accessibilité**
+- Lazy loading pour les images
+- Attributs alt descriptifs obligatoires
+- Contraste minimum 4.5:1
+- Navigation au clavier fonctionnelle
+- Meta tags pour SEO optimisés
+
+**Structure de projet BTS SIO SISR**
+- Section projets avec détails techniques
+- Certifications clairement mises en valeur
+- Compétences cybersécurité et réseaux prominentes
+
+### Qualité du Code
+
+- Approche Mobile-First : Concevoir et développer pour les appareils mobiles en priorité.
+- Compatibilité Navigateur : S'assurer du bon fonctionnement sur les principaux navigateurs.
+- Favoriser la collaboration et le partage des connaissances.
+
+### Commandes Utiles
+
+- Pour déployer la documentation MkDocs sur GitHub Pages :
+  `python -m mkdocs gh-deploy`
+

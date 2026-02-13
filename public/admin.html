@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Administration des projets du portfolio"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Admin - Portfolio Lilian Peyr</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+    <link rel="manifest" href="/assets/images/site.webmanifest">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+
+    <style>
+      .admin-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--space-lg) var(--space-sm);
+      }
+
+      .admin-header {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-lg);
+        padding: var(--space-md) var(--space-lg);
+        margin-bottom: var(--space-lg);
+        backdrop-filter: blur(10px);
+      }
+
+      .admin-header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .projects-list {
+        display: grid;
+        gap: var(--space-sm);
+      }
+
+      .project-item {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: var(--radius-md);
+        padding: 1rem;
+        display: grid;
+        grid-template-columns: 80px 1fr auto;
+        gap: 1.5rem;
+        align-items: center;
+        transition: var(--transition);
+      }
+
+      @media (max-width: 768px) {
+        .project-item {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+        
+        .project-thumbnail {
+          width: 100% !important;
+          height: 150px !important;
+        }
+
+        .project-actions {
+          justify-content: flex-start;
+          width: 100%;
+        }
+      }
+
+      .project-item:hover {
+        border-color: rgba(59, 130, 246, 0.3);
+        background: rgba(255, 255, 255, 0.04);
+        transform: translateX(5px);
+      }
+
+      .project-thumbnail {
+        width: 80px;
+        height: 50px;
+        border-radius: var(--radius-sm);
+        object-fit: cover;
+        background: #000;
+      }
+
+      .project-info {
+        min-width: 0; /* Important pour le text-overflow */
+      }
+
+      .project-info h3 {
+        margin: 0 0 0.25rem 0;
+        font-size: 1.1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .project-info p {
+        margin: 0;
+        color: var(--color-text-muted);
+        font-size: 0.85rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.4;
+      }
+
+      .project-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-top: 0.5rem;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 0.15rem 0.6rem;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+      }
+
+      .status-published {
+        background: rgba(16, 185, 129, 0.1);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+      }
+
+      .status-draft {
+        background: rgba(251, 191, 36, 0.1);
+        color: #fbbf24;
+        border: 1px solid rgba(251, 191, 36, 0.2);
+      }
+
+      .project-actions {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .quick-action {
+        padding: 0.4rem 0.8rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--color-text);
+        cursor: pointer;
+        transition: var(--transition);
+        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        white-space: nowrap;
+      }
+
+      .quick-action:hover {
+        background: rgba(59, 130, 246, 0.1);
+        border-color: var(--color-primary);
+        color: var(--color-white);
+      }
+
+      .btn-danger:hover {
+          background: rgba(239, 68, 68, 0.2);
+          border-color: #ef4444;
+          color: #fca5a5;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: var(--space-sm);
+        margin-bottom: var(--space-lg);
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: var(--radius-md);
+        padding: 1.25rem;
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--color-primary);
+        margin-bottom: 0.1rem;
+      }
+
+      .stat-label {
+        color: var(--color-text-muted);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .loading {
+        text-align: center;
+        padding: var(--space-lg);
+        color: var(--color-text-muted);
+        font-style: italic;
+      }
+
+      /* --- Modal --- */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .modal-overlay.is-visible {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal {
+        background: #0f172a;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-lg);
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: var(--space-lg);
+        transform: translateY(20px);
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .modal-overlay.is-visible .modal {
+        transform: translateY(0);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--color-text);
+        font-weight: 500;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-sm);
+        color: var(--color-text);
+        font-family: inherit;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      textarea.form-input {
+        min-height: 100px;
+        resize: vertical;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .close-button {
+        background: none;
+        border: none;
+        color: var(--color-text-muted);
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        transition: color 0.2s;
+      }
+
+      .close-button:hover {
+        color: var(--color-text);
+      }
+
+      .badge {
+          font-size: 0.7rem;
+      }
+    </style>
+
+    <!-- Supabase Client - Load    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js"></script>
+    <script src="js/admin-api.js"></script>
+  </head>
+
+  <body>
+    <div class="admin-container">
+      <div class="admin-header">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h1>Administration du Portfolio</h1>
+            <p style="color: var(--color-text-muted); margin-top: 0.5rem">
+              <a href="/" style="color: var(--color-primary)">← Retour au portfolio</a>
+              <span style="margin: 0 0.5rem;">|</span>
+              <span id="user-email">Vérification de l'accès...</span>
+            </p>
+          </div>
+          <button onclick="window.adminAPI.logout()" class="quick-action btn-danger">
+            🚪 Déconnexion
+          </button>
+        </div>
+      </div>
+
+      <div class="stats-grid" id="stats">
+        <div class="stat-card">
+          <div class="stat-value">-</div>
+          <div class="stat-label">Projets académiques</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">-</div>
+          <div class="stat-label">Projets personnels</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">-</div>
+          <div class="stat-label">Compétences</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">-</div>
+          <div class="stat-label">Technologies</div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-md)">
+          <h2>Projets Académiques</h2>
+          <button class="quick-action" onclick="alert('Fonctionnalité en cours de développement : Formulaire d\'ajout')">
+              ➕ Nouveau Projet
+          </button>
+      </div>
+      <div class="projects-list" id="academic-projects">
+        <div class="loading">Chargement des projets...</div>
+      </div>
+
+      <h2 style="margin: var(--space-xl) 0 var(--space-md)">
+        Projets Personnels
+      </h2>
+      <div class="projects-list" id="personal-projects">
+        <div class="loading">Chargement des projets...</div>
+      </div>
+
+      <h2 style="margin: var(--space-xl) 0 var(--space-md); display: flex; justify-content: space-between; align-items: center;">
+        <span>Des Veilles Technologiques</span>
+        <button class="quick-action" onclick="openVeilleModal()">
+            ➕ Nouvelle Veille
+        </button>
+      </h2>
+      <div class="projects-list" id="veilles-list">
+        <div class="loading">Chargement des veilles...</div>
+      </div>
+
+      <h2 style="margin: var(--space-xl) 0 var(--space-md); display: flex; justify-content: space-between; align-items: center;">
+        <span>Certifications</span>
+        <button class="quick-action" onclick="openCertModal()">
+            ➕ Nouvelle Certification
+        </button>
+      </h2>
+      <div class="projects-list" id="cert-list">
+        <div class="loading">Chargement des certifications...</div>
+      </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 style="margin: 0">Éditer le projet</h2>
+          <button class="close-button" onclick="closeModal()">×</button>
+        </div>
+        <form id="editForm" onsubmit="handleEditSubmit(event)">
+          <input type="hidden" id="edit_id" name="id">
+          
+          <div class="form-group">
+            <label class="form-label" for="edit_title">Titre</label>
+            <input type="text" id="edit_title" name="title" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+             <label class="form-label" for="edit_slug">Slug (URL)</label>
+             <input type="text" id="edit_slug" name="slug" class="form-input" required>
+             <small style="color: var(--color-text-muted)">Identifiant unique pour l'URL</small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="edit_description">Description courte</label>
+            <textarea id="edit_description" name="description" class="form-input" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="edit_image_url">URL de l'image (Bannière)</label>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="text" id="edit_image_url" name="image_url" class="form-input" style="flex: 1">
+                <label class="button button--ghost" style="cursor: pointer; padding: 0.75rem;" title="Télécharger une image">
+                    📂
+                    <input type="file" onchange="handleImageUpload(event, 'edit_image_url')" accept="image/*" style="display: none;">
+                </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="edit_semester">Semestre (ex: Semestre 1)</label>
+            <input type="text" id="edit_semester" name="semester" class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="edit_order">Ordre d'affichage</label>
+            <input type="number" id="edit_order" name="order_index" class="form-input">
+          </div>
+
+          <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+            <button type="button" class="button button--ghost" onclick="closeModal()">Annuler</button>
+            <button type="submit" class="button button--primary">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Veille Modal -->
+    <div class="modal-overlay" id="veilleModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2 style="margin: 0" id="veilleModalTitle">Nouvelle Veille</h2>
+          <button class="close-button" onclick="closeVeilleModal()">×</button>
+        </div>
+        <form id="veilleForm" onsubmit="handleVeilleSubmit(event)">
+          <input type="hidden" id="v_id" name="id">
+          
+          <div class="form-group">
+            <label class="form-label" for="v_title">Titre</label>
+            <input type="text" id="v_title" name="title" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="v_category">Catégorie</label>
+            <select id="v_category" name="category" class="form-input" required style="background: rgba(255, 255, 255, 0.05); color: inherit; border: 1px solid rgba(255,255,255,0.1);">
+                <option value="Cyber">Cybersécurité</option>
+                <option value="Dev">Développement</option>
+                <option value="Cloud">Cloud/Réseau</option>
+                <option value="Hardware">Hardware</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+             <label class="form-label" for="v_url">URL de l'article</label>
+             <input type="url" id="v_url" name="url" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="v_image_url">URL Image</label>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="text" id="v_image_url" name="image_url" class="form-input" style="flex: 1">
+                <label class="button button--ghost" style="cursor: pointer; padding: 0.75rem;" title="Télécharger une image">
+                    📂
+                    <input type="file" onchange="handleImageUpload(event, 'v_image_url')" accept="image/*" style="display: none;">
+                </label>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="v_description">Description (optionnelle)</label>
+            <textarea id="v_description" name="description" class="form-input" style="min-height: 60px;"></textarea>
+          </div>
+
+          <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+            <button type="button" class="button button--ghost" onclick="closeVeilleModal()">Annuler</button>
+            <button type="submit" class="button button--primary">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Certification Modal -->
+    <div class="modal-overlay" id="certModal">
+      <div class="modal">
+        <h2 style="margin: 0" id="certModalTitle">Nouvelle Certification</h2>
+        <button class="close-button" onclick="closeCertModal()">×</button>
+        
+        <form id="certForm" onsubmit="handleCertSubmit(event)">
+          <input type="hidden" id="c_id" name="id">
+          
+          <div class="form-group">
+            <label class="form-label" for="c_title">Titre</label>
+            <input type="text" id="c_title" name="title" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="c_provider">Organisme</label>
+            <input type="text" id="c_provider" name="provider" class="form-input" value="CNIL">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="c_logo_url">URL du Logo</label>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="text" id="c_logo_url" name="logo_url" class="form-input" placeholder="https://..." style="flex: 1">
+                <label class="button button--ghost" style="cursor: pointer; padding: 0.75rem;" title="Télécharger un logo">
+                    📂
+                    <input type="file" onchange="handleImageUpload(event, 'c_logo_url')" accept="image/*" style="display: none;">
+                </label>
+            </div>
+            <small style="color: var(--color-text-muted); font-size: 0.85rem;">Logo de l'organisme (PNG/SVG transparent recommandé)</small>
+          </div>
+
+          <div class="form-group">
+             <label class="form-label" for="c_image_url">URL du Certificat (Image)</label>
+             <div style="display: flex; gap: 0.5rem; align-items: center;">
+                 <input type="text" id="c_image_url" name="image_url" class="form-input" placeholder="https://..." style="flex: 1">
+                 <label class="button button--ghost" style="cursor: pointer; padding: 0.75rem;" title="Télécharger une image">
+                     📂
+                     <input type="file" onchange="handleImageUpload(event, 'c_image_url')" accept="image/*" style="display: none;">
+                 </label>
+             </div>
+             <small style="color: var(--color-text-muted); font-size: 0.85rem;">L'image scanée de votre reçu/diplôme</small>
+          </div>
+
+          <div class="form-group">
+             <label class="form-label" for="c_pdf_url">URL du PDF Principal (optionnel)</label>
+             <div style="display: flex; gap: 0.5rem; align-items: center;">
+                 <input type="text" id="c_pdf_url" name="pdf_url" class="form-input" placeholder="https://..." style="flex: 1">
+                 <label class="button button--ghost" style="cursor: pointer; padding: 0.75rem;" title="Télécharger un PDF">
+                     📂
+                     <input type="file" onchange="handleImageUpload(event, 'c_pdf_url')" accept="application/pdf" style="display: none;">
+                 </label>
+             </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="c_description">Description (optionnelle)</label>
+            <textarea id="c_description" name="description" class="form-input" style="min-height: 60px;"></textarea>
+          </div>
+
+          <!-- Gallery Section (Edit Mode Only) -->
+          <div class="form-group" id="cert-gallery-group" style="display:none; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+            <label class="form-label">Galerie d'images additionnelles</label>
+            <div id="cert_gallery_list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 0.5rem; margin-bottom: 0.5rem;"></div>
+            <label class="button button--ghost" style="cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem;">
+                ➕ Ajouter images
+                <input type="file" multiple accept="image/*" onchange="handleCertGalleryUpload(event)" style="display: none;">
+                <span id="gallery_upload_status" style="font-size: 0.8em; color: var(--color-text-muted);"></span>
+            </label>
+          </div>
+
+          <!-- Docs Section (Edit Mode Only) -->
+          <div class="form-group" id="cert-docs-group" style="display:none; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+            <label class="form-label">Documents PDF additionnels</label>
+            <div id="cert_docs_list" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.5rem;"></div>
+            <label class="button button--ghost" style="cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem;">
+                ➕ Ajouter PDF
+                <input type="file" multiple accept="application/pdf" onchange="handleCertDocsUpload(event)" style="display: none;">
+                <span id="docs_upload_status" style="font-size: 0.8em; color: var(--color-text-muted);"></span>
+            </label>
+          </div>
+          
+          <div id="cert-save-msg" style="display:none; color: var(--color-primary); margin-bottom: 1rem; font-style: italic;">
+              Enregistrez la certification pour ajouter des fichiers additionnels.
+          </div>
+
+          <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+            <button type="button" class="button button--ghost" onclick="closeCertModal()">Annuler</button>
+            <button type="submit" class="button button--primary">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- DOCUMENTATION MANAGER -->
+    <div id="documentation-manager" class="tab-content">
+        <div class="admin-header">
+            <h1>Gestion Documentation</h1>
+            <p>Rédigez et publiez vos articles techniques.</p>
+            <button class="button button--primary" onclick="openDocModal()" style="margin-top: 1rem;">
+                + Nouvel Article
+            </button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 250px 1fr; gap: 2rem;">
+            <!-- Categories Sidebar -->
+            <div class="card" style="height: fit-content; padding: 1.5rem;">
+                <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--color-primary);">Catégories</h3>
+                
+                <div id="doc-categories-list" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+                    <!-- Categories injected here -->
+                </div>
+
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                    <input type="text" id="new-cat-name" placeholder="Nouvelle catégorie..." class="form-input" style="font-size: 0.9rem; margin-bottom: 0.5rem;">
+                    <button onclick="handleAddCategory()" class="button button--ghost" style="width: 100%; font-size: 0.85rem;">Ajouter</button>
+                </div>
+            </div>
+
+            <!-- Articles List -->
+            <div class="card" style="padding: 0;">
+                <div id="doc-list" class="projects-list">
+                    <!-- Articles injected here -->
+                    <p class="loading">Chargement...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOCUMENTATION EDITOR MODAL -->
+    <div class="modal-overlay" id="docModal">
+        <div class="modal" style="max-width: 95vw; height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="docModalTitle">Nouvel Article</h2>
+                <button class="close-button" onclick="closeDocModal()">✕</button>
+            </div>
+            
+            <form id="docForm" onsubmit="handleDocSubmit(event)" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+                <input type="hidden" id="doc_id">
+                
+                <!-- Meta controls -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr 200px; gap: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <div>
+                        <label class="form-label">Titre</label>
+                        <input type="text" id="doc_title" required class="form-input" oninput="generateSlug(this.value)">
+                    </div>
+                    <div>
+                        <label class="form-label">Slug (URL)</label>
+                        <input type="text" id="doc_slug" required class="form-input">
+                    </div>
+                    <div>
+                        <label class="form-label">Catégorie</label>
+                        <select id="doc_category" class="form-select">
+                            <option value="">Aucune</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Editor Area (Split View) -->
+                <div style="display: flex; flex: 1; min-height: 0; margin-top: 1rem; gap: 1rem;">
+                    <!-- Editor -->
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                        <label class="form-label">Contenu (Markdown)</label>
+                        <textarea id="doc_content" class="form-input" style="flex: 1; font-family: monospace; resize: none; line-height: 1.5;" 
+                            placeholder="# Titre..." oninput="updatePreview(this.value)"></textarea>
+                    </div>
+
+                    <!-- Preview -->
+                    <div style="flex: 1; display: flex; flex-direction: column; background: rgba(255,255,255,0.02); border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.05);">
+                        <label class="form-label" style="padding: 0.5rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.2);">Prévisualisation</label>
+                        <div id="doc_preview" class="prose" style="flex: 1; padding: 1rem; overflow-y: auto; color: var(--color-text);"></div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 1rem;">
+                     <div>
+                         <label class="checkbox-container">
+                             <input type="checkbox" id="doc_published">
+                             <span class="checkmark"></span>
+                             Publier immédiatement
+                         </label>
+                     </div>
+                     <div style="display: flex; gap: 1rem;">
+                         <button type="button" class="button button--ghost" onclick="closeDocModal()">Annuler</button>
+                         <button type="submit" class="button button--primary">Enregistrer</button>
+                     </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+      // Load statistics
+      async function loadStats() {
+        try {
+          const [academicProjects, personalProjects, competences] =
+            await Promise.all([
+              window.portfolioAPI.getProjects("academic", false),
+              window.portfolioAPI.getProjects("personal", false),
+              window.portfolioAPI.getCompetences(),
+            ]);
+
+          const techCount = academicProjects.reduce((count, project) => {
+            return count + (project.project_technologies?.length || 0);
+          }, 0);
+
+          const stats = document.getElementById("stats");
+          stats.children[0].querySelector(".stat-value").textContent =
+            academicProjects.length;
+          stats.children[1].querySelector(".stat-value").textContent =
+            personalProjects.length;
+          stats.children[2].querySelector(".stat-value").textContent =
+            competences.length;
+          stats.children[3].querySelector(".stat-value").textContent =
+            techCount;
+        } catch (error) {
+          console.error("Error loading stats:", error);
+        }
+      }
+
+      // Render project item
+      function renderProject(project) {
+        const statusClass = project.is_published
+          ? "status-published"
+          : "status-draft";
+        const statusText = project.is_published ? "Publié" : "Brouillon";
+        const competenceCount = project.project_competences?.length || 0;
+        const techCount = project.project_technologies?.length || 0;
+
+        return `
+                <div class="project-item">
+                    <img src="${
+                      project.image_url || "assets/images/placeholder.png"
+                    }" 
+                         alt="${project.title}" 
+                         class="project-thumbnail">
+                    <div class="project-info">
+                        <h3>${project.title}</h3>
+                        <p>${project.description}</p>
+                        <div class="project-meta">
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                            ${
+                              project.semester
+                                ? `<span class="badge">${project.semester}</span>`
+                                : ""
+                            }
+                            <span class="badge">${competenceCount} compétences</span>
+                            <span class="badge">${techCount} technologies</span>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <button class="quick-action" onclick="editProject('${project.id}')">
+                            ✏️ Éditer
+                        </button>
+                        <button class="quick-action btn-danger" onclick="deleteProjectConfirm('${project.id}', '${project.title.replace(/'/g, "\\'")}')">
+                            🗑️ Suppr.
+                        </button>
+                        <button class="quick-action" onclick="viewProject('${project.slug}')">
+                            👁️ Voir
+                        </button>
+                    </div>
+                </div>
+            `;
+      }
+
+      // Load academic projects
+      async function loadAcademicProjects() {
+        const container = document.getElementById("academic-projects");
+        try {
+          const projects = await window.portfolioAPI.getProjects("academic", false);
+          container.innerHTML = projects.length === 0 
+            ? '<p class="loading">Aucun projet trouvé.</p>' 
+            : projects.map(renderProject).join("");
+        } catch (error) {
+          console.error("Error loading projects:", error);
+          container.innerHTML = '<p class="loading" style="color: var(--color-error);">Erreur de chargement.</p>';
+        }
+      }
+
+      // Load personal projects
+      async function loadPersonalProjects() {
+        const container = document.getElementById("personal-projects");
+        try {
+          const projects = await window.portfolioAPI.getProjects("personal", false);
+          container.innerHTML = projects.length === 0 
+            ? '<p class="loading">Aucun projet trouvé.</p>' 
+            : projects.map(renderProject).join("");
+        } catch (error) {
+          console.error("Error loading projects:", error);
+          container.innerHTML = '<p class="loading" style="color: var(--color-error);">Erreur de chargement.</p>';
+        }
+      }
+
+      // Actions
+      function viewProject(slug) {
+        window.open(`projet.html?slug=${slug}`, "_blank");
+      }
+
+      async function editProject(id) {
+          const btn = event.target; // Simple way to show feedback, though event is deprecated in some contexts, it works for onclick
+          const originalText = btn.innerText;
+          btn.innerText = '⌛...';
+          
+          try {
+              // We need to fetch the single project data again to be sure we have everything or just filter from list?
+              // fetching by slug would be cleaner API wise but we have ID here.
+              // Let's filter from the DOM or fetch again. Let's fetch the specific project data using the ID isn't directly exposed in client API
+              // But client API has getProjects. Efficient way: find in memory if possible, but we haven't stored them globally.
+              // Let's just fetch all and find (not optimal but safe) or we can just use the data if we had it.
+              // Better: Let's reuse the getProjects data or update admin-api to fetch one.
+              // For now, I will use getProjects since it's cached/fast for small sets.
+              
+              // Actually, looking at admin-api.js, we don't have getProjectById.
+              // But we can use the list we just loaded.
+              // To make it robust, let's just reload the list or assume we can find it.
+              
+              // NOTE: For better UX we should store loaded projects in a global variable.
+              // Quick fix: fetch all again (supabase is fast).
+              const allProjects = await window.adminAPI.checkAuth() ? await window.portfolioAPI.getProjects(null, false) : [];
+              const project = allProjects.find(p => p.id === id);
+
+              if (!project) {
+                  alert("Erreur : Projet introuvable.");
+                  return;
+              }
+
+              // Populate Form
+              document.getElementById('edit_id').value = project.id;
+              document.getElementById('edit_title').value = project.title || '';
+              document.getElementById('edit_slug').value = project.slug || '';
+              document.getElementById('edit_description').value = project.description || '';
+              document.getElementById('edit_image_url').value = project.image_url || '';
+              document.getElementById('edit_semester').value = project.semester || '';
+              document.getElementById('edit_order').value = project.order_index || 0;
+
+              // Show Modal
+              document.getElementById('editModal').classList.add('is-visible');
+
+          } catch (e) {
+              console.error(e);
+              alert("Erreur lors du chargement du projet.");
+          } finally {
+              btn.innerText = originalText;
+          }
+      }
+
+      function closeModal() {
+          document.getElementById('editModal').classList.remove('is-visible');
+      }
+
+      async function handleEditSubmit(e) {
+          e.preventDefault();
+          const form = e.target;
+          const id = form.id.value;
+          const btn = form.querySelector('button[type="submit"]');
+          const originalText = btn.innerText;
+
+          // Collect data
+          const updates = {
+              title: form.title.value,
+              slug: form.slug.value,
+              description: form.description.value,
+              image_url: form.image_url.value,
+              semester: form.semester.value,
+              order_index: parseInt(form.order_index.value)
+          };
+
+          btn.innerText = 'Sauvegarde...';
+          btn.disabled = true;
+
+          try {
+              const { error } = await window.adminAPI.updateProject(id, updates);
+              if (error) throw error;
+
+              closeModal();
+              // Reload lists
+              loadAcademicProjects();
+              loadPersonalProjects();
+              // alert('Projet mis à jour !'); 
+
+          } catch (error) {
+              console.error(error);
+              alert('Erreur lors de la mise à jour: ' + error.message);
+          } finally {
+              btn.innerText = originalText;
+              btn.disabled = false;
+          }
+      }
+
+      async function deleteProjectConfirm(id, title) {
+          if (confirm(`Voulez-vous vraiment supprimer le projet "${title}" ?`)) {
+              const { error } = await window.adminAPI.deleteProject(id);
+              if (error) {
+                  alert('Erreur: ' + error.message);
+              } else {
+                  alert('Projet supprimé !');
+                  location.reload();
+              }
+          }
+      }
+
+      // --- Recette Veille ---
+      async function loadVeilles() {
+          const container = document.getElementById("veilles-list");
+          try {
+              const veilles = await window.portfolioAPI.getVeilles();
+              
+              if (veilles.length === 0) {
+                  container.innerHTML = '<p class="loading">Aucune veille trouvée.</p>';
+              } else {
+                  container.innerHTML = veilles.map(v => `
+                    <div class="project-item">
+                        <img src="${v.image_url || 'assets/images/placeholder.png'}" class="project-thumbnail">
+                        <div class="project-info">
+                            <h3>${v.title}</h3>
+                            <p>${v.category} • ${new Date(v.published_date).toLocaleDateString()}</p>
+                        </div>
+                        <div class="project-actions">
+                            <button class="quick-action" onclick="openVeilleModal('${v.id}')">✏️</button>
+                            <button class="quick-action btn-danger" onclick="deleteVeilleConfirm('${v.id}')">🗑️</button>
+                            <a href="${v.url}" target="_blank" class="quick-action">🔗</a>
+                        </div>
+                    </div>
+                  `).join('');
+              }
+          } catch(e) {
+              console.error(e);
+              container.innerHTML = '<p class="loading" style="color: red">Erreur chargement veille</p>';
+          }
+      }
+
+      async function openVeilleModal(id = null) {
+          const modal = document.getElementById('veilleModal');
+          const form = document.getElementById('veilleForm');
+          const title = document.getElementById('veilleModalTitle');
+          
+          form.reset();
+          
+          if (id) {
+              title.innerText = 'Modifier Veille';
+              // Fetch details (optimize by using loaded list if possible, but fetch is safer)
+              const veilles = await window.portfolioAPI.getVeilles(); // simple approach
+              const v = veilles.find(x => x.id === id);
+              if(v) {
+                  document.getElementById('v_id').value = v.id;
+                  document.getElementById('v_title').value = v.title;
+                  document.getElementById('v_category').value = v.category;
+                  document.getElementById('v_url').value = v.url;
+                  document.getElementById('v_image_url').value = v.image_url || '';
+                  document.getElementById('v_description').value = v.description || '';
+              }
+          } else {
+              title.innerText = 'Nouvelle Veille';
+              document.getElementById('v_id').value = '';
+          }
+          
+          modal.classList.add('is-visible');
+      }
+
+      function closeVeilleModal() {
+          document.getElementById('veilleModal').classList.remove('is-visible');
+      }
+
+      async function handleVeilleSubmit(e) {
+          e.preventDefault();
+          const form = e.target;
+          const id = document.getElementById('v_id').value;
+          
+          const data = {
+              title: document.getElementById('v_title').value,
+              category: document.getElementById('v_category').value,
+              url: document.getElementById('v_url').value,
+              image_url: document.getElementById('v_image_url').value,
+              description: document.getElementById('v_description').value
+          };
+
+          const btn = form.querySelector('button[type="submit"]');
+          btn.disabled = true;
+          btn.innerText = '...';
+
+          try {
+              if (id) {
+                  // Update
+                  await window.adminAPI.updateVeille(id, data);
+              } else {
+                  // Create
+                  await window.adminAPI.createVeille(data);
+              }
+              closeVeilleModal();
+              loadVeilles();
+          } catch(err) {
+              alert('Erreur: ' + err.message);
+          } finally {
+              btn.disabled = false;
+              btn.innerText = 'Enregistrer';
+          }
+      }
+
+      async function deleteVeilleConfirm(id) {
+          if(confirm("Supprimer cette veille ?")) {
+              await window.adminAPI.deleteVeille(id);
+              loadVeilles();
+          }
+      }
+
+      // --- Recette Certifications ---
+      async function loadCertifications() {
+          const container = document.getElementById("cert-list");
+          try {
+              // Ensure we have this function in supoabase-client or use raw query if needed, 
+              // but we added getCertifications to supabase-client.js
+              if (!window.portfolioAPI.getCertifications) {
+                   console.warn("getCertifications not found in API yet");
+                   return;
+              }
+              
+              const certs = await window.portfolioAPI.getCertifications();
+              
+                if (certs.length === 0) {
+                    container.innerHTML = '<p class="loading">Aucune certification trouvée.</p>';
+                } else {
+                    container.innerHTML = certs.map(c => `
+                      <div class="project-item">
+                          <div class="project-thumbnail" style="display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);color:var(--color-primary);font-size:1.5rem;overflow:hidden;">
+                              ${c.logo_url ? `<img src="${c.logo_url}" style="width:100%;height:100%;object-fit:contain;">` : '<i class="fas fa-award"></i>'}
+                          </div>
+                          <div class="project-info">
+                              <h3>${c.title}</h3>
+                              <p>${c.provider} • ${c.issued_date ? new Date(c.issued_date).toLocaleDateString() : 'Date non définie'}</p>
+                          </div>
+                          <div class="project-actions">
+                               <button class="quick-action" onclick="openCertModal('${c.id}')">✏️</button>
+                               ${c.pdf_url ? `<a href="${c.pdf_url}" target="_blank" class="quick-action">📄 PDF</a>` : ''}
+                               ${c.image_url ? `<a href="${c.image_url}" target="_blank" class="quick-action">🖼️ Image</a>` : ''}
+                               <button class="quick-action btn-danger" onclick="deleteCertConfirm('${c.id}')">🗑️</button>
+                          </div>
+                      </div>
+                    `).join('');
+                }
+          } catch(e) {
+              console.error(e);
+              container.innerHTML = '<p class="loading" style="color: red">Erreur chargement certifications</p>';
+          }
+      }
+
+      async function openCertModal(id = null) {
+          const form = document.getElementById('certForm');
+          form.reset();
+          
+          const galleryGroup = document.getElementById('cert-gallery-group');
+          const docsGroup = document.getElementById('cert-docs-group');
+          const saveMsg = document.getElementById('cert-save-msg');
+
+          if (id) {
+              document.getElementById('certModalTitle').innerText = 'Modifier Certification';
+              document.getElementById('c_id').value = id;
+              
+              // Load details
+              const certs = await window.portfolioAPI.getCertifications();
+              const cert = certs.find(c => c.id === id);
+              
+              if(cert) {
+                  document.getElementById('c_title').value = cert.title;
+                  document.getElementById('c_provider').value = cert.provider;
+                  document.getElementById('c_logo_url').value = cert.logo_url || '';
+                  document.getElementById('c_image_url').value = cert.image_url || '';
+                  document.getElementById('c_pdf_url').value = cert.pdf_url || '';
+                  document.getElementById('c_description').value = cert.description || '';
+              }
+              
+              // Show extra sections
+              galleryGroup.style.display = 'block';
+              docsGroup.style.display = 'block';
+              saveMsg.style.display = 'none';
+
+              // Load lists
+              loadCertGallery(id);
+              loadCertDocs(id);
+          } else {
+              document.getElementById('certModalTitle').innerText = 'Nouvelle Certification';
+              document.getElementById('c_id').value = '';
+              
+              // Hide extra sections (must save first)
+              galleryGroup.style.display = 'none';
+              docsGroup.style.display = 'none';
+              saveMsg.style.display = 'block';
+          }
+          
+          document.getElementById('certModal').classList.add('is-visible');
+      }
+
+      function closeCertModal() {
+        document.getElementById('certModal').classList.remove('is-visible');
+      }
+
+      async function handleCertSubmit(e) {
+          e.preventDefault();
+          const form = e.target;
+          const id = document.getElementById('c_id').value;
+          
+          const data = {
+              title: form.c_title.value,
+              provider: form.c_provider.value,
+              logo_url: form.c_logo_url.value,
+              pdf_url: form.c_pdf_url.value,
+              image_url: form.c_image_url.value,
+              description: form.c_description.value
+          };
+
+          const btn = form.querySelector('button[type="submit"]');
+          btn.disabled = true;
+          btn.innerText = 'Enregistrement...';
+
+          try {
+              if (id) {
+                  // Update
+                  await window.adminAPI.updateCertification(id, data);
+                  // Don't reset if we want to keep editing? Maybe better to close.
+                  // Current flow closes modal.
+              } else {
+                  // Create
+                  await window.adminAPI.createCertification(data);
+              }
+              
+              closeCertModal();
+              form.reset();
+              loadCertifications();
+          } catch(err) {
+              alert('Erreur: ' + err.message);
+          } finally {
+              btn.disabled = false;
+              btn.innerText = 'Enregistrer';
+          }
+      }
+
+      async function deleteCertConfirm(id) {
+          if(confirm("Supprimer cette certification ?")) {
+              await window.adminAPI.deleteCertification(id);
+              loadCertifications();
+          }
+      }
+
+      // Initialize
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Wait for APIs to be ready
+        if (!window.portfolioAPI || !window.adminAPI) {
+            let retryCount = 0;
+            const checkAPIs = setInterval(async () => {
+                retryCount++;
+                if (window.portfolioAPI && window.adminAPI) {
+                    clearInterval(checkAPIs);
+                    initAdmin();
+                } else if (retryCount > 20) {
+                    clearInterval(checkAPIs);
+                    document.body.innerHTML = '<div style="color: red; padding: 2rem; text-align: center;">Erreur: Les scripts de l\'API n\'ont pas pu être chargés.</div>';
+                }
+            }, 100);
+        } else {
+            initAdmin();
+        }
+      });
+
+      async function initAdmin() {
+        // 1. Force Auth Check
+        const session = await window.adminAPI.checkAuth();
+        if (!session) return; // checkAuth will handle redirect
+
+        // 2. User Info
+        const user = await window.adminAPI.getCurrentUser();
+        if (user) {
+          document.getElementById('user-email').textContent = user.email;
+        }
+
+        // 3. Load Data
+        loadStats();
+        loadAcademicProjects();
+        loadPersonalProjects();
+        loadVeilles();
+        loadCertifications();
+        loadDocCategories();
+        loadDocumentations();
+      }
+      async function handleImageUpload(event, targetInputId) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const targetInput = document.getElementById(targetInputId);
+        
+        // Visual feedback
+        targetInput.value = "Téléchargement en cours...";
+        targetInput.disabled = true;
+        event.target.disabled = true;
+
+        try {
+            const { publicUrl, error } = await window.adminAPI.uploadFile(file);
+            
+            if (error) throw error;
+
+            targetInput.value = publicUrl;
+        } catch (error) {
+            console.error(error);
+            alert("Erreur lors du téléchargement de l'image: " + error.message);
+            targetInput.value = ""; 
+        } finally {
+            targetInput.disabled = false;
+            event.target.disabled = false;
+            event.target.value = ""; 
+        }
+      }
+
+      // --- Multi-File Upload Logic ---
+
+      async function handleCertGalleryUpload(event) {
+          const files = event.target.files;
+          const certId = document.getElementById('c_id').value;
+          const status = document.getElementById('gallery_upload_status');
+          
+          if (!files.length || !certId) return;
+
+          status.innerText = 'Envoi...';
+          event.target.parentElement.classList.add('disabled');
+
+          try {
+              for (let file of files) {
+                  // Upload
+                  const { publicUrl, error } = await window.adminAPI.uploadFile(file, 'uploads');
+                  if (error) throw error;
+
+                  // Add to DB
+                  const { error: dbError } = await window.adminAPI.addCertificationImage(certId, publicUrl, file.name);
+                  if (dbError) throw dbError;
+              }
+              // Refresh
+              loadCertGallery(certId);
+          } catch (e) {
+              console.error(e);
+              alert('Erreur upload galerie: ' + e.message);
+          } finally {
+              status.innerText = '';
+              event.target.parentElement.classList.remove('disabled');
+              event.target.value = '';
+          }
+      }
+
+      async function handleCertDocsUpload(event) {
+          const files = event.target.files;
+          const certId = document.getElementById('c_id').value;
+          const status = document.getElementById('docs_upload_status');
+          
+          if (!files.length || !certId) return;
+
+          status.innerText = 'Envoi...';
+          event.target.parentElement.classList.add('disabled');
+
+          try {
+              for (let file of files) {
+                  // Upload
+                  const { publicUrl, error } = await window.adminAPI.uploadFile(file, 'uploads');
+                  if (error) throw error;
+
+                  // Add to DB
+                  const { error: dbError } = await window.adminAPI.addCertificationDoc(certId, publicUrl, file.name);
+                  if (dbError) throw dbError;
+              }
+              // Refresh
+              loadCertDocs(certId);
+          } catch (e) {
+              console.error(e);
+              alert('Erreur upload docs: ' + e.message);
+          } finally {
+              status.innerText = '';
+              event.target.parentElement.classList.remove('disabled');
+              event.target.value = '';
+          }
+      }
+
+      async function loadCertGallery(certId) {
+           const container = document.getElementById('cert_gallery_list');
+           container.innerHTML = '...';
+           
+           // We need to re-fetch cert details or just filtering from memory if we had it global
+           // Simplest: fetch fresh list
+           const certs = await window.portfolioAPI.getCertifications();
+           const cert = certs.find(c => c.id === certId);
+           
+           if (!cert || !cert.certification_images) {
+               container.innerHTML = '';
+               return;
+           }
+
+           container.innerHTML = cert.certification_images.map(img => `
+                <div style="position:relative; width:80px; height:80px;">
+                    <img src="${img.image_url}" style="width:100%; height:100%; object-fit:cover; border-radius:4px; border:1px solid rgba(255,255,255,0.1);">
+                    <button onclick="deleteCertImage('${img.id}', '${certId}')" style="position:absolute; top:-5px; right:-5px; background:red; color:white; border:none; border-radius:50%; width:20px; height:20px; cursor:pointer; font-size:10px; display:flex; align-items:center; justify-content:center;">×</button>
+                </div>
+           `).join('');
+      }
+
+      async function loadCertDocs(certId) {
+           const container = document.getElementById('cert_docs_list');
+           container.innerHTML = '...';
+           
+           const certs = await window.portfolioAPI.getCertifications();
+           const cert = certs.find(c => c.id === certId);
+           
+           if (!cert || !cert.certification_docs) {
+               container.innerHTML = '';
+               return;
+           }
+
+           container.innerHTML = cert.certification_docs.map(doc => `
+                <div style="display:flex; align-items:center; gap:0.5rem; background:rgba(255,255,255,0.05); padding:0.5rem; border-radius:4px;">
+                    <span style="font-size:1.2rem;">📄</span>
+                    <a href="${doc.doc_url}" target="_blank" style="flex:1; color:inherit; text-decoration:none; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:0.9rem;">${doc.name || 'Document'}</a>
+                    <button onclick="deleteCertDoc('${doc.id}', '${certId}')" style="background:none; border:none; color:#ef4444; cursor:pointer;">🗑️</button>
+                </div>
+           `).join('');
+      }
+
+      async function deleteCertImage(imgId, certId) {
+          if (!confirm('Supprimer cette image ?')) return;
+          await window.adminAPI.deleteCertificationImage(imgId);
+          loadCertGallery(certId);
+      }
+
+      async function deleteCertDoc(docId, certId) {
+           if (!confirm('Supprimer ce document ?')) return;
+           await window.adminAPI.deleteCertificationDoc(docId);
+           loadCertDocs(certId);
+      }
+      // --- DOCUMENTATION LOGIC ---
+
+      async function loadDocCategories() {
+          const list = document.getElementById('doc-categories-list');
+          const select = document.getElementById('doc_category');
+          
+          list.innerHTML = '<p class="loading">Chargement...</p>';
+          select.innerHTML = '<option value="">Aucune</option>';
+
+          try {
+              const categories = await window.portfolioAPI.getDocCategories();
+              
+              // Render Sidebar List
+              list.innerHTML = categories.map(cat => `
+                  <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 0.5rem; border-radius: 4px;">
+                      <span>${cat.name}</span>
+                      <button onclick="deleteDocCategoryConfirm('${cat.id}')" style="background: none; border: none; color: #ef4444; cursor: pointer;">×</button>
+                  </div>
+              `).join('');
+
+              // Render Select Options
+              categories.forEach(cat => {
+                  const option = document.createElement('option');
+                  option.value = cat.id;
+                  option.textContent = cat.name;
+                  select.appendChild(option);
+              });
+
+          } catch (e) {
+              console.error(e);
+              list.innerHTML = '<p style="color:red">Erreur</p>';
+          }
+      }
+
+      async function handleAddCategory() {
+          const input = document.getElementById('new-cat-name');
+          const name = input.value.trim();
+          if (!name) return;
+
+          const slug = generateSlug(name);
+          
+          try {
+              const { error } = await window.adminAPI.createDocCategory(name, slug);
+              if (error) throw error;
+              input.value = '';
+              loadDocCategories();
+          } catch (e) {
+              alert('Erreur: ' + e.message);
+          }
+      }
+
+      async function deleteDocCategoryConfirm(id) {
+          if(!confirm('Supprimer cette catégorie ?')) return;
+          await window.adminAPI.deleteDocCategory(id);
+          loadDocCategories();
+      }
+
+      async function loadDocumentations() {
+          const container = document.getElementById('doc-list');
+          container.innerHTML = '<p class="loading">Chargement...</p>';
+
+          try {
+              const docs = await window.portfolioAPI.getAllDocumentationsAdmin();
+              
+              if (docs.length === 0) {
+                  container.innerHTML = '<p style="text-align:center; color:var(--color-text-muted);">Aucun article.</p>';
+                  return;
+              }
+
+              container.innerHTML = docs.map(doc => `
+                  <div class="project-item">
+                      <div class="project-thumbnail" style="display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);color:var(--color-primary);font-size:1.5rem;">
+                          📄
+                      </div>
+                      <div class="project-info">
+                          <h3>${doc.title}</h3>
+                          <p>${doc.is_published ? '<span class="status-badge status-published">Publié</span>' : '<span class="status-badge status-draft">Brouillon</span>'} • ${doc.doc_categories ? doc.doc_categories.name : 'Sans catégorie'}</p>
+                      </div>
+                      <div class="project-actions">
+                          <button class="quick-action" onclick="openDocModal('${doc.id}')">✏️</button>
+                          <button class="quick-action btn-danger" onclick="deleteDocConfirm('${doc.id}')">🗑️</button>
+                      </div>
+                  </div>
+              `).join('');
+
+          } catch (e) {
+              console.error(e);
+              container.innerHTML = '<p style="color:red">Erreur chargement</p>';
+          }
+      }
+
+      // Modal & Editor Logic
+      let currentDocId = null;
+
+      async function openDocModal(id = null) {
+          const modal = document.getElementById('docModal');
+          const form = document.getElementById('docForm');
+          form.reset();
+          currentDocId = id;
+          document.getElementById('doc_preview').innerHTML = '';
+
+          if (id) {
+              document.getElementById('docModalTitle').innerText = 'Modifier Article';
+              const docs = await window.portfolioAPI.getAllDocumentationsAdmin();
+              const doc = docs.find(d => d.id === id);
+              
+              if (doc) {
+                  document.getElementById('doc_title').value = doc.title;
+                  document.getElementById('doc_slug').value = doc.slug;
+                  document.getElementById('doc_category').value = doc.category_id || '';
+                  document.getElementById('doc_content').value = doc.content || '';
+                  document.getElementById('doc_published').checked = doc.is_published;
+                  updatePreview(doc.content || '');
+              }
+          } else {
+              document.getElementById('docModalTitle').innerText = 'Nouvel Article';
+              updatePreview('');
+          }
+
+          modal.classList.add('is-visible');
+      }
+
+      function closeDocModal() {
+          document.getElementById('docModal').classList.remove('is-visible');
+      }
+
+      async function handleDocSubmit(e) {
+          e.preventDefault();
+          
+          const data = {
+              title: document.getElementById('doc_title').value,
+              slug: document.getElementById('doc_slug').value,
+              category_id: document.getElementById('doc_category').value || null,
+              content: document.getElementById('doc_content').value,
+              is_published: document.getElementById('doc_published').checked
+          };
+
+          try {
+              if (currentDocId) {
+                  await window.adminAPI.updateDocumentation(currentDocId, data);
+              } else {
+                  await window.adminAPI.createDocumentation(data);
+              }
+              closeDocModal();
+              loadDocumentations();
+          } catch (e) {
+              alert('Erreur: ' + e.message);
+          }
+      }
+
+      async function deleteDocConfirm(id) {
+          if(!confirm('Supprimer cet article ?')) return;
+          await window.adminAPI.deleteDocumentation(id);
+          loadDocumentations();
+      }
+
+      function updatePreview(markdown) {
+          const preview = document.getElementById('doc_preview');
+          // Basic markdown parsing if marked is not loaded yet (fallback)
+          if (typeof marked !== 'undefined') {
+              preview.innerHTML = marked.parse(markdown);
+          } else {
+              preview.innerHTML = markdown;
+          }
+      }
+
+      function generateSlug(text) {
+          const slug = text.toLowerCase()
+              .replace(/[^\w\s-]/g, '')
+              .replace(/\s+/g, '-');
+          document.getElementById('doc_slug').value = slug;
+          return slug;
+      }
+
+      // Tab Switching Logic
+      document.addEventListener('DOMContentLoaded', () => {
+          document.querySelectorAll('.admin-nav-item').forEach(item => {
+              item.addEventListener('click', () => {
+                  // Active class
+                  document.querySelectorAll('.admin-nav-item').forEach(nav => nav.classList.remove('active'));
+                  item.classList.add('active');
+                  
+                  // Show content
+                  const tabId = item.dataset.tab;
+                  document.querySelectorAll('.tab-content').forEach(content => {
+                      content.style.display = 'none';
+                  });
+                  
+                  // Show specific manager
+                  if (tabId === 'projects') {
+                      document.getElementById('projects-manager').style.display = 'block';
+                  } else if (tabId === 'veilles') {
+                      document.getElementById('veilles-manager').style.display = 'block';
+                  } else if (tabId === 'certifications') {
+                      document.getElementById('certifications-manager').style.display = 'block';
+                  } else if (tabId === 'documentation') {
+                      document.getElementById('documentation-manager').style.display = 'block';
+                      loadDocCategories();
+                      loadDocumentations();
+                  }
+              });
+          });
+      });
+    </script>
+  </body>
+</html>
