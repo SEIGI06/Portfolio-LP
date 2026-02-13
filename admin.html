@@ -1512,10 +1512,14 @@
       }
 
       function generateSlug(text) {
-          const slug = text.toLowerCase()
-              .replace(/[^\w\s-]/g, '')
-              .replace(/\s+/g, '-');
-          document.getElementById('doc_slug').value = slug;
+          const slug = text.toString().toLowerCase()
+              .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove accents
+              .replace(/[^\w\s-]/g, '') // Remove special chars
+              .replace(/\s+/g, '-') // Space to dash
+              .replace(/^-+|-+$/g, ''); // Trim dashes
+          
+          const slugInput = document.getElementById('doc_slug');
+          if (slugInput) slugInput.value = slug;
           return slug;
       }
 
