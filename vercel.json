@@ -54,7 +54,11 @@
   ],
   "rewrites": [
     {
-      "source": "/doc/:slug",
+      "source": "/doc",
+      "destination": "/documentation.html"
+    },
+    {
+      "source": "/doc/(.*)",
       "destination": "/documentation.html"
     }
   ],
