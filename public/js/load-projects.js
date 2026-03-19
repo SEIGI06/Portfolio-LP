@@ -138,7 +138,10 @@ function createPersonalProjectCard(project, index) {
         <div class="card__content">
             <h3 class="card__title" style="margin-bottom: 0.5rem;">${project.title}</h3>
             <p class="card__description" style="margin-bottom: 1.5rem;">${project.description}</p>
-            ${linksHTML}
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <a href="projet.html?slug=${project.slug}" class="button button--ghost" style="width: 100%; font-size: 0.9rem; text-align: center;">Voir le projet</a>
+                ${linksHTML}
+            </div>
         </div>
     `;
 

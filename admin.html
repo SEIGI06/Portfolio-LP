@@ -449,6 +449,12 @@
           </div>
 
           <div class="form-group">
+            <label class="form-label" for="edit_website_url">URL externe (ex: https://...)</label>
+            <input type="url" id="edit_website_url" name="website_url" class="form-input" placeholder="https://mon-projet.com">
+            <small style="color: var(--color-text-muted)">Pour les projets personnels, ce lien s'affichera comme bouton "Voir le site".</small>
+          </div>
+
+          <div class="form-group">
             <label class="form-label">Compétences</label>
             <div id="edit_competences_list" style="display: flex; flex-direction: column; gap: 0.5rem; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: var(--radius-sm); max-height: 200px; overflow-y: auto;">
                 <span class="loading" style="padding: 0; font-size: 0.9rem;">Chargement des compétences...</span>
@@ -777,6 +783,9 @@
                         <button class="quick-action" onclick="editProject('${project.id}')">
                             ✏️ Éditer
                         </button>
+                        <button class="quick-action" onclick="handleTogglePublication('${project.id}', ${project.is_published})">
+                            ${project.is_published ? '📁 Désarchiver' : '🌍 Publier'}
+                        </button>
                         <button class="quick-action btn-danger" onclick="deleteProjectConfirm('${project.id}', '${project.title.replace(/'/g, "\\'")}')">
                             🗑️ Suppr.
                         </button>
@@ -858,6 +867,10 @@
               document.getElementById('edit_semester').value = project.semester || '';
               document.getElementById('edit_order').value = project.order_index || 0;
 
+              // Populate Website URL (for personal projects)
+              const websiteLink = project.personal_project_links ? project.personal_project_links.find(l => l.link_type === 'website') : null;
+              document.getElementById('edit_website_url').value = websiteLink ? websiteLink.url : '';
+
               // Populate Competences
               const projectCompetences = project.project_competences ? project.project_competences.map(pc => pc.competence.id) : [];
               const checkboxes = document.querySelectorAll('input[name="competences_input"]');
@@ -883,7 +896,7 @@
       async function handleEditSubmit(e) {
           e.preventDefault();
           const form = e.target;
-          const id = form.id.value;
+          const id = form.edit_id.value; // Explicit ID
           const btn = form.querySelector('button[type="submit"]');
           const originalText = btn.innerText;
 
@@ -903,6 +916,16 @@
           try {
               const { error } = await window.adminAPI.updateProject(id, updates);
               if (error) throw error;
+
+              // Save Website Link (only if it's filled or needs deleting)
+              const websiteUrl = form.website_url.value.trim();
+              if (websiteUrl) {
+                  // We also need to get existing ones to update OR we can just delete all website links for this project and re-add.
+                  // adminAPI doesn't have a specific updateLink, so let's delete all and re-add for simplicity.
+                  // For better UX we should only delete type 'website'.
+                  await supabaseClient.from('personal_project_links').delete().eq('project_id', id).eq('link_type', 'website');
+                  await window.adminAPI.addProjectLink(id, 'website', websiteUrl, "Voir le site");
+              }
 
               // Save Competences
               const selectedCompetences = Array.from(form.querySelectorAll('input[name="competences_input"]:checked')).map(cb => cb.value);
@@ -933,6 +956,18 @@
                   alert('Projet supprimé !');
                   location.reload();
               }
+          }
+      }
+
+      async function handleTogglePublication(id, currentStatus) {
+          try {
+              const { error } = await window.adminAPI.toggleProjectPublication(id, currentStatus);
+              if (error) throw error;
+              loadAcademicProjects();
+              loadPersonalProjects();
+          } catch (error) {
+              console.error(error);
+              alert("Erreur lors de la modification du statut : " + error.message);
           }
       }
 
