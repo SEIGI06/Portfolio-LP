@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    // 1. Setup Ticker
-    setupTicker();
+    // 1. Setup Ticker (Live version)
+    await setupLiveTicker();
 
-    // 2. Fetch Veilles
+    // 2. Fetch Veilles from DB
     const veilles = await window.portfolioAPI.getVeilles();
     
     // 3. Render Grid
@@ -12,28 +12,79 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupFilters(veilles);
 });
 
-function setupTicker() {
+async function setupLiveTicker() {
     const tickerContent = document.getElementById('ticker-content');
-    
-    // Simulated "Recent Videos" from favorite channels
-    // In a real app, this could come from a YouTube API fetch via Edge Function
-    const tickerItems = [
-        { title: "Micode - J'ai infiltré un réseau d'arnaqueurs", source: "Micode", url: "https://www.youtube.com/@Micode", icon: "assets/images/youtube-icon.png" },
-        { title: "Underscore_ - Le futur de l'IA est terrifiant", source: "Underscore_", url: "https://www.youtube.com/@Underscore_Talk", icon: "assets/images/youtube-icon.png" },
-        { title: "NetworkChuck - You need to learn Linux RIGHT NOW", source: "NetworkChuck", url: "https://www.youtube.com/c/NetworkChuck", icon: "assets/images/youtube-icon.png" },
-        { title: "Defend Intelligence - Analyse d'une cyberattaque", source: "Defend Intelligence", url: "https://www.youtube.com/@DefendIntelligence", icon: "assets/images/youtube-icon.png" },
-        { title: "LeMondeInformatique - Les failles Zero-Day explosent", source: "LMI", url: "https://www.lemondeinformatique.fr/", icon: "assets/images/news-icon.png" }
+    const videoGrid = document.getElementById('youtube-videos');
+    if (!tickerContent) return;
+
+    const channels = [
+        { name: "Micode", id: "UCYnvxJ-PKiGXo_tYXpWAC-w" },
+        { name: "Underscore_", id: "UCWedHS9qKebauVIK2J7383g" }
     ];
 
-    // Double the items to make the marquee smoother
-    const itemsToRender = [...tickerItems, ...tickerItems];
+    try {
+        const results = await Promise.all(channels.map(async (channel) => {
+            try {
+                // Using rss2json to convert YouTube RSS to JSON
+                const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.youtube.com%2Ffeeds%2Fvideos.xml%3Fchannel_id%3D${channel.id}`);
+                const data = await response.json();
+                if (data.status === 'ok') {
+                    return data.items.map(item => ({
+                        title: item.title,
+                        source: channel.name,
+                        url: item.link,
+                        thumbnail: item.thumbnail,
+                        pubDate: item.pubDate
+                    }));
+                }
+            } catch (err) {
+                console.error(`Error fetching YouTube feed for ${channel.name}:`, err);
+            }
+            return [];
+        }));
 
-    tickerContent.innerHTML = itemsToRender.map(item => `
-        <a href="${item.url}" target="_blank" class="marquee-item">
-            <span>🔴 ${item.source} :</span>
-            <strong>${item.title}</strong>
-        </a>
-    `).join('');
+        const allVideos = results.flat().sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+        
+        // 1. Render Ticker
+        const tickerItems = allVideos.slice(0, 10);
+        if (tickerItems.length > 0) {
+            const itemsToRender = [...tickerItems, ...tickerItems]; // Double for smooth marquee
+            tickerContent.innerHTML = itemsToRender.map(item => `
+                <a href="${item.url}" target="_blank" class="marquee-item">
+                    <span>🔴 ${item.source} :</span>
+                    <strong>${item.title}</strong>
+                </a>
+            `).join('');
+        }
+
+        // 2. Render Video Grid
+        if (videoGrid) {
+            const topVideos = allVideos.slice(0, 6);
+            if (topVideos.length > 0) {
+                videoGrid.innerHTML = topVideos.map(video => `
+                    <article class="card fade-in-up is-visible" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+                        <a href="${video.url}" target="_blank" style="text-decoration: none; color: inherit; height: 100%; display: flex; flex-direction: column;">
+                            <div style="position: relative; padding-top: 56.25%;">
+                                <img src="${video.thumbnail}" alt="${video.title}" style="position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover;">
+                            </div>
+                            <div style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column;">
+                                <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                    <span class="badge" style="background: rgba(255,0,0,0.1); color: #ff0000; border: 1px solid rgba(255,0,0,0.2);">YouTube</span>
+                                    <span class="badge">${video.source}</span>
+                                </div>
+                                <h3 style="font-size: 1.1rem; margin: 0; line-height: 1.4;">${video.title}</h3>
+                            </div>
+                        </a>
+                    </article>
+                `).join('');
+            } else {
+                videoGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">Aucune vidéo trouvée.</p>';
+            }
+        }
+
+    } catch (error) {
+        console.error('Ticker setup error:', error);
+    }
 }
 
 function renderVeilles(veilles) {
