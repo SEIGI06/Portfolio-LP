@@ -126,6 +126,7 @@ async function getCompetenceMatrix() {
             `
       )
       .eq("is_published", true)
+      .eq("project_type", "academic")
       .order("order_index", { ascending: true });
 
     const { data: competences, error: competencesError } = await supabaseClient
