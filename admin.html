@@ -449,6 +449,14 @@
           </div>
 
           <div class="form-group">
+            <label class="form-label">Compétences</label>
+            <div id="edit_competences_list" style="display: flex; flex-direction: column; gap: 0.5rem; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: var(--radius-sm); max-height: 200px; overflow-y: auto;">
+                <span class="loading" style="padding: 0; font-size: 0.9rem;">Chargement des compétences...</span>
+            </div>
+            <small style="color: var(--color-text-muted)">Cochez les compétences validées par ce projet.</small>
+          </div>
+
+          <div class="form-group">
             <label class="form-label" for="edit_order">Ordre d'affichage</label>
             <input type="number" id="edit_order" name="order_index" class="form-input">
           </div>
@@ -850,6 +858,13 @@
               document.getElementById('edit_semester').value = project.semester || '';
               document.getElementById('edit_order').value = project.order_index || 0;
 
+              // Populate Competences
+              const projectCompetences = project.project_competences ? project.project_competences.map(pc => pc.competence.id) : [];
+              const checkboxes = document.querySelectorAll('input[name="competences_input"]');
+              checkboxes.forEach(cb => {
+                  cb.checked = projectCompetences.includes(cb.value);
+              });
+
               // Show Modal
               document.getElementById('editModal').classList.add('is-visible');
 
@@ -888,6 +903,11 @@
           try {
               const { error } = await window.adminAPI.updateProject(id, updates);
               if (error) throw error;
+
+              // Save Competences
+              const selectedCompetences = Array.from(form.querySelectorAll('input[name="competences_input"]:checked')).map(cb => cb.value);
+              const { error: compError } = await window.adminAPI.updateProjectCompetences(id, selectedCompetences);
+              if (compError) throw compError;
 
               closeModal();
               // Reload lists
@@ -1190,6 +1210,22 @@
 
         // 3. Load Data
         loadStats();
+
+        // 4. Load Competences into Modal
+        try {
+            const competences = await window.portfolioAPI.getCompetences();
+            const compContainer = document.getElementById('edit_competences_list');
+            if (compContainer) {
+                compContainer.innerHTML = competences.map(c => `
+                    <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--color-text); font-size: 0.9rem; cursor: pointer;">
+                        <input type="checkbox" name="competences_input" value="${c.id}">
+                        ${c.name}
+                    </label>
+                `).join('');
+            }
+        } catch (e) {
+            console.error("Failed to load competences for edit modal", e);
+        }
         loadAcademicProjects();
         loadPersonalProjects();
         loadVeilles();
