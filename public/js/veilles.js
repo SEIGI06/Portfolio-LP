@@ -1,6 +1,10 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    // 1. Setup Ticker (Live version)
-    await setupLiveTicker();
+    // 1. Setup Ticker (Live version) - Non-blocking to avoid freezing other loads
+    setupLiveTicker().catch(err => {
+        console.error("Critical ticker error:", err);
+        const videoGrid = document.getElementById('youtube-videos');
+        if (videoGrid) videoGrid.innerHTML = '<p style="text-align: center;">Impossible de charger les vidéos YouTube.</p>';
+    });
 
     // 2. Fetch Veilles from DB
     const veilles = await window.portfolioAPI.getVeilles();
@@ -43,14 +47,31 @@ async function setupLiveTicker() {
             return [];
         }));
 
-        const allVideos = results.flat().sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+        const allVideos = results.flat()
+            .filter(v => v.title && v.url) // Sanitize
+            .sort((a, b) => {
+                if (!a.pubDate || !b.pubDate) return 0;
+                return new Date(b.pubDate) - new Date(a.pubDate);
+            });
         
+        // Final fallback if we have ABSOLUTELY nothing
+        if (allVideos.length === 0) {
+            videoGrid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+                    <p>Impossible de récupérer les dernières vidéos en direct pour le moment.</p>
+                    <a href="https://www.youtube.com/@Micode" target="_blank" class="button button--ghost" style="margin: 0.5rem;">Micode sur YouTube</a>
+                    <a href="https://www.youtube.com/@Underscore_Talk" target="_blank" class="button button--ghost" style="margin: 0.5rem;">Underscore_ sur YouTube</a>
+                </div>
+            `;
+            return;
+        }
+
         // 1. Render Ticker
         const tickerItems = allVideos.slice(0, 10);
         if (tickerItems.length > 0) {
             const itemsToRender = [...tickerItems, ...tickerItems]; // Double for smooth marquee
             tickerContent.innerHTML = itemsToRender.map(item => `
-                <a href="${item.url}" target="_blank" class="marquee-item">
+                <a href="${item.url}" target="_blank" class="marquee-item" style="text-decoration: none;">
                     <span>🔴 ${item.source} :</span>
                     <strong>${item.title}</strong>
                 </a>
@@ -81,6 +102,7 @@ async function setupLiveTicker() {
                 videoGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">Aucune vidéo trouvée.</p>';
             }
         }
+
 
     } catch (error) {
         console.error('Ticker setup error:', error);
