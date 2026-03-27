@@ -8,7 +8,8 @@ const { ncp } = require('ncp');
 const SUPABASE_URL = "https://luetejjufuemdqpkcbrk.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1ZXRlamp1ZnVlbWRxcGtjYnJrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyOTMwNzQsImV4cCI6MjA4Mjg2OTA3NH0.pxyT7Jva4ZyU5gCYaP1a30pSkN5dO9KMQL30lmA670I";
 const ROOT_DIR = path.join(__dirname, '..');
-const SITEMAP_PATH = path.join(ROOT_DIR, 'sitemap.xml');
+const SRC_DIR = path.join(ROOT_DIR, 'src');
+const SITEMAP_PATH = path.join(SRC_DIR, 'sitemap.xml');
 const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const BASE_URL = 'https://www.seigi-tech.fr';
 
@@ -31,7 +32,7 @@ async function build() {
         if (error) throw error;
         console.log(`✅ Found ${docs.length} documentation articles.`);
 
-        console.log('qm Reading existing sitemap.xml...');
+        console.log('📂 Reading source sitemap.xml...');
         const sitemapContent = fs.readFileSync(SITEMAP_PATH, 'utf-8');
         const parser = new xml2js.Parser();
         const builder = new xml2js.Builder();
@@ -56,13 +57,13 @@ async function build() {
         result.urlset.url = [...staticUrls, ...docUrls];
         const newSitemap = builder.buildObject(result);
 
-        // Write updated sitemap to ROOT (will be copied later)
+        // Write updated sitemap to SRC (it will be copied to public later)
         fs.writeFileSync(SITEMAP_PATH, newSitemap);
-        console.log('💾 sitemap.xml updated successfully!');
+        console.log('💾 sitemap.xml updated in src/ successfully!');
 
 
         // --- 2. COPY TO PUBLIC ---
-        console.log('📂 Copying files to ./public directory...');
+        console.log('📂 Copying files from src/ to ./public directory...');
 
         // Create public dir if not exists
         if (!fs.existsSync(PUBLIC_DIR)){
@@ -73,22 +74,18 @@ async function build() {
         const options = {
             filter: (source) => {
                 const basename = path.basename(source);
-                // Exclude hidden files/dirs, node_modules, public, scripts, and package files
-                if (source.includes('node_modules') || 
-                    source.includes('.git') || 
-                    source.includes('.vercel') ||
-                    basename === 'public' ||
-                    basename === 'scripts' ||
-                    basename === 'package.json' ||
-                    basename === 'package-lock.json') {
+                // Exclude hidden files/dirs and development artifacts
+                if (basename.startsWith('.') || 
+                    basename === 'node_modules' || 
+                    basename === 'scripts') {
                     return false;
                 }
                 return true;
             }
         };
 
-        // Copy everything using ncp
-        ncp(ROOT_DIR, PUBLIC_DIR, options, function (err) {
+        // Copy everything from src/ using ncp
+        ncp(SRC_DIR, PUBLIC_DIR, options, function (err) {
             if (err) {
                 return console.error(err);
             }
