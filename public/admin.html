@@ -453,6 +453,20 @@
           </div>
 
           <div class="form-group">
+            <label class="form-label" for="edit_website_url">URL externe (ex: https://...)</label>
+            <input type="url" id="edit_website_url" name="website_url" class="form-input" placeholder="https://mon-projet.com">
+            <small style="color: var(--color-text-muted)">Pour les projets personnels, ce lien s'affichera comme bouton "Voir le site".</small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Compétences</label>
+            <div id="edit_competences_list" style="display: flex; flex-direction: column; gap: 0.5rem; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: var(--radius-sm); max-height: 200px; overflow-y: auto;">
+                <span class="loading" style="padding: 0; font-size: 0.9rem;">Chargement des compétences...</span>
+            </div>
+            <small style="color: var(--color-text-muted)">Cochez les compétences validées par ce projet.</small>
+          </div>
+
+          <div class="form-group">
             <label class="form-label" for="edit_order">Ordre d'affichage</label>
             <input type="number" id="edit_order" name="order_index" class="form-input">
           </div>
@@ -807,6 +821,9 @@
                         <button class="quick-action" onclick="openProjectModal('${project.id}')">
                             ✏️ Éditer
                         </button>
+                        <button class="quick-action" onclick="handleTogglePublication('${project.id}', ${project.is_published})">
+                            ${project.is_published ? '📁 Désarchiver' : '🌍 Publier'}
+                        </button>
                         <button class="quick-action btn-danger" onclick="deleteProjectConfirm('${project.id}', '${project.title.replace(/'/g, "\\'")}')">
                             🗑️ Suppr.
                         </button>
@@ -851,59 +868,62 @@
         window.open(`projet.html?slug=${slug}`, "_blank");
       }
 
-      async function openProjectModal(id = null, projectType = 'academic') {
-          const btn = event ? event.target : null;
-          let originalText = '';
-          if(btn) {
-              originalText = btn.innerText;
-              btn.innerText = '⌛...';
-          }
+      async function editProject(id) {
+          const btn = event.target; // Simple way to show feedback, though event is deprecated in some contexts, it works for onclick
+          const originalText = btn.innerText;
+          btn.innerText = '⌛...';
           
           try {
-              if (id) {
-                  document.querySelector('#editModal h2').innerText = 'Éditer le projet';
-                  const allProjects = await window.adminAPI.checkAuth() ? await window.portfolioAPI.getProjects(null, false) : [];
-                  const project = allProjects.find(p => p.id === id);
+              // We need to fetch the single project data again to be sure we have everything or just filter from list?
+              // fetching by slug would be cleaner API wise but we have ID here.
+              // Let's filter from the DOM or fetch again. Let's fetch the specific project data using the ID isn't directly exposed in client API
+              // But client API has getProjects. Efficient way: find in memory if possible, but we haven't stored them globally.
+              // Let's just fetch all and find (not optimal but safe) or we can just use the data if we had it.
+              // Better: Let's reuse the getProjects data or update admin-api to fetch one.
+              // For now, I will use getProjects since it's cached/fast for small sets.
+              
+              // Actually, looking at admin-api.js, we don't have getProjectById.
+              // But we can use the list we just loaded.
+              // To make it robust, let's just reload the list or assume we can find it.
+              
+              // NOTE: For better UX we should store loaded projects in a global variable.
+              // Quick fix: fetch all again (supabase is fast).
+              const allProjects = await window.adminAPI.checkAuth() ? await window.portfolioAPI.getProjects(null, false) : [];
+              const project = allProjects.find(p => p.id === id);
 
-                  if (!project) {
-                      alert("Erreur : Projet introuvable.");
-                      return;
-                  }
-
-                  // Populate Form
-                  document.getElementById('edit_id').value = project.id;
-                  document.getElementById('project_type').value = project.project_type || '';
-                  document.getElementById('edit_title').value = project.title || '';
-                  document.getElementById('edit_slug').value = project.slug || '';
-                  document.getElementById('edit_description').value = project.description || '';
-                  document.getElementById('edit_image_url').value = project.image_url || '';
-                  document.getElementById('edit_semester').value = project.semester || '';
-                  document.getElementById('edit_order').value = project.order_index || 0;
-                  
-                  document.getElementById('project-sections-group').style.display = 'block';
-                  document.getElementById('project-save-msg').style.display = 'none';
-                  closeProjectSectionForm();
-                  loadProjectSections(project.id);
-              } else {
-                  // New Project
-                  document.querySelector('#editModal h2').innerText = 'Nouveau Projet';
-                  document.getElementById('editForm').reset();
-                  document.getElementById('edit_id').value = '';
-                  document.getElementById('project_type').value = projectType;
-                  document.getElementById('edit_order').value = 0;
-                  
-                  document.getElementById('project-sections-group').style.display = 'none';
-                  document.getElementById('project-save-msg').style.display = 'block';
+              if (!project) {
+                  alert("Erreur : Projet introuvable.");
+                  return;
               }
+
+              // Populate Form
+              document.getElementById('edit_id').value = project.id;
+              document.getElementById('edit_title').value = project.title || '';
+              document.getElementById('edit_slug').value = project.slug || '';
+              document.getElementById('edit_description').value = project.description || '';
+              document.getElementById('edit_image_url').value = project.image_url || '';
+              document.getElementById('edit_semester').value = project.semester || '';
+              document.getElementById('edit_order').value = project.order_index || 0;
+
+              // Populate Website URL (for personal projects)
+              const websiteLink = project.personal_project_links ? project.personal_project_links.find(l => l.link_type === 'website') : null;
+              document.getElementById('edit_website_url').value = websiteLink ? websiteLink.url : '';
+
+              // Populate Competences
+              const projectCompetences = project.project_competences ? project.project_competences.map(pc => pc.competence.id) : [];
+              const checkboxes = document.querySelectorAll('input[name="competences_input"]');
+              checkboxes.forEach(cb => {
+                  cb.checked = projectCompetences.includes(cb.value);
+              });
 
               // Show Modal
               document.getElementById('editModal').classList.add('is-visible');
 
           } catch (e) {
               console.error(e);
-              alert("Erreur lors du chargement de la modale.");
+              alert("Erreur lors du chargement du projet.");
           } finally {
-              if(btn) btn.innerText = originalText;
+              btn.innerText = originalText;
           }
       }
 
@@ -914,7 +934,7 @@
       async function handleEditSubmit(e) {
           e.preventDefault();
           const form = e.target;
-          const id = form.id.value;
+          const id = form.edit_id.value; // Explicit ID
           const btn = form.querySelector('button[type="submit"]');
           const originalText = btn.innerText;
 
@@ -943,6 +963,21 @@
                   const { error } = await window.adminAPI.createProject(updates);
                   if (error) throw error;
               }
+
+              // Save Website Link (only if it's filled or needs deleting)
+              const websiteUrl = form.website_url.value.trim();
+              if (websiteUrl) {
+                  // We also need to get existing ones to update OR we can just delete all website links for this project and re-add.
+                  // adminAPI doesn't have a specific updateLink, so let's delete all and re-add for simplicity.
+                  // For better UX we should only delete type 'website'.
+                  await supabaseClient.from('personal_project_links').delete().eq('project_id', id).eq('link_type', 'website');
+                  await window.adminAPI.addProjectLink(id, 'website', websiteUrl, "Voir le site");
+              }
+
+              // Save Competences
+              const selectedCompetences = Array.from(form.querySelectorAll('input[name="competences_input"]:checked')).map(cb => cb.value);
+              const { error: compError } = await window.adminAPI.updateProjectCompetences(id, selectedCompetences);
+              if (compError) throw compError;
 
               closeModal();
               // Reload lists
@@ -1069,6 +1104,13 @@
           }
       }
 
+      async function deleteProjectSectionConfirm(sectionId, projectId) {
+          if(confirm('Supprimer cette section ?')) {
+              await window.adminAPI.deleteProjectSection(sectionId);
+              loadProjectSections(projectId);
+          }
+      }
+
       async function deleteProjectConfirm(id, title) {
           if (confirm(`Voulez-vous vraiment supprimer le projet "${title}" ?`)) {
               const { error } = await window.adminAPI.deleteProject(id);
@@ -1078,6 +1120,18 @@
                   alert('Projet supprimé !');
                   location.reload();
               }
+          }
+      }
+
+      async function handleTogglePublication(id, currentStatus) {
+          try {
+              const { error } = await window.adminAPI.toggleProjectPublication(id, currentStatus);
+              if (error) throw error;
+              loadAcademicProjects();
+              loadPersonalProjects();
+          } catch (error) {
+              console.error(error);
+              alert("Erreur lors de la modification du statut : " + error.message);
           }
       }
 
@@ -1355,6 +1409,22 @@
 
         // 3. Load Data
         loadStats();
+
+        // 4. Load Competences into Modal
+        try {
+            const competences = await window.portfolioAPI.getCompetences();
+            const compContainer = document.getElementById('edit_competences_list');
+            if (compContainer) {
+                compContainer.innerHTML = competences.map(c => `
+                    <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--color-text); font-size: 0.9rem; cursor: pointer;">
+                        <input type="checkbox" name="competences_input" value="${c.id}">
+                        ${c.name}
+                    </label>
+                `).join('');
+            }
+        } catch (e) {
+            console.error("Failed to load competences for edit modal", e);
+        }
         loadAcademicProjects();
         loadPersonalProjects();
         loadVeilles();
@@ -1677,10 +1747,14 @@
       }
 
       function generateSlug(text) {
-          const slug = text.toLowerCase()
-              .replace(/[^\w\s-]/g, '')
-              .replace(/\s+/g, '-');
-          document.getElementById('doc_slug').value = slug;
+          const slug = text.toString().toLowerCase()
+              .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Remove accents
+              .replace(/[^\w\s-]/g, '') // Remove special chars
+              .replace(/\s+/g, '-') // Space to dash
+              .replace(/^-+|-+$/g, ''); // Trim dashes
+          
+          const slugInput = document.getElementById('doc_slug');
+          if (slugInput) slugInput.value = slug;
           return slug;
       }
 
