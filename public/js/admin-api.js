@@ -259,6 +259,77 @@ async function deleteProjectLink(linkId) {
 }
 
 // ============================================
+// PROJECT SECTIONS CRUD
+// ============================================
+
+/**
+ * Add a new content section to a project
+ */
+async function addProjectSection(projectId, title, content, orderIndex = 0) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('project_sections')
+      .insert([{
+        project_id: projectId,
+        title: title,
+        content: content,
+        order_index: orderIndex
+      }])
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error('Add project section error:', error);
+    return { data: null, error };
+  }
+}
+
+/**
+ * Update an existing project section
+ */
+async function updateProjectSection(sectionId, title, content, orderIndex) {
+  try {
+    const { data, error } = await supabaseClient
+      .from('project_sections')
+      .update({
+        title: title,
+        content: content,
+        order_index: orderIndex
+      })
+      .eq('id', sectionId)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error('Update project section error:', error);
+    return { data: null, error };
+  }
+}
+
+/**
+ * Delete a project section
+ */
+async function deleteProjectSection(sectionId) {
+  try {
+    const { error } = await supabaseClient
+      .from('project_sections')
+      .delete()
+      .eq('id', sectionId);
+    
+    if (error) throw error;
+    return { error: null };
+  } catch (error) {
+    console.error('Delete project section error:', error);
+    return { error };
+  }
+}
+
+
+// ============================================
 // VEILLE CRUD
 // ============================================
 
@@ -576,6 +647,11 @@ window.adminAPI = {
   deleteProjectTechnology,
   addProjectLink,
   deleteProjectLink,
+
+  // Project Sections
+  addProjectSection,
+  updateProjectSection,
+  deleteProjectSection,
 
   // Veille CRUD
   createVeille,
