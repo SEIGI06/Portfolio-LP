@@ -868,62 +868,61 @@
         window.open(`projet.html?slug=${slug}`, "_blank");
       }
 
-      async function editProject(id) {
-          const btn = event.target; // Simple way to show feedback, though event is deprecated in some contexts, it works for onclick
-          const originalText = btn.innerText;
-          btn.innerText = '⌛...';
+      async function openProjectModal(id = null, projectType = 'academic') {
+          const btn = event ? event.target : null;
+          let originalText = '';
+          if(btn) {
+              originalText = btn.innerText;
+              btn.innerText = '⌛...';
+          }
           
           try {
-              // We need to fetch the single project data again to be sure we have everything or just filter from list?
-              // fetching by slug would be cleaner API wise but we have ID here.
-              // Let's filter from the DOM or fetch again. Let's fetch the specific project data using the ID isn't directly exposed in client API
-              // But client API has getProjects. Efficient way: find in memory if possible, but we haven't stored them globally.
-              // Let's just fetch all and find (not optimal but safe) or we can just use the data if we had it.
-              // Better: Let's reuse the getProjects data or update admin-api to fetch one.
-              // For now, I will use getProjects since it's cached/fast for small sets.
-              
-              // Actually, looking at admin-api.js, we don't have getProjectById.
-              // But we can use the list we just loaded.
-              // To make it robust, let's just reload the list or assume we can find it.
-              
-              // NOTE: For better UX we should store loaded projects in a global variable.
-              // Quick fix: fetch all again (supabase is fast).
-              const allProjects = await window.adminAPI.checkAuth() ? await window.portfolioAPI.getProjects(null, false) : [];
-              const project = allProjects.find(p => p.id === id);
+              if (id) {
+                  document.querySelector('#editModal h2').innerText = 'Éditer le projet';
+                  const allProjects = await window.adminAPI.checkAuth() ? await window.portfolioAPI.getProjects(null, false) : [];
+                  const project = allProjects.find(p => p.id === id);
 
-              if (!project) {
-                  alert("Erreur : Projet introuvable.");
-                  return;
+                  if (!project) {
+                      alert("Erreur : Projet introuvable.");
+                      return;
+                  }
+
+                  // Populate Form
+                  document.getElementById('edit_id').value = project.id;
+                  document.getElementById('project_type').value = project.project_type || '';
+                  document.getElementById('edit_title').value = project.title || '';
+                  document.getElementById('edit_slug').value = project.slug || '';
+                  document.getElementById('edit_description').value = project.description || '';
+                  document.getElementById('edit_image_url').value = project.image_url || '';
+                  document.getElementById('edit_semester').value = project.semester || '';
+                  document.getElementById('edit_order').value = project.order_index || 0;
+                  
+                  // Sections Logic Toggle
+                  document.getElementById('project-sections-group').style.display = 'block';
+                  document.getElementById('project-save-msg').style.display = 'none';
+                  closeProjectSectionForm();
+                  loadProjectSections(project.id);
+                  
+              } else {
+                  // New Project
+                  document.querySelector('#editModal h2').innerText = 'Nouveau Projet';
+                  document.getElementById('editForm').reset();
+                  document.getElementById('edit_id').value = '';
+                  document.getElementById('project_type').value = projectType;
+                  document.getElementById('edit_order').value = 0;
+                  
+                  document.getElementById('project-sections-group').style.display = 'none';
+                  document.getElementById('project-save-msg').style.display = 'block';
               }
-
-              // Populate Form
-              document.getElementById('edit_id').value = project.id;
-              document.getElementById('edit_title').value = project.title || '';
-              document.getElementById('edit_slug').value = project.slug || '';
-              document.getElementById('edit_description').value = project.description || '';
-              document.getElementById('edit_image_url').value = project.image_url || '';
-              document.getElementById('edit_semester').value = project.semester || '';
-              document.getElementById('edit_order').value = project.order_index || 0;
-
-              // Populate Website URL (for personal projects)
-              const websiteLink = project.personal_project_links ? project.personal_project_links.find(l => l.link_type === 'website') : null;
-              document.getElementById('edit_website_url').value = websiteLink ? websiteLink.url : '';
-
-              // Populate Competences
-              const projectCompetences = project.project_competences ? project.project_competences.map(pc => pc.competence.id) : [];
-              const checkboxes = document.querySelectorAll('input[name="competences_input"]');
-              checkboxes.forEach(cb => {
-                  cb.checked = projectCompetences.includes(cb.value);
-              });
 
               // Show Modal
               document.getElementById('editModal').classList.add('is-visible');
 
           } catch (e) {
               console.error(e);
-              alert("Erreur lors du chargement du projet.");
+              alert("Erreur lors du chargement de la modale.");
           } finally {
-              btn.innerText = originalText;
+              if(btn) btn.innerText = originalText;
           }
       }
 
