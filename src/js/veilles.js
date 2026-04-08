@@ -1,7 +1,4 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    // 1. Setup Ticker
-    setupTicker();
-
     // 2. Fetch Veilles
     const veilles = await window.portfolioAPI.getVeilles();
     
@@ -12,29 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupFilters(veilles);
 });
 
-function setupTicker() {
-    const tickerContent = document.getElementById('ticker-content');
-    
-    // Simulated "Recent Videos" from favorite channels
-    // In a real app, this could come from a YouTube API fetch via Edge Function
-    const tickerItems = [
-        { title: "Micode - J'ai infiltré un réseau d'arnaqueurs", source: "Micode", url: "https://www.youtube.com/@Micode", icon: "assets/images/youtube-icon.png" },
-        { title: "Underscore_ - Le futur de l'IA est terrifiant", source: "Underscore_", url: "https://www.youtube.com/@Underscore_Talk", icon: "assets/images/youtube-icon.png" },
-        { title: "NetworkChuck - You need to learn Linux RIGHT NOW", source: "NetworkChuck", url: "https://www.youtube.com/c/NetworkChuck", icon: "assets/images/youtube-icon.png" },
-        { title: "Defend Intelligence - Analyse d'une cyberattaque", source: "Defend Intelligence", url: "https://www.youtube.com/@DefendIntelligence", icon: "assets/images/youtube-icon.png" },
-        { title: "LeMondeInformatique - Les failles Zero-Day explosent", source: "LMI", url: "https://www.lemondeinformatique.fr/", icon: "assets/images/news-icon.png" }
-    ];
 
-    // Double the items to make the marquee smoother
-    const itemsToRender = [...tickerItems, ...tickerItems];
-
-    tickerContent.innerHTML = itemsToRender.map(item => `
-        <a href="${item.url}" target="_blank" class="marquee-item">
-            <span>🔴 ${item.source} :</span>
-            <strong>${item.title}</strong>
-        </a>
-    `).join('');
-}
 
 function renderVeilles(veilles) {
     const grid = document.getElementById('veille-grid');

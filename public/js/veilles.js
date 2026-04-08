@@ -1,12 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    // 1. Setup Ticker (Live version) - Non-blocking to avoid freezing other loads
-    setupLiveTicker().catch(err => {
-        console.error("Critical ticker error:", err);
-        const videoGrid = document.getElementById('youtube-videos');
-        if (videoGrid) videoGrid.innerHTML = '<p style="text-align: center;">Impossible de charger les vidéos YouTube.</p>';
-    });
-
-    // 2. Fetch Veilles from DB
+    // 2. Fetch Veilles
     const veilles = await window.portfolioAPI.getVeilles();
     
     // 3. Render Grid
@@ -16,98 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupFilters(veilles);
 });
 
-async function setupLiveTicker() {
-    const tickerContent = document.getElementById('ticker-content');
-    const videoGrid = document.getElementById('youtube-videos');
-    if (!tickerContent) return;
 
-    const channels = [
-        { name: "Micode", id: "UCYnvxJ-PKiGXo_tYXpWAC-w" },
-        { name: "Underscore_", id: "UCWedHS9qKebauVIK2J7383g" }
-    ];
-
-    try {
-        const results = await Promise.all(channels.map(async (channel) => {
-            try {
-                // Using rss2json to convert YouTube RSS to JSON
-                const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.youtube.com%2Ffeeds%2Fvideos.xml%3Fchannel_id%3D${channel.id}`);
-                const data = await response.json();
-                if (data.status === 'ok') {
-                    return data.items.map(item => ({
-                        title: item.title,
-                        source: channel.name,
-                        url: item.link,
-                        thumbnail: item.thumbnail,
-                        pubDate: item.pubDate
-                    }));
-                }
-            } catch (err) {
-                console.error(`Error fetching YouTube feed for ${channel.name}:`, err);
-            }
-            return [];
-        }));
-
-        const allVideos = results.flat()
-            .filter(v => v.title && v.url) // Sanitize
-            .sort((a, b) => {
-                if (!a.pubDate || !b.pubDate) return 0;
-                return new Date(b.pubDate) - new Date(a.pubDate);
-            });
-        
-        // Final fallback if we have ABSOLUTELY nothing
-        if (allVideos.length === 0) {
-            videoGrid.innerHTML = `
-                <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
-                    <p>Impossible de récupérer les dernières vidéos en direct pour le moment.</p>
-                    <a href="https://www.youtube.com/@Micode" target="_blank" class="button button--ghost" style="margin: 0.5rem;">Micode sur YouTube</a>
-                    <a href="https://www.youtube.com/@Underscore_Talk" target="_blank" class="button button--ghost" style="margin: 0.5rem;">Underscore_ sur YouTube</a>
-                </div>
-            `;
-            return;
-        }
-
-        // 1. Render Ticker
-        const tickerItems = allVideos.slice(0, 10);
-        if (tickerItems.length > 0) {
-            const itemsToRender = [...tickerItems, ...tickerItems]; // Double for smooth marquee
-            tickerContent.innerHTML = itemsToRender.map(item => `
-                <a href="${item.url}" target="_blank" class="marquee-item" style="text-decoration: none;">
-                    <span>🔴 ${item.source} :</span>
-                    <strong>${item.title}</strong>
-                </a>
-            `).join('');
-        }
-
-        // 2. Render Video Grid
-        if (videoGrid) {
-            const topVideos = allVideos.slice(0, 6);
-            if (topVideos.length > 0) {
-                videoGrid.innerHTML = topVideos.map(video => `
-                    <article class="card fade-in-up is-visible" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
-                        <a href="${video.url}" target="_blank" style="text-decoration: none; color: inherit; height: 100%; display: flex; flex-direction: column;">
-                            <div style="position: relative; padding-top: 56.25%;">
-                                <img src="${video.thumbnail}" alt="${video.title}" style="position: absolute; top:0; left:0; width:100%; height:100%; object-fit: cover;">
-                            </div>
-                            <div style="padding: 1.5rem; flex: 1; display: flex; flex-direction: column;">
-                                <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                    <span class="badge" style="background: rgba(255,0,0,0.1); color: #ff0000; border: 1px solid rgba(255,0,0,0.2);">YouTube</span>
-                                    <span class="badge">${video.source}</span>
-                                </div>
-                                <h3 style="font-size: 1.1rem; margin: 0; line-height: 1.4;">${video.title}</h3>
-                            </div>
-                        </a>
-                    </article>
-                `).join('');
-            } else {
-                videoGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">Aucune vidéo trouvée.</p>';
-            }
-        }
-
-
-    } catch (error) {
-        console.error('Ticker setup error:', error);
-    }
-}
 
 function renderVeilles(veilles) {
     const grid = document.getElementById('veille-grid');
