@@ -323,33 +323,37 @@ function renderProjectContent(project) {
                     <h1 class="section__title">${project.title}</h1>
                 </div>
 
-                ${project.image_url ? `
-                <figure class="fade-in-up" style="margin: var(--space-lg) auto; border-radius: var(--radius-lg); overflow: hidden; transition-delay: 0.1s; max-width: 800px; max-height: 480px;">
-                    <img src="${project.image_url}" alt="${project.title}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-                </figure>
-                ` : ''}
+                <div class="${project.image_url ? 'grid grid-2' : ''}" style="gap: 3rem; margin-top: var(--space-lg); align-items: start;">
+                    ${project.image_url ? `
+                    <div class="fade-in-up" style="position: sticky; top: 120px; transition-delay: 0.1s;">
+                        <figure style="border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg);">
+                            <img src="${project.image_url}" alt="${project.title}" style="width: 100%; max-height: 400px; object-fit: cover; display: block;">
+                        </figure>
+                    </div>
+                    ` : ''}
 
-                <div class="fade-in-up" style="transition-delay: 0.2s;">
-                    <p style="font-size: 1.1rem; color: var(--color-text-muted); line-height: 1.8;">
-                        ${project.description}
-                    </p>
-                    
-                    ${competencesHTML}
+                    <div class="fade-in-up" style="transition-delay: 0.2s;">
+                        <p style="font-size: 1.1rem; color: var(--color-text-muted); line-height: 1.8; margin-bottom: 2rem;">
+                            ${project.description}
+                        </p>
+                        
+                        ${competencesHTML}
 
-                    ${/* Sections rendering logic */ ''}
-                    ${project.project_sections && project.project_sections.length > 0 
-                        ? project.project_sections.sort((a, b) => a.order_index - b.order_index).map(section => `
-                            <div style="margin-top: 2rem;">
-                                <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--color-text);">${section.title}</h3>
-                                <div style="color: var(--color-text-muted); line-height: 1.6;">
-                                    ${section.content}
+                        ${/* Sections rendering logic */ ''}
+                        ${project.project_sections && project.project_sections.length > 0 
+                            ? project.project_sections.sort((a, b) => a.order_index - b.order_index).map(section => `
+                                <div style="margin-top: 2rem;">
+                                    <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--color-text);">${section.title}</h3>
+                                    <div style="color: var(--color-text-muted); line-height: 1.6;">
+                                        ${section.content}
+                                    </div>
                                 </div>
-                            </div>
-                        `).join('') 
-                        : ''
-                    }
+                            `).join('') 
+                            : ''
+                        }
 
-                    ${techHTML}
+                        ${techHTML}
+                    </div>
                 </div>
             </div>
         </section>
