@@ -284,7 +284,7 @@ function renderProjectContent(project) {
         }).join('');
         
         competencesHTML = `
-            <div style="margin-top: var(--space-xl);">
+            <div style="margin: var(--space-lg) 0;">
                 <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Compétences Validées</h2>
                 <div class="grid grid-2" style="gap: 1.5rem;">
                     ${compCards}
@@ -324,8 +324,8 @@ function renderProjectContent(project) {
                 </div>
 
                 ${project.image_url ? `
-                <figure class="fade-in-up" style="margin: var(--space-lg) 0; border-radius: var(--radius-lg); overflow: hidden; transition-delay: 0.1s;">
-                    <img src="${project.image_url}" alt="${project.title}" style="width: 100%; height: auto; display: block;">
+                <figure class="fade-in-up" style="margin: var(--space-lg) auto; border-radius: var(--radius-lg); overflow: hidden; transition-delay: 0.1s; max-width: 800px; max-height: 480px;">
+                    <img src="${project.image_url}" alt="${project.title}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
                 </figure>
                 ` : ''}
 
@@ -334,6 +334,8 @@ function renderProjectContent(project) {
                         ${project.description}
                     </p>
                     
+                    ${competencesHTML}
+
                     ${/* Sections rendering logic */ ''}
                     ${project.project_sections && project.project_sections.length > 0 
                         ? project.project_sections.sort((a, b) => a.order_index - b.order_index).map(section => `
@@ -349,8 +351,6 @@ function renderProjectContent(project) {
 
                     ${techHTML}
                 </div>
-
-                ${competencesHTML}
             </div>
         </section>
     `;
