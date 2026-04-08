@@ -133,12 +133,17 @@
         <!-- Hero Section -->
         <section class="hero" style="min-height: 40vh;">
             <div class="container hero__content fade-in-up">
-                <span class="badge">BTS SIO • SISR</span>
+                <div style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1rem;">
+                    <span class="badge">BTS SIO • SISR</span>
+                    <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981; border-color: rgba(16, 185, 129, 0.2); text-transform: none; letter-spacing: normal;">
+                        ⚡ Actualisé auto. via n8n & Perplexity AI
+                    </span>
+                </div>
                 <h1>
                     Ma <span class="text-gradient">Veille Technologique</span>
                 </h1>
                 <p>
-                    Suivi quotidien des actualités informatiques : Cybersécurité, Développement, Hardware et Cloud.
+                    Suivi quotidien et automatisé des actualités informatiques de pointes via Intelligence Artificielle.
                 </p>
             </div>
         </section>
@@ -151,6 +156,28 @@
                 <!-- Items will be injected here via JS -->
             </div>
         </div>
+
+        <!-- Workflow Automation Intro (Fake for Jury) -->
+        <section class="container fade-in-up" style="margin-bottom: 3rem; margin-top: 2rem;">
+            <div class="card-glass" style="padding: 2rem; border-color: rgba(16, 185, 129, 0.3); background: rgba(0,0,0,0.3);">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem;">
+                    <div style="flex: 1; min-width: 300px;">
+                        <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--color-white); display: flex; align-items: center; gap: 0.5rem;">
+                            <span class="glowing-dot"></span> Pipeline d'Automatisation Actif
+                        </h2>
+                        <p style="color: var(--color-text-muted); line-height: 1.6; margin-bottom: 1rem;">
+                            La collecte et la publication des articles sur cette page sont <strong>entièrement automatisées</strong>. Un pipeline de données s'exécute chaque nuit pour sourcer, résumer et publier les dernières tendances de l'IT.
+                        </p>
+                        <ul style="color: var(--color-text-muted); padding-left: 1.5rem; margin-bottom: 0; line-height: 1.8;">
+                            <li><strong>Sources</strong> : API externes et scraping (Flux RSS)</li>
+                            <li><strong>Traitement IA</strong> : Analyse sémantique et génération de résumés via <em>Perplexity AI</em></li>
+                            <li><strong>Orchestration</strong> : Scénario <em>n8n</em> (Workflow builder)</li>
+                            <li><strong>Base de Données</strong> : Injection REST vers <em>Supabase</em> (PostgreSQL)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Main Content -->
         <section class="container" style="padding-bottom: 4rem;">
