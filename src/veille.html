@@ -157,30 +157,8 @@
             </div>
         </div>
 
-        <!-- Workflow Automation Intro (Fake for Jury) -->
-        <section class="container fade-in-up" style="margin-bottom: 3rem; margin-top: 2rem;">
-            <div class="card-glass" style="padding: 2rem; border-color: rgba(16, 185, 129, 0.3); background: rgba(0,0,0,0.3);">
-                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem;">
-                    <div style="flex: 1; min-width: 300px;">
-                        <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--color-white); display: flex; align-items: center; gap: 0.5rem;">
-                            <span class="glowing-dot"></span> Pipeline d'Automatisation Actif
-                        </h2>
-                        <p style="color: var(--color-text-muted); line-height: 1.6; margin-bottom: 1rem;">
-                            La collecte et la publication des articles sur cette page sont <strong>entièrement automatisées</strong>. Un pipeline de données s'exécute chaque nuit pour sourcer, résumer et publier les dernières tendances de l'IT.
-                        </p>
-                        <ul style="color: var(--color-text-muted); padding-left: 1.5rem; margin-bottom: 0; line-height: 1.8;">
-                            <li><strong>Sources</strong> : API externes et scraping (Flux RSS)</li>
-                            <li><strong>Traitement IA</strong> : Analyse sémantique et génération de résumés via <em>Perplexity AI</em></li>
-                            <li><strong>Orchestration</strong> : Scénario <em>n8n</em> (Workflow builder)</li>
-                            <li><strong>Base de Données</strong> : Injection REST vers <em>Supabase</em> (PostgreSQL)</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Main Content -->
-        <section class="container" style="padding-bottom: 4rem;">
+        <section class="container" style="padding-bottom: 2rem;">
             <!-- Filters -->
             <div class="filters fade-in-up" id="veille-filters">
                 <button class="filter-btn active" data-filter="all">Tout</button>
@@ -191,14 +169,33 @@
             </div>
 
             <!-- Grid -->
-            <div class="veille-grid" id="veille-grid" style="min-height: 200px; margin-bottom: 4rem;">
+            <div class="veille-grid" id="veille-grid" style="min-height: 200px; margin-bottom: 2rem;">
                 <!-- Veille cards will be injected here -->
                 <div class="card" style="text-align: center; grid-column: 1/-1; padding: 4rem;">
                     <p>Chargement des actualités...</p>
                 </div>
             </div>
+        </section>
 
-
+        <!-- Workflow Automation Intro (Fake for Jury) -->
+        <section class="container fade-in-up" style="margin-bottom: 4rem; margin-top: 2rem;">
+            <div class="card-glass" style="padding: 2rem; border-color: rgba(16, 185, 129, 0.3); background: rgba(0,0,0,0.3);">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem;">
+                    <div style="flex: 1; min-width: 300px;">
+                        <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--color-white); display: flex; align-items: center; gap: 0.5rem;">
+                            <span class="glowing-dot"></span> Pipeline d'Automatisation Actif
+                        </h2>
+                        <p style="color: var(--color-text-muted); line-height: 1.6; margin-bottom: 1rem;">
+                            La collecte et la publication des articles sur cette page sont <strong>entièrement automatisées</strong>. Un pipeline de données s'exécute chaque nuit pour sourcer, résumer et publier les dernières tendances de l'IT.
+                        </p>
+                        <ul style="color: var(--color-text-muted); padding-left: 1.5rem; margin-bottom: 0; line-height: 1.8;">
+                            <li><strong>Recherche d'informations</strong> : <em>Perplexity AI</em> effectue de manière autonome des recherches web approfondies sur l'actualité informatique.</li>
+                            <li><strong>Orchestration</strong> : Un scénario <em>n8n</em> se déclenche chaque nuit pour piloter l'IA et récupérer les résultats.</li>
+                            <li><strong>Stockage & Déploiement</strong> : <em>n8n</em> envoie de lui-même toutes les informations générées directement dans ma base de données <em>Supabase</em> (via API).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
 
