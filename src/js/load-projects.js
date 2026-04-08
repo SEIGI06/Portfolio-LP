@@ -272,12 +272,14 @@ function renderProjectContent(project) {
             const colorScheme = colors[index % colors.length];
             
             return `
-                <div class="card-glass" style="padding: 1.5rem; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
-                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                        <div style="background: ${colorScheme.bg}; padding: 0.5rem; border-radius: 8px; color: ${colorScheme.color};">
-                            ✓
+                <div class="card-glass" style="padding: 1rem; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="background: ${colorScheme.bg}; padding: 0.4rem; border-radius: 6px; color: ${colorScheme.color}; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
                         </div>
-                        <h3 style="font-size: 1.1rem; margin: 0;">${pc.competence.name}</h3>
+                        <h3 style="font-size: 0.95rem; margin: 0; line-height: 1.3;">${pc.competence.name}</h3>
                     </div>
                 </div>
             `;

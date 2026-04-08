@@ -897,6 +897,12 @@
                   document.getElementById('edit_semester').value = project.semester || '';
                   document.getElementById('edit_order').value = project.order_index || 0;
                   
+                  // Populate Competences checkboxes
+                  const compCheckboxes = document.querySelectorAll('input[name="competences_input"]');
+                  compCheckboxes.forEach(cb => {
+                      cb.checked = project.project_competences?.some(pc => pc.competence.id === cb.value) || false;
+                  });
+                  
                   // Sections Logic Toggle
                   document.getElementById('project-sections-group').style.display = 'block';
                   document.getElementById('project-save-msg').style.display = 'none';
