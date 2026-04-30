@@ -21,45 +21,50 @@ async function build() {
 
     try {
         // --- 1. SITEMAP GENERATION ---
-        console.log('🔄 Generating sitemap...');
-        console.log('📡 Fetching documentations from Supabase...');
-        
-        const { data: docs, error } = await supabase
-            .from('documentations')
-            .select('slug, updated_at, created_at')
-            .eq('is_published', true);
+        try {
+            console.log('🔄 Generating sitemap...');
+            console.log('📡 Fetching documentations from Supabase...');
+            
+            const { data: docs, error } = await supabase
+                .from('documentations')
+                .select('slug, updated_at, created_at')
+                .eq('is_published', true);
 
-        if (error) throw error;
-        console.log(`✅ Found ${docs.length} documentation articles.`);
+            if (error) throw error;
+            console.log(`✅ Found ${docs.length} documentation articles.`);
 
-        console.log('📂 Reading source sitemap.xml...');
-        const sitemapContent = fs.readFileSync(SITEMAP_PATH, 'utf-8');
-        const parser = new xml2js.Parser();
-        const builder = new xml2js.Builder();
+            console.log('📂 Reading source sitemap.xml...');
+            const sitemapContent = fs.readFileSync(SITEMAP_PATH, 'utf-8');
+            const parser = new xml2js.Parser();
+            const builder = new xml2js.Builder();
 
-        const result = await parser.parseStringPromise(sitemapContent);
-        
-        // Filter out existing dynamic URLs
-        const staticUrls = result.urlset.url.filter(url => !url.loc[0].includes('/doc/'));
-        
-        // Create new URL entries
-        const docUrls = docs.map(doc => {
-            const lastMod = new Date(doc.updated_at || doc.created_at).toISOString().split('T')[0];
-            return {
-                loc: [`${BASE_URL}/doc/${doc.slug}`],
-                lastmod: [lastMod],
-                changefreq: ['weekly'],
-                priority: ['0.7']
-            };
-        });
+            const result = await parser.parseStringPromise(sitemapContent);
+            
+            // Filter out existing dynamic URLs
+            const staticUrls = result.urlset.url.filter(url => !url.loc[0].includes('/doc/'));
+            
+            // Create new URL entries
+            const docUrls = docs.map(doc => {
+                const lastMod = new Date(doc.updated_at || doc.created_at).toISOString().split('T')[0];
+                return {
+                    loc: [`${BASE_URL}/doc/${doc.slug}`],
+                    lastmod: [lastMod],
+                    changefreq: ['weekly'],
+                    priority: ['0.7']
+                };
+            });
 
-        // Merge and rebuild
-        result.urlset.url = [...staticUrls, ...docUrls];
-        const newSitemap = builder.buildObject(result);
+            // Merge and rebuild
+            result.urlset.url = [...staticUrls, ...docUrls];
+            const newSitemap = builder.buildObject(result);
 
-        // Write updated sitemap to SRC (it will be copied to public later)
-        fs.writeFileSync(SITEMAP_PATH, newSitemap);
-        console.log('💾 sitemap.xml updated in src/ successfully!');
+            // Write updated sitemap to SRC (it will be copied to public later)
+            fs.writeFileSync(SITEMAP_PATH, newSitemap);
+            console.log('💾 sitemap.xml updated in src/ successfully!');
+        } catch (sitemapError) {
+            console.warn('⚠️ Sitemap generation failed (Supabase unreachable). Using existing sitemap.');
+            console.warn('   Details:', sitemapError.message);
+        }
 
 
         // --- 2. COPY TO PUBLIC ---
