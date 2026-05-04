@@ -1251,7 +1251,8 @@
         category: document.getElementById('v_category').value,
         url: document.getElementById('v_url').value,
         image_url: document.getElementById('v_image_url').value,
-        description: document.getElementById('v_description').value
+        description: document.getElementById('v_description').value,
+        published_date: new Date().toISOString()
       };
 
       const btn = form.querySelector('button[type="submit"]');
