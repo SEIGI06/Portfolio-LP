@@ -20,17 +20,20 @@ async function build() {
     console.log('🚀 Starting build process...');
 
     try {
+        let docs = [];
+        
         // --- 1. SITEMAP GENERATION ---
         try {
             console.log('🔄 Generating sitemap...');
             console.log('📡 Fetching documentations from Supabase...');
             
-            const { data: docs, error } = await supabase
+            const { data, error } = await supabase
                 .from('documentations')
                 .select('slug, title, excerpt, content, updated_at, created_at')
                 .eq('is_published', true);
 
             if (error) throw error;
+            docs = data;
             console.log(`✅ Found ${docs.length} documentation articles.`);
 
             console.log('📂 Reading source sitemap.xml...');
