@@ -7,7 +7,13 @@ function getHeaderHTML() {
     return `
     <div class="container site-header__inner">
         <a href="/" class="logo">Lilian<span>.</span></a>
-        <nav>
+        
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Ouvrir le menu">
+            <svg id="menu-icon-open" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            <svg id="menu-icon-close" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+
+        <nav id="main-nav">
             <ul class="nav-list">
                 <li><a href="/" class="nav-link">Accueil</a></li>
                 <li><a href="/parcours.html" class="nav-link">Parcours</a></li>
@@ -40,6 +46,29 @@ function initSharedComponents() {
     if (headerEl) {
         headerEl.innerHTML = getHeaderHTML();
         highlightActiveLink();
+        
+        // Mobile menu logic
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mainNav = document.getElementById('main-nav');
+        const iconOpen = document.getElementById('menu-icon-open');
+        const iconClose = document.getElementById('menu-icon-close');
+
+        if (mobileBtn && mainNav) {
+            mobileBtn.addEventListener('click', () => {
+                const isOpen = mainNav.classList.toggle('is-open');
+                iconOpen.style.display = isOpen ? 'none' : 'block';
+                iconClose.style.display = isOpen ? 'block' : 'none';
+            });
+
+            // Close on click outside
+            document.addEventListener('click', (e) => {
+                if (!mainNav.contains(e.target) && !mobileBtn.contains(e.target) && mainNav.classList.contains('is-open')) {
+                    mainNav.classList.remove('is-open');
+                    iconOpen.style.display = 'block';
+                    iconClose.style.display = 'none';
+                }
+            });
+        }
     }
 
     if (footerEl) {
