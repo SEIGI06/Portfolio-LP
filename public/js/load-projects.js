@@ -138,10 +138,7 @@ function createPersonalProjectCard(project, index) {
         <div class="card__content">
             <h3 class="card__title" style="margin-bottom: 0.5rem;">${project.title}</h3>
             <p class="card__description" style="margin-bottom: 1.5rem;">${project.description}</p>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <a href="projet.html?slug=${project.slug}" class="button button--ghost" style="width: 100%; font-size: 0.9rem; text-align: center;">Voir le projet</a>
-                ${linksHTML}
-            </div>
+            ${linksHTML}
         </div>
     `;
 
@@ -275,19 +272,21 @@ function renderProjectContent(project) {
             const colorScheme = colors[index % colors.length];
             
             return `
-                <div class="card-glass" style="padding: 1.5rem; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
-                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                        <div style="background: ${colorScheme.bg}; padding: 0.5rem; border-radius: 8px; color: ${colorScheme.color};">
-                            ✓
+                <div class="card-glass" style="padding: 1rem; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="background: ${colorScheme.bg}; padding: 0.4rem; border-radius: 6px; color: ${colorScheme.color}; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
                         </div>
-                        <h3 style="font-size: 1.1rem; margin: 0;">${pc.competence.name}</h3>
+                        <h3 style="font-size: 0.95rem; margin: 0; line-height: 1.3;">${pc.competence.name}</h3>
                     </div>
                 </div>
             `;
         }).join('');
         
         competencesHTML = `
-            <div style="margin-top: var(--space-xl);">
+            <div style="margin: var(--space-lg) 0;">
                 <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Compétences Validées</h2>
                 <div class="grid grid-2" style="gap: 1.5rem;">
                     ${compCards}
@@ -326,34 +325,38 @@ function renderProjectContent(project) {
                     <h1 class="section__title">${project.title}</h1>
                 </div>
 
-                ${project.image_url ? `
-                <figure class="fade-in-up" style="margin: var(--space-lg) 0; border-radius: var(--radius-lg); overflow: hidden; transition-delay: 0.1s;">
-                    <img src="${project.image_url}" alt="${project.title}" style="width: 100%; height: auto; display: block;">
-                </figure>
-                ` : ''}
+                <div class="${project.image_url ? 'grid grid-2' : ''}" style="gap: 3rem; margin-top: var(--space-lg); align-items: start;">
+                    ${project.image_url ? `
+                    <div class="fade-in-up" style="position: sticky; top: 120px; transition-delay: 0.1s;">
+                        <figure style="border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg);">
+                            <img src="${project.image_url}" alt="${project.title}" style="width: 100%; max-height: 400px; object-fit: cover; display: block;">
+                        </figure>
+                    </div>
+                    ` : ''}
 
-                <div class="fade-in-up" style="transition-delay: 0.2s;">
-                    <p style="font-size: 1.1rem; color: var(--color-text-muted); line-height: 1.8;">
-                        ${project.description}
-                    </p>
-                    
-                    ${/* Sections rendering logic */ ''}
-                    ${project.project_sections && project.project_sections.length > 0 
-                        ? project.project_sections.sort((a, b) => a.order_index - b.order_index).map(section => `
-                            <div style="margin-top: 2rem;">
-                                <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--color-text);">${section.title}</h3>
-                                <div style="color: var(--color-text-muted); line-height: 1.6;">
-                                    ${section.content}
+                    <div class="fade-in-up" style="transition-delay: 0.2s;">
+                        <p style="font-size: 1.1rem; color: var(--color-text-muted); line-height: 1.8; margin-bottom: 2rem;">
+                            ${project.description}
+                        </p>
+                        
+                        ${competencesHTML}
+
+                        ${/* Sections rendering logic */ ''}
+                        ${project.project_sections && project.project_sections.length > 0 
+                            ? project.project_sections.sort((a, b) => a.order_index - b.order_index).map(section => `
+                                <div style="margin-top: 2rem;">
+                                    <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--color-text);">${section.title}</h3>
+                                    <div style="color: var(--color-text-muted); line-height: 1.6;">
+                                        ${section.content}
+                                    </div>
                                 </div>
-                            </div>
-                        `).join('') 
-                        : ''
-                    }
+                            `).join('') 
+                            : ''
+                        }
 
-                    ${techHTML}
+                        ${techHTML}
+                    </div>
                 </div>
-
-                ${competencesHTML}
             </div>
         </section>
     `;

@@ -362,3 +362,31 @@
   box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
   animation: pulse-glow 2s infinite;
 }
+
+/* --- Competence Tags (Stages) --- */
+.competence-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.competence-tag:hover {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: var(--color-text);
+}
+
+.competence-tag .glowing-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+}
