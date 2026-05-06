@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- EDIT — Titre et description SEO -->
+  <title>Alex Martin — Portfolio Développeur Web</title>
+  <meta name="description"
+    content="Portfolio d'Alex Martin, développeur web full-stack passionné par le design moderne et les technologies innovantes." />
+  <meta name="keywords" content="Alex Martin, Développeur Web, Portfolio, Full-Stack, React, Node.js" />
+  <meta name="author" content="Alex Martin" />
+
+  <!-- EDIT — Open Graph (partage réseaux sociaux) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.alexmartin.dev/" />
+  <meta property="og:title" content="Alex Martin — Portfolio Développeur Web" />
+  <meta property="og:description"
+    content="Découvrez mes projets et mon parcours en développement web." />
+
+  <!-- 🎨 POLICE — Changez la police ici (et dans style.css → --font-main) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+
+<body>
+  <!-- Loading Screen -->
+  <div class="page-loader" aria-hidden="true">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+
+  <!-- Overlay mobile menu -->
+  <div class="nav-overlay" id="nav-overlay"></div>
+
+  <!-- ========================================================================
+       HEADER / NAVIGATION
+       ======================================================================== -->
+  <header class="site-header" id="main-header">
+    <div class="container site-header__inner">
+      <!-- EDIT — Votre nom / logo -->
+      <a href="#accueil" class="logo">Alex<span>.</span></a>
+
+      <nav>
+        <ul class="nav-list" id="nav-list">
+          <!-- EDIT — Liens de navigation -->
+          <li><a href="#accueil" class="nav-link">Accueil</a></li>
+          <li><a href="#about" class="nav-link">À propos</a></li>
+          <li><a href="#projects" class="nav-link">Projets</a></li>
+          <li><a href="#timeline" class="nav-link">Parcours</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+          <li>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Changer de thème">🌙</button>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Mobile menu toggle -->
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <button class="theme-toggle" id="theme-toggle-mobile" aria-label="Changer de thème"
+          style="display: none;">🌙</button>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <!-- ========================================================================
+         HERO SECTION
+         ======================================================================== -->
+    <section id="accueil" class="hero">
+      <div class="container hero__content fade-in-up">
+        <!-- EDIT — Badge / titre de poste -->
+        <span class="badge">Développeur Web Full-Stack</span>
+
+        <!-- EDIT — Titre principal avec votre nom -->
+        <h1>Bonjour, je suis <span class="text-gradient">Alex Martin</span></h1>
+
+        <!-- EDIT — Sous-titre / description courte -->
+        <p class="hero__subtitle">
+          Je conçois et développe des expériences web modernes, performantes et accessibles.
+          Passionné par le code propre et le design élégant.
+        </p>
+
+        <!-- EDIT — Boutons d'action -->
+        <div class="hero__actions">
+          <a class="button button--primary" href="#projects">Voir mes projets</a>
+          <a class="button button--ghost" href="#contact">Me contacter</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         À PROPOS
+         ======================================================================== -->
+    <section id="about">
+      <div class="container">
+        <div class="fade-in-up" style="text-align: center; margin-bottom: var(--space-lg);">
+          <span class="badge">À propos</span>
+          <h2 class="section__title">Qui suis-<span class="text-gradient">je ?</span></h2>
+        </div>
+
+        <div class="about-grid fade-in-up">
+          <!-- EDIT — Remplacez par votre photo (ratio 4:5 recommandé) -->
+          <div class="about__image-wrapper">
+            <img
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face"
+              alt="Photo de profil d'Alex Martin"
+              class="about__image"
+              loading="lazy"
+            />
+          </div>
+
+          <div class="about__text">
+            <!-- EDIT — Votre description -->
+            <h2>Alex <span class="text-gradient">Martin</span></h2>
+            <p>
+              Développeur web passionné depuis plus de 3 ans, je crée des sites et applications
+              qui allient esthétique moderne et performance technique. Mon objectif : transformer
+              vos idées en expériences digitales mémorables.
+            </p>
+            <p>
+              Spécialisé en JavaScript, React et Node.js, je m'intéresse aussi au design UI/UX
+              pour offrir des interfaces intuitives et engageantes.
+            </p>
+
+            <!-- EDIT — Vos statistiques -->
+            <div class="about__stats">
+              <div class="about__stat">
+                <span class="about__stat-value">15+</span>
+                <span class="about__stat-label">Projets</span>
+              </div>
+              <div class="about__stat">
+                <span class="about__stat-value">3+</span>
+                <span class="about__stat-label">Années d'exp.</span>
+              </div>
+              <div class="about__stat">
+                <span class="about__stat-value">100%</span>
+                <span class="about__stat-label">Passionné</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         PROJETS (3 cartes)
+         ======================================================================== -->
+    <section id="projects">
+      <div class="container">
+        <div class="fade-in-up" style="text-align: center; margin-bottom: var(--space-lg);">
+          <span class="badge">Portfolio</span>
+          <h2 class="section__title">Mes <span class="text-gradient">projets</span></h2>
+          <p style="margin: 0 auto;">Une sélection de mes réalisations récentes.</p>
+        </div>
+
+        <div class="grid grid-3">
+          <!-- EDIT — Projet 1 -->
+          <article class="card fade-in-up">
+            <img
+              src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop"
+              alt="Dashboard Analytics — capture d'écran"
+              class="card__image"
+              loading="lazy"
+            />
+            <span class="badge">Web App</span>
+            <h3 class="card__title">Dashboard Analytics</h3>
+            <p class="card__description">
+              Tableau de bord interactif avec visualisation de données en temps réel,
+              filtres dynamiques et exports PDF.
+            </p>
+            <div class="card__tags">
+              <span class="card__tag">React</span>
+              <span class="card__tag">D3.js</span>
+              <span class="card__tag">Node.js</span>
+            </div>
+          </article>
+
+          <!-- EDIT — Projet 2 -->
+          <article class="card fade-in-up">
+            <img
+              src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&h=400&fit=crop"
+              alt="E-commerce Premium — capture d'écran"
+              class="card__image"
+              loading="lazy"
+            />
+            <span class="badge">E-commerce</span>
+            <h3 class="card__title">Boutique en Ligne</h3>
+            <p class="card__description">
+              Plateforme e-commerce complète avec panier, paiement sécurisé Stripe
+              et gestion des stocks en temps réel.
+            </p>
+            <div class="card__tags">
+              <span class="card__tag">Next.js</span>
+              <span class="card__tag">Stripe</span>
+              <span class="card__tag">PostgreSQL</span>
+            </div>
+          </article>
+
+          <!-- EDIT — Projet 3 -->
+          <article class="card fade-in-up">
+            <img
+              src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&h=400&fit=crop"
+              alt="App Mobile Fitness — capture d'écran"
+              class="card__image"
+              loading="lazy"
+            />
+            <span class="badge">Mobile</span>
+            <h3 class="card__title">FitTracker App</h3>
+            <p class="card__description">
+              Application mobile de suivi fitness avec programmes personnalisés,
+              statistiques et intégration Apple Health.
+            </p>
+            <div class="card__tags">
+              <span class="card__tag">React Native</span>
+              <span class="card__tag">Firebase</span>
+              <span class="card__tag">TypeScript</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         TIMELINE / PARCOURS
+         ======================================================================== -->
+    <section id="timeline">
+      <div class="container">
+        <div class="fade-in-up" style="text-align: center; margin-bottom: var(--space-lg);">
+          <span class="badge">Parcours</span>
+          <h2 class="section__title">Mon <span class="text-gradient">parcours</span></h2>
+          <p style="margin: 0 auto;">Formation et expériences qui m'ont forgé.</p>
+        </div>
+
+        <ol class="timeline fade-in-up">
+          <!-- EDIT — Étape 1 (la plus récente en haut) -->
+          <li class="timeline__item">
+            <span class="timeline__marker"></span>
+            <div class="timeline__content">
+              <p class="timeline__meta">2024 — Présent</p>
+              <h3 class="timeline__title">Développeur Full-Stack — Freelance</h3>
+              <p style="color: var(--color-text-muted);">
+                Conception et développement de sites web et d'applications pour des clients variés.
+                Spécialisation en React, Node.js et architectures cloud.
+              </p>
+            </div>
+          </li>
+
+          <!-- EDIT — Étape 2 -->
+          <li class="timeline__item">
+            <span class="timeline__marker"></span>
+            <div class="timeline__content">
+              <p class="timeline__meta">2023 — 2024</p>
+              <h3 class="timeline__title">Développeur Front-End — Agence Digitale</h3>
+              <p style="color: var(--color-text-muted);">
+                Intégration de maquettes Figma, développement de composants React réutilisables
+                et optimisation des performances web (Core Web Vitals).
+              </p>
+            </div>
+          </li>
+
+          <!-- EDIT — Étape 3 -->
+          <li class="timeline__item">
+            <span class="timeline__marker"></span>
+            <div class="timeline__content">
+              <p class="timeline__meta">2021 — 2023</p>
+              <h3 class="timeline__title">Licence Informatique — Université de Lyon</h3>
+              <p style="color: var(--color-text-muted);">
+                Formation en algorithmique, bases de données, développement web et systèmes
+                d'exploitation. Projet de fin d'études sur les Progressive Web Apps.
+              </p>
+            </div>
+          </li>
+
+          <!-- EDIT — Étape 4 -->
+          <li class="timeline__item">
+            <span class="timeline__marker"></span>
+            <div class="timeline__content">
+              <p class="timeline__meta">2019 — 2021</p>
+              <h3 class="timeline__title">DUT Informatique — IUT de Grenoble</h3>
+              <p style="color: var(--color-text-muted);">
+                Découverte de la programmation, du développement web et des bases de données.
+                Stage de fin d'études dans une startup EdTech.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         CONTACT
+         ======================================================================== -->
+    <section id="contact">
+      <div class="container">
+        <div class="fade-in-up" style="text-align: center; margin-bottom: var(--space-lg);">
+          <span class="badge">Contact</span>
+          <h2 class="section__title">Discutons de votre <span class="text-gradient">projet</span></h2>
+          <p style="margin: 0 auto;">
+            Une idée, une question ou une proposition ? N'hésitez pas à m'écrire.
+          </p>
+        </div>
+
+        <div class="card contact-card fade-in-up">
+          <!--
+            EDIT — Formulaire de contact
+            Option 1 : Remplacez l'action par votre URL Formspree (https://formspree.io)
+                        <form action="https://formspree.io/f/VOTRE_ID" method="POST" class="form">
+            Option 2 : Gardez le comportement JavaScript simulé (par défaut)
+          -->
+          <form id="contact-form" class="form">
+            <div class="form__group">
+              <label for="name" class="form__label">Votre Nom</label>
+              <!-- EDIT — Placeholder -->
+              <input type="text" name="name" id="name" required placeholder="Jean Dupont" class="form__input" />
+            </div>
+
+            <div class="form__group">
+              <label for="email" class="form__label">Votre Email</label>
+              <!-- EDIT — Placeholder -->
+              <input type="email" name="email" id="email" required placeholder="jean@exemple.fr" class="form__input" />
+            </div>
+
+            <div class="form__group">
+              <label for="message" class="form__label">Votre Message</label>
+              <!-- EDIT — Placeholder -->
+              <textarea name="message" id="message" required rows="5"
+                placeholder="Bonjour Alex, j'aimerais discuter d'un projet..." class="form__textarea"></textarea>
+            </div>
+
+            <button type="submit" class="button button--primary form__submit">
+              Envoyer le message
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="site-footer" id="main-footer">
+    <div class="container site-footer__inner">
+      <!-- EDIT — Copyright -->
+      <p style="margin: 0; font-size: 0.9rem;">
+        © <span id="current-year"></span> Alex Martin — Tous droits réservés
+      </p>
+
+      <!-- EDIT — Liens footer -->
+      <div class="footer-links">
+        <a href="https://github.com/alexmartin" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://linkedin.com/in/alexmartin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="mailto:contact@alexmartin.dev">Email</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/main.js" defer></script>
+
+  <!--
+    NOTE : Le thème toggle mobile est synchronisé avec le desktop.
+    Ce petit script fait le lien entre les deux boutons.
+  -->
+  <script>
+    // Sync mobile theme toggle with desktop one
+    document.addEventListener('DOMContentLoaded', () => {
+      const desktopToggle = document.getElementById('theme-toggle');
+      const mobileToggle = document.getElementById('theme-toggle-mobile');
+
+      // Show mobile toggle only on small screens
+      function checkMobileToggle() {
+        if (window.innerWidth <= 768) {
+          if (mobileToggle) mobileToggle.style.display = 'flex';
+        } else {
+          if (mobileToggle) mobileToggle.style.display = 'none';
+        }
+      }
+      checkMobileToggle();
+      window.addEventListener('resize', checkMobileToggle);
+
+      // Sync clicks
+      if (mobileToggle) {
+        mobileToggle.addEventListener('click', () => {
+          const current = document.documentElement.getAttribute('data-theme');
+          const next = current === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          localStorage.setItem('portfolio-theme', next);
+          desktopToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+          mobileToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+        });
+      }
+
+      // Init mobile button text
+      const theme = document.documentElement.getAttribute('data-theme');
+      if (mobileToggle) mobileToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+    });
+  </script>
+</body>
+
+</html>

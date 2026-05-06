@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin-login
 
 Sitemap: https://www.seigi-tech.fr/sitemap.xml

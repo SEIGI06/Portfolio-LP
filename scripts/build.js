@@ -27,7 +27,7 @@ async function build() {
             
             const { data: docs, error } = await supabase
                 .from('documentations')
-                .select('slug, updated_at, created_at')
+                .select('slug, title, excerpt, content, updated_at, created_at')
                 .eq('is_published', true);
 
             if (error) throw error;
@@ -79,7 +79,6 @@ async function build() {
         const options = {
             filter: (source) => {
                 const basename = path.basename(source);
-                // Exclude hidden files/dirs and development artifacts
                 if (basename.startsWith('.') || 
                     basename === 'node_modules' || 
                     basename === 'scripts') {
@@ -89,13 +88,71 @@ async function build() {
             }
         };
 
-        // Copy everything from src/ using ncp
-        ncp(SRC_DIR, PUBLIC_DIR, options, function (err) {
-            if (err) {
-                return console.error(err);
-            }
-            console.log('✅ Build completed! Files copied to ./public');
+        // Wrap ncp in a promise
+        await new Promise((resolve, reject) => {
+            ncp(SRC_DIR, PUBLIC_DIR, options, function (err) {
+                if (err) reject(err);
+                else resolve();
+            });
         });
+        console.log('✅ Build completed! Files copied to ./public');
+
+        // --- 3. PRERENDER DOCUMENTATION PAGES FOR SEO ---
+        console.log('📄 Prerendering documentation pages for SEO...');
+        const docTemplatePath = path.join(PUBLIC_DIR, 'documentation.html');
+        if (fs.existsSync(docTemplatePath)) {
+            let docTemplate = fs.readFileSync(docTemplatePath, 'utf-8');
+            
+            const docDir = path.join(PUBLIC_DIR, 'doc');
+            if (!fs.existsSync(docDir)){
+                fs.mkdirSync(docDir);
+            }
+
+            docs.forEach(doc => {
+                let pageHtml = docTemplate;
+                
+                // SEO: Title
+                pageHtml = pageHtml.replace(
+                    /<title>.*?<\/title>/,
+                    `<title>${doc.title} | Documentation | Lilian Peyr</title>`
+                );
+                
+                // SEO: Meta Description
+                const excerpt = (doc.content || '').substring(0, 160).replace(/\n/g, ' ').replace(/"/g, '&quot;');
+                pageHtml = pageHtml.replace(
+                    /<meta name="description"\s+content="[^"]*">/,
+                    `<meta name="description" content="${excerpt}">`
+                );
+                
+                // SEO: Canonical URL
+                pageHtml = pageHtml.replace(
+                    /<link rel="canonical" href="https:\/\/www\.seigi-tech\.fr\/documentation" \/>/,
+                    `<link rel="canonical" href="https://www.seigi-tech.fr/doc/${doc.slug}" />`
+                );
+                
+                // SEO: Content Fallback in <noscript>
+                const safeContent = (doc.content || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                const seoContent = `
+                        <!-- SEO Prerendered Content -->
+                        <noscript>
+                            <div style="padding: 2rem; background: rgba(0,0,0,0.2); border-radius: var(--radius-lg); margin-top: 2rem;">
+                                <h1>${doc.title}</h1>
+                                <pre style="white-space: pre-wrap; font-family: inherit;">${safeContent}</pre>
+                            </div>
+                        </noscript>
+                `;
+                
+                // Inject right after the loading text inside doc-container
+                pageHtml = pageHtml.replace(
+                    '<p class="loading" style="text-align: center;">Chargement des articles...</p>',
+                    '<p class="loading" style="text-align: center;">Chargement des articles...</p>\n' + seoContent
+                );
+
+                const pagePath = path.join(docDir, `${doc.slug}.html`);
+                fs.writeFileSync(pagePath, pageHtml);
+            });
+            console.log(`✅ Prerendered ${docs.length} documentation pages successfully!`);
+        }
 
     } catch (error) {
         console.error('❌ Build failed:', error);
